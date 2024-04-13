@@ -1,0 +1,169 @@
+.welcome-box {
+    background: #92196b;
+    background: linear-gradient(90deg, #92196b 0%, #d31459 100%);
+    height: 80px;
+    border-radius: 6px;
+    padding: 0 20px;
+    overflow: hidden;
+}
+
+.welcome-box img {
+    height: 100%;
+}
+
+.welcome-box h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-color-white);
+}
+
+.welcome-box p {
+    color: var(--text-color-white);
+}
+
+.welcome-box button {
+    border-radius: 20px;
+    border: 1px solid #ffffff4d;
+    padding: 8px 20px;
+    color: #fff;
+    background: none;
+    transition: all .3s ease;
+}
+
+.welcome-box button:hover, .welcome-box button:active {
+    background: #fff;
+    border-color: #fff;
+    color: #000;
+    transition: all .3s ease;
+}
+
+.statistic {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 25px;
+}
+
+.statistic-box {
+    padding: 15px 18px;
+    border-radius: 6px;
+}
+
+.statistic-box:first-child {
+    background: #5956d6;
+}
+
+.statistic-box:nth-child(2) {
+    background: #349aff;
+}
+
+.statistic-box:nth-child(3){
+    background: #ecad21;
+}
+
+.statistic-box:nth-child(4){
+    background: #da5d5c;
+}
+
+.statistic-box * {
+    color: #fff;
+}
+
+.sta-cate-name {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.sta-task-count {
+    font-size: 14px;
+    color: #fff;
+}
+
+.completed-percent-bar {
+    width: 100%;
+    background: #ffffff98;
+    border-radius: 20px;
+    height: 4px;
+    overflow: hidden;
+}
+
+.completed-percent-bar div {
+    height: 100%;
+    background: #fff;
+    border-radius: 20px;
+}
+
+.weather-box {
+    width: 370px;
+    height: 550px;
+    background: var(--current-content-bg);
+    background-size: 100%;
+}
+
+.weather-box * {
+    color: #fff;
+}
+
+.time * {
+    font-size: 16px;
+}
+
+.temperature {
+    font-size: 60px;
+}
+
+.weather-description {
+    font-size: 25px;
+}
+
+.reload-weather {
+    border: none;
+    outline: none;
+    background: #ffffff0e;
+    width: 35px;
+    aspect-ratio: 1;
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+    display: grid;
+    place-items: center;
+}
+
+.reload-weather:hover, .reload-weather:active {
+    background: #ffffff36;
+}
+
+.reload-weather i {
+    font-size: 18px;
+}
+
+.today-tasks {
+    width: calc(100% - 370px);
+    height: 550px;
+}
+
+.today-tasks > .home-task-list  {
+    overflow-y: auto;
+    height: calc(100% - 34px);
+}
+
+.today-tasks * {
+    color: var(--current-text-color);
+}
+
+.today-tasks svg {
+    cursor: pointer;
+}
+
+.today-task-box {
+    border-bottom: 1px solid #666;
+    padding: 10px 0;
+    width: 100%;
+}
+
+.td-task-content {
+    width: calc(100% - 220px);
+    overflow: hidden;
+}
+
+.td-task-content .td-task-name-des {
+    max-width: calc(100% - 60px);
+}

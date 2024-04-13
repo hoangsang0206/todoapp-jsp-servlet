@@ -1,0 +1,177 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    background-image: url(/images/bg-01.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.login-page, .register-page {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+.login-wrapper, .register-wrapper {
+    width: 50rem;
+    height: 30rem;
+    background: #fff;
+    border-radius: 0.3rem;
+    overflow: hidden;
+}
+
+.register-wrapper {
+    height: 35rem;
+    width: 55rem;
+}
+
+.login-banner, .register-banner {
+    width: 52%;
+    height: 100%;
+    background-image: url(/images/12085707_20944201.svg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.login-form-box, .register-form-box {
+    width: 48%;
+    padding: 1rem;
+}
+
+.ac-input-box {
+    border-bottom: 2px solid #ccc;
+    width: 17rem;
+    padding: 0 0.5rem;
+    position: relative;
+}
+
+.ac-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.ac-input-box input {
+    border: none;
+    outline: none;
+    padding: 0.5rem 0;
+    font-size: 0.95em;
+    width: calc(100% - 2.5rem);
+    font-weight: 500;
+}
+
+.ac-input-box i {
+    width: 2.5rem;
+    font-size: 1.4rem;
+    color: #717171;
+}
+
+.ac-input-focus {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    background: #717171;
+    height: 2px;
+    width: 0;
+}
+
+.ac-input-box input:focus ~ .ac-input-focus {
+    width: 100%;
+    transition: .5s ease-in-out;
+}
+
+.ac-button {
+    background: -webkit-linear-gradient(right,#00dbde,#fc00ff,#00dbde,#fc00ff);
+    background-size: 300%;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #fff;
+    padding: 0.5rem 0;
+    border-radius: 2rem;
+    border: none;
+    outline: none;
+}
+
+.ac-button:hover {
+    background-position: -100%;
+    transition: .7s ease;
+}
+
+.submit-button {
+    font-weight: 700;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.96rem;
+}
+
+.register-forgot-action {
+    width: 100%;
+}
+
+.register-forgot-action a {
+    font-size: 0.8rem;
+    text-decoration: none;
+    color: #717171;
+    font-weight: 500;
+}
+
+.login-break p {
+    font-size: 0.85rem;
+    color: #717171;
+    font-weight: 500;
+    background-color: #fff;
+    margin: 0 0.5rem;
+}
+
+.other-login-med i {
+    font-size: 2.5rem;
+}
+
+.other-login-med .bxl-facebook-circle {
+    color: #1773ea;
+}
+
+.other-login-med .bxl-google {
+    background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, 
+     #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+     -webkit-background-clip: text;
+     background-clip: text;
+     color: transparent;
+     -webkit-text-fill-color: transparent;
+}
+
+/* For mobile */
+@media screen and (max-width: 767px) {
+    * {
+        font-size: 14px;
+    }
+
+    .login-wrapper, .register-wrapper {
+        width: 20rem;
+        max-width: 90%;
+        max-height: 90%;
+    }
+
+    .login-banner, .register-banner {
+        display: none;
+    }
+
+    .login-form-box {
+        padding: 25px !important;
+    }
+
+    .login-form-box, .register-form-box, .login-form, .login-form > div {
+        width: 100%;
+    }
+
+    .ac-input-box {
+        width: 100%;
+    }
+
+}
