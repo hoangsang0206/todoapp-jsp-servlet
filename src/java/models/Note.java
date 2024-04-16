@@ -4,6 +4,8 @@
  */
 package models;
 
+import java.time.LocalDateTime;
+
 /**
  *
  * @author Sang
@@ -12,14 +14,16 @@ public class Note {
     protected String id;
     protected String content;
     protected String username;
+    protected LocalDateTime dateCreate;
 
     public Note() {
     }
 
-    public Note(String id, String content, String username) {
+    public Note(String id, String content, String username, LocalDateTime dateCreate) {
         this.id = id;
         this.content = content;
         this.username = username;
+        this.dateCreate = dateCreate;
     }
 
     public String getId() {
@@ -44,6 +48,14 @@ public class Note {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public LocalDateTime getDateCreate() {
+        return dateCreate;
+    }
+
+    public void setDateCreate(LocalDateTime dateCreate) {
+        this.dateCreate = dateCreate;
     }
     
 }

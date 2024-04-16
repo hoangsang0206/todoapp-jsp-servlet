@@ -10,7 +10,6 @@ package models;
  */
 public class SubTodo {
     protected String id;
-    protected String todoId;
     protected String title;
     protected boolean isCompleted;
     protected Todo todo;
@@ -18,9 +17,8 @@ public class SubTodo {
     public SubTodo() {
     }
 
-    public SubTodo(String id, String todoId, String title, boolean isCompleted, Todo todo) {
+    public SubTodo(String id, String title, boolean isCompleted, Todo todo) {
         this.id = id;
-        this.todoId = todoId;
         this.title = title;
         this.isCompleted = isCompleted;
         this.todo = todo;
@@ -32,14 +30,6 @@ public class SubTodo {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getTodoId() {
-        return todoId;
-    }
-
-    public void setTodoId(String todoId) {
-        this.todoId = todoId;
     }
 
     public String getTitle() {

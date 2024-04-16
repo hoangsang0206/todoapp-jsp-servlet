@@ -160,7 +160,7 @@
 }
 
 .td-task-content {
-    width: calc(100% - 220px);
+    width: calc(100% - 250px);
     overflow: hidden;
 }
 

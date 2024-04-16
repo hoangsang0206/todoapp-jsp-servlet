@@ -105,6 +105,3 @@ $(document).ready(() => {
 $('.reload-weather').click(() => {
     loadWeatherBox();
 })
-
-const s: string = "Hello";
-console.error(s)

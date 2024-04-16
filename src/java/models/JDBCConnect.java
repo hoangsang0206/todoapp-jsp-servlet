@@ -36,9 +36,9 @@ public class JDBCConnect {
                     : "-- Kết nối cơ sở dữ liệu thành công.");
             
         } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(JDBCConnect.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(JDBCConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -49,7 +49,7 @@ public class JDBCConnect {
             
             System.out.println("-- Đã dừng kết nối cơ sở dữ liệu.");
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(JDBCConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
@@ -60,7 +60,7 @@ public class JDBCConnect {
             
             return statement.executeQuery(sqlQuery);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(JDBCConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return null;
@@ -72,7 +72,7 @@ public class JDBCConnect {
             return statement.executeUpdate(sqlQuery);
             
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(JDBCConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         return -1;

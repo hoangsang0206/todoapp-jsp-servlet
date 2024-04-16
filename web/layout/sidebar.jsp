@@ -1,4 +1,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="models.JDBCConnect" %>
+<%@page import="models.Category" %>
+
+<%  %>
 <nav class="d-flex flex-column position-relative navigation">
     <div class="nav-header d-flex align-items-center justify-content-between">
         <div class="logo-wrapper d-flex align-items-center">          
@@ -114,69 +118,7 @@
                             </div>
                         </a>
                     </li>
-                    <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            <div class="nav-link-box d-flex align-items-center">
-                                <span class="nav-color-icon" style="background: orange;"></span>
-
-                                <span class="nav-link-text">Tào lao</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            <div class="nav-link-box d-flex align-items-center">
-                                <span class="nav-color-icon" style="background: orange;"></span>
-
-                                <span class="nav-link-text">Tào lao</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            <div class="nav-link-box d-flex align-items-center">
-                                <span class="nav-color-icon" style="background: orange;"></span>
-
-                                <span class="nav-link-text">Tào lao</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            <div class="nav-link-box d-flex align-items-center">
-                                <span class="nav-color-icon" style="background: orange;"></span>
-
-                                <span class="nav-link-text">Tào lao</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            <div class="nav-link-box d-flex align-items-center">
-                                <span class="nav-color-icon" style="background: orange;"></span>
-
-                                <span class="nav-link-text">Tào lao</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            <div class="nav-link-box d-flex align-items-center">
-                                <span class="nav-color-icon" style="background: orange;"></span>
-
-                                <span class="nav-link-text">Tào lao</span>
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            <div class="nav-link-box d-flex align-items-center">
-                                <span class="nav-color-icon" style="background: orange;"></span>
-
-                                <span class="nav-link-text">Tào lao</span>
-                            </div>
-                        </a>
-                    </li>
+                    
                     <li>
                         <a href="#" class="add-cate-action d-flex align-items-center">
                             <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
