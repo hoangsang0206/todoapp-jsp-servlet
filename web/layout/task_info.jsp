@@ -9,20 +9,20 @@
         </div>
         <div class="task-inf-box">
             <div class="task-inf">
-                <div class="task-inf-name mb-1">Tên công vi?c</div>
+                <div class="task-inf-name mb-1">Tên công việc</div>
                 <div class="task-inf-description">
-                    Mô t? công vi?c
+                    Mô tả công việc
                 </div>
                 <hr />
                 <div class="task-inf-categories">
-                    <div class="task-inf-cate-name mb-1">Danh m?c</div>
+                    <div class="task-inf-cate-name mb-1">Danh mục</div>
                     <div class="task-inf-cate-list d-flex align-items-center flex-wrap column-gap-4">
                         <div class="task-inf-cate-item">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <path d="M2 7v1l11 4 9-4V7L11 4z"></path>
                                 <path d="M4 11v4.267c0 1.621 4.001 3.893 9 3.734 4-.126 6.586-1.972 7-3.467.024-.089.037-.178.037-.268V11L13 14l-5-1.667v3.213l-1-.364V12l-3-1z"></path>
                             </svg>
-                            <span>H?c t?p</span>
+                            <span>Học tập</span>
                         </div>
                         <div class="task-inf-cate-item">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -44,7 +44,7 @@
 
             <div class="sub-task mt-5">
                 <div class="sub-task-header d-flex align-items-center justify-content-between mb-3">
-                    <h5 class="p-0 m-0">Vi?c c?n làm</h5>
+                    <h5 class="p-0 m-0">Việc cần làm</h5>
                     <svg class="add-sub-task" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                         <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
                     </svg>
@@ -53,7 +53,7 @@
                     <div class="sub-task-item d-flex align-items-center">
                         <label for="sub-task-cbox-1" class="sub-task-label d-flex align-items-center gap-2">                         
                             <input type="checkbox" id="sub-task-cbox-1">
-                            <span>Vi?c 1</span>
+                            <span>Việc 1</span>
                         </label>
                         <div class="edit-sub-task-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@
                     <div class="sub-task-item d-flex align-items-center">
                         <label for="sub-task-cbox-2" class="sub-task-label d-flex align-items-center gap-2">                         
                             <input type="checkbox" id="sub-task-cbox-2">
-                            <span>Vi?c 2</span>
+                            <span>Việc 2</span>
                         </label>
                         <div class="edit-sub-task-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@
                     <div class="sub-task-item d-flex align-items-center">
                         <label for="sub-task-cbox-3" class="sub-task-label d-flex align-items-center gap-2">                         
                             <input type="checkbox" id="sub-task-cbox-3">
-                            <span>Vi?c 3</span>
+                            <span>Việc 3</span>
                         </label>
                         <div class="edit-sub-task-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">

@@ -5,6 +5,8 @@
 
 package controllers;
 
+import dao.NotesDAO;
+import dao.TodoListDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -26,7 +28,6 @@ import java.util.logging.Logger;
  */
 @WebServlet(name="DashboardServlet", urlPatterns={"/dashboard"})
 public class DashboardServlet extends HttpServlet {
-    JDBCConnect connect = new JDBCConnect();
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -50,96 +51,45 @@ public class DashboardServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        try {
-            connect.getConnection();
-            String sqlTodo = "Select * From TodoList Order By dateCreate ASC";
-            String sqlNote = "Select * From Notes Order By dateCreate ASC";
-            
-            ResultSet rsTodo = connect.excuteQuery(sqlTodo);
-            ResultSet rsNote = connect.excuteQuery(sqlNote);
+        String username = "admin";
 
-            ArrayList<Todo> todoList = new ArrayList<>();
-            ArrayList<Note> notes = new ArrayList<>();
-        
-            while(rsTodo.next()) {
-                Todo todo = new Todo();
-                todo.setId(rsTodo.getString("id"));
-                todo.setTitle(rsTodo.getString("title"));
-                todo.setDescription(rsTodo.getString("description"));
-                todo.setUsername(rsTodo.getString("username"));
-                
-                todo.setDateCreate(rsTodo.getTimestamp("dateCreate") != null 
-                        ? rsTodo.getTimestamp("dateCreate").toLocalDateTime() : LocalDateTime.now());
-                todo.setDateCompleted(rsTodo.getTimestamp("dateCompleted") != null 
-                        ? rsTodo.getTimestamp("dateCompleted").toLocalDateTime() : null);
-                
-                //Get sub task in todo
-                ArrayList<SubTodo> subTodoList = new ArrayList<>();
-                String sqlSubTodo  = "Select * From Sub_TodoList Where todoID = '" + todo.getId() + "'";
-                ResultSet rsSubTodo = connect.excuteQuery(sqlSubTodo);
-                while(rsSubTodo.next()) {
-                    SubTodo subTodo = new SubTodo();
-                    subTodo.setId(rsSubTodo.getString("id"));
-                    subTodo.setTodo(todo);
-                    subTodo.setTitle(rsSubTodo.getString("title"));
-                    subTodo.setIsCompleted(rsSubTodo.getBoolean("is_completed"));
-                    
-                    subTodoList.add(subTodo);
-                }
-                
-                todo.setSubTodoList(subTodoList);
-                
-                todoList.add(todo);
-            }
-            
-            while(rsNote.next()) {
-                Note note = new Note();
-                note.setId(rsNote.getString("id"));
-                note.setContent(rsNote.getString("content"));
-                note.setUsername("username");
-                note.setDateCreate(rsNote.getTimestamp("dateCreate") != null 
-                        ? rsNote.getTimestamp("dateCreate").toLocalDateTime() : LocalDateTime.now());
-                
-                notes.add(note);
-            }
-            
-            connect.close();
-            
-            //--
-            ArrayList<Todo> monthTodo = new ArrayList<>();
-            ArrayList<Todo> weekTodo = new ArrayList<>();
-            ArrayList<Todo> dayTodo = new ArrayList<>();
-            
-            int monthCompleted = 0, weekCompleted = 0, dayCompleted = 0;
-            
-            LocalDateTime now = LocalDateTime.now();
-            for(Todo todo : todoList) {
-                LocalDateTime createDate = todo.getDateCreate();;
-                    
-                if(createDate != null && createDate.getMonth() == now.getMonth()) {
-                    monthTodo.add(todo);
+        TodoListDAO todoListDAO = new TodoListDAO();
+        NotesDAO notesDAO = new NotesDAO();
 
-                    if(now.truncatedTo(ChronoUnit.DAYS).isEqual(createDate.truncatedTo(ChronoUnit.DAYS))) {
-                        weekTodo.add(todo);
+        ArrayList<Todo> todoList = todoListDAO.getTodoList(username);
+        ArrayList<Note> notes = notesDAO.getNotes(username);
+
+        //--
+        ArrayList<Todo> monthTodo = new ArrayList<>();
+        ArrayList<Todo> weekTodo = new ArrayList<>();
+        ArrayList<Todo> dayTodo = new ArrayList<>();
+
+        int monthCompleted = 0, weekCompleted = 0, dayCompleted = 0;
+
+        LocalDateTime now = LocalDateTime.now();
+        for(Todo todo : todoList) {
+            LocalDateTime createDate = todo.getDateCreate();;
+
+            if(createDate != null && createDate.getMonth() == now.getMonth()) {
+                monthTodo.add(todo);
+
+                if(now.truncatedTo(ChronoUnit.DAYS).isEqual(createDate.truncatedTo(ChronoUnit.DAYS))) {
+                    weekTodo.add(todo);
 
 
-                        if(now.toLocalDate().isEqual(createDate.toLocalDate())) {
-                            dayTodo.add(todo);
-                        }
+                    if(now.toLocalDate().isEqual(createDate.toLocalDate())) {
+                        dayTodo.add(todo);
                     }
                 }
             }
-            
-            request.setAttribute("TodayList", dayTodo);
-            request.setAttribute("Notes", notes);
+        }
+
+        request.setAttribute("TodayList", dayTodo);
+        request.setAttribute("Notes", notes);
 //            request.setAttribute("MonthTodo", monthTodo);
 //            request.setAttribute("WeekTodo", weekTodo);
 //            request.setAttribute("DayTodo", dayTodo);
-            request.getRequestDispatcher("dashboard.jsp").forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(DashboardServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     } 
 
     /** 

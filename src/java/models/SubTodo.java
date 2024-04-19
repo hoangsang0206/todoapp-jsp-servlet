@@ -12,16 +12,16 @@ public class SubTodo {
     protected String id;
     protected String title;
     protected boolean isCompleted;
-    protected Todo todo;
+    protected String todoId;
 
     public SubTodo() {
     }
 
-    public SubTodo(String id, String title, boolean isCompleted, Todo todo) {
+    public SubTodo(String id, String title, boolean isCompleted, String todoId) {
         this.id = id;
         this.title = title;
         this.isCompleted = isCompleted;
-        this.todo = todo;
+        this.todoId = todoId;
     }
 
     public String getId() {
@@ -48,12 +48,12 @@ public class SubTodo {
         this.isCompleted = isCompleted;
     }
 
-    public Todo getTodo() {
-        return todo;
+    public String getTodoId() {
+        return todoId;
     }
 
-    public void setTodo(Todo todo) {
-        this.todo = todo;
+    public void setTodoId(String todoId) {
+        this.todoId = todoId;
     }
     
 }
