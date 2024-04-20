@@ -98,13 +98,6 @@ $('.show-nav-action').click(() => {
     $('.navigation').addClass('show');
     showOverlay();
 });
-$('.task-box, .task-action.info').click(function () {
-    $('.task-box').removeClass('active');
-    $(this).addClass('active');
-    $('.task-infomation-wrapper').removeClass('close');
-    setMainWidth();
-    showOverlay();
-});
 $('.toggle-task-list').click(function () {
     $(this).toggleClass('active');
     let taskList = $(this).parent().next('.task-list');
@@ -181,4 +174,74 @@ $(document).ready(function () {
             localStorage.setItem('theme', 'dark');
         }
     });
+});
+function appendTaskInfo(data) {
+    $('.task-inf-name').text(data.title);
+    $('.task-inf-description').text(data.description);
+    $('.task-inf-cate-list').empty();
+    $('.sub-task-list').empty();
+    data.categories.forEach(category => {
+        let svgStr = category.iconSVG;
+        let taskInfItem = $(`<div class="task-inf-cate-item"></div>`);
+        taskInfItem.append(svgStr);
+        taskInfItem.append(`<span>${category.cateName}</span>`);
+        $('.task-inf-cate-list').append(taskInfItem);
+    });
+    data.subTodoList.forEach(subTodo => {
+        let str = `<div class="sub-task-item d-flex align-items-center">
+                        <label for="sub-task-cbox-1" class="sub-task-label d-flex align-items-center gap-2">                         
+                            <input type="checkbox" id="sub-task-cbox-1">
+                            <span>${subTodo.title}</span>
+                        </label>
+                        <div class="edit-sub-task-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                <path d="M19.045 7.401c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.378-.378-.88-.586-1.414-.586s-1.036.208-1.413.585L4 13.585V18h4.413L19.045 7.401zm-3-3 1.587 1.585-1.59 1.584-1.586-1.585 1.589-1.584zM6 16v-1.585l7.04-7.018 1.586 1.586L7.587 16H6zm-2 4h16v2H4z"></path>
+                            </svg>
+                        </div>
+                        <div class="edit-sub-task d-flex align-items-center">
+                            <form action="#" method="#">
+                                <input type="text" name="subtodo_title" required autocomplete="off">
+                                <input type="hidden" name="subtdo_id" value="${subTodo.id}" required />
+                                <button type="submit" class="edit-sub-task-submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                        <path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                            <button class="delete-sub-task" data-id="${subTodo.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"></path><path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>`;
+        $('.sub-task-list').append(str);
+    });
+    $('.completed-task-btn').data('id', data.id);
+    $('.edit-task-btn').data('id', data.id);
+    $('.delete-task-btn').data('id', data.id);
+}
+$('.task-box, .task-action.info').click(function () {
+    $('.task-box').removeClass('active');
+    $(this).addClass('active');
+    $('.task-infomation-wrapper').removeClass('close');
+    setMainWidth();
+    showOverlay();
+    showContentLoading($('.task-infomation-wrapper'));
+    $.ajax({
+        url: '/todoapp/api/todo',
+        type: 'GET',
+        data: {
+            user: 'admin',
+            id: $(this).data('id')
+        },
+        success: (response) => {
+            appendTaskInfo(response);
+            hideContentLoading($('.task-infomation-wrapper'));
+        },
+        error: () => { }
+    });
+});
+$('.completed-task-btn').click(function () {
+    console.log($(this).data('id'));
 });

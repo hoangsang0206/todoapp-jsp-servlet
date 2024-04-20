@@ -88,5 +88,3 @@ $(document).ready(() => {
 $('.reload-weather').click(() => {
     loadWeatherBox();
 });
-const s = "Hello";
-console.error(s);
