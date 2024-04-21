@@ -480,7 +480,7 @@ main {
 }
 
 .search-form {
-    width: 500px;
+    width: 470px;
     overflow: hidden;
     border: none !important;
     border-radius: 5px;
@@ -1361,10 +1361,6 @@ main {
 
     .add-new-task {
         display: none;
-    }
-
-    .main-contents {
-        height: calc(100% - 130px);
     }
 
     .sub-task-list {

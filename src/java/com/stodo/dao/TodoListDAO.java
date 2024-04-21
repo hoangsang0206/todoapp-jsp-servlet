@@ -48,7 +48,7 @@ public class TodoListDAO {
                 todo.setSubTodoList(subTodoList);
                 
                 //Get categories
-                ArrayList<Category> categories = CategoriesDAO.getCategories(todo.getId());
+                ArrayList<Category> categories = CategoriesDAO.getTodoCategories(todo.getId());
                 todo.setCategories(categories);
                 
                 todoList.add(todo);
@@ -70,6 +70,16 @@ public class TodoListDAO {
         return todoList;
     }
     
+    public static ArrayList<Todo> getTodoListByCategory(String categoryID) {
+        String sql = "SELECT TodoList.* " +
+                    "FROM Categories " +
+                    "INNER JOIN Todo_Categories ON Categories.id = Todo_Categories.cateID " +
+                    "INNER JOIN TodoList ON Todo_Categories.todoID = TodoList.id " +
+                    "WHERE Categories.id = '" + categoryID + "'";
+        ArrayList<Todo> todoList = getTodoListBySQL(sql);
+         
+        return todoList;
+    }
     
     public static ArrayList<Todo> searchTodoList(String username, String todoName) {
         String sqlTodo = "Select * From TodoList "
@@ -109,7 +119,7 @@ public class TodoListDAO {
                 todo.setSubTodoList(subTodoList);
                 
                 //Get categories
-                ArrayList<Category> categories = CategoriesDAO.getCategories(todo.getId());
+                ArrayList<Category> categories = CategoriesDAO.getTodoCategories(todo.getId());
                 todo.setCategories(categories);
                 
                 break;
@@ -172,4 +182,5 @@ public class TodoListDAO {
         
         return result > 0;
     }
+    
 }

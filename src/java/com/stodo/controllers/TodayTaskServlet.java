@@ -55,7 +55,11 @@ public class TodayTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        
+        
+        request.setAttribute("ActiveNav", "today");
+        
+        request.getRequestDispatcher("today.jsp").forward(request, response);
     } 
 
     /** 

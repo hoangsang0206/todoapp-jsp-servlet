@@ -86,6 +86,8 @@ public class DashboardServlet extends HttpServlet {
 //            request.setAttribute("MonthTodo", monthTodo);
 //            request.setAttribute("WeekTodo", weekTodo);
 //            request.setAttribute("DayTodo", dayTodo);
+        request.setAttribute("ActiveNav", "dashboard");
+        
         request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     } 
 

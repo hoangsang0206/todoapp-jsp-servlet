@@ -66,10 +66,6 @@ $(window).resize(() => {
         $('.navigation').removeClass('close');
     }
 });
-$('.nav-link').click(function () {
-    $('.nav-link').removeClass('active');
-    $(this).addClass('active');
-});
 $('.toggle-nav').click(() => {
     if (window.innerWidth < 768) {
         $('.navigation').removeClass('show');
@@ -110,14 +106,6 @@ $('.toggle-task-list').click(function () {
         let height = taskList.data('box-height');
         showTaskList(taskList, height);
     }
-});
-$('.edit-sub-task-btn').click(function () {
-    $(this).parent().find('.edit-sub-task').addClass('show');
-    $(this).parent().find('.edit-sub-task input').focus();
-    $(this).parent().find('.edit-sub-task input').val($(this).parent().find('.sub-task-label span').text());
-});
-$('.edit-sub-task-submit').click(function () {
-    $(this).closest('.edit-sub-task').removeClass('show');
 });
 $('.add-new-task, .add-task-floating, .welcome-box button').click(() => {
     $('.create-task').addClass('show');
@@ -244,4 +232,12 @@ $('.task-box, .task-action.info').click(function () {
 });
 $('.completed-task-btn').click(function () {
     console.log($(this).data('id'));
+});
+$(document).on('click', '.edit-sub-task-btn', function () {
+    $(this).parent().find('.edit-sub-task').addClass('show');
+    $(this).parent().find('.edit-sub-task input').focus();
+    $(this).parent().find('.edit-sub-task input').val($(this).parent().find('.sub-task-label span').text());
+});
+$('.edit-sub-task-submit').click(function () {
+    $(this).closest('.edit-sub-task').removeClass('show');
 });

@@ -4,26 +4,30 @@
  */
 package com.stodo.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Sang
  */
-public class Category {
+public class Category implements Serializable {
     protected String id;
     protected String cateName;
     protected String iconSVG;
     protected String username;
+    
+    protected ArrayList<Todo> todoList;
 
     public Category() {
     }
 
-    public Category(String id, String cateName, String iconSVG, String username) {
+    public Category(String id, String cateName, String iconSVG, String username, ArrayList<Todo> todoList) {
         this.id = id;
         this.cateName = cateName;
         this.iconSVG = iconSVG;
         this.username = username;
+        this.todoList = todoList;
     }
 
     public String getId() {
@@ -56,6 +60,14 @@ public class Category {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public ArrayList<Todo> getTodoList() {
+        return todoList;
+    }
+
+    public void setTodoList(ArrayList<Todo> todoList) {
+        this.todoList = todoList;
     }
     
 }
