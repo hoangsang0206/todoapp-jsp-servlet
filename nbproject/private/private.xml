@@ -3,13 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/layout/task_info.jsp</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/com/stodo/dao/TodoListDAO.java</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/dashboard.jsp</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/layout/sidebar.jsp</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/com/stodo/dao/CategoriesDAO.java</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/com/stodo/controllers/DashboardServlet.java</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/typescript/layout.ts</file>
+            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/com/stodo/controllers/RegisterSevlet.java</file>
         </group>
     </open-files>
 </project-private>

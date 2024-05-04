@@ -4,35 +4,30 @@
  */
 package com.stodo.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Sang
  */
-public class Account {
+public class Account implements Serializable {
     protected String username;
-    protected String password;
+    protected String passwordHash;
     protected String fullName;
     protected String email;
     protected String imageSrc;
     
-    protected ArrayList<Category> categories;
-    protected ArrayList<Todo> todoList;
-    protected ArrayList<Note> notes;
 
     public Account() {
     }
 
-    public Account(String username, String password, String fullName, String email, String imageSrc, ArrayList<Category> categories, ArrayList<Todo> todoList, ArrayList<Note> notes) {
+    public Account(String username, String passwordHash, String fullName, String email, String imageSrc) {
         this.username = username;
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.fullName = fullName;
         this.email = email;
         this.imageSrc = imageSrc;
-        this.categories = categories;
-        this.todoList = todoList;
-        this.notes = notes;
     }
 
     public String getUsername() {
@@ -43,12 +38,12 @@ public class Account {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getFullName() {
@@ -75,28 +70,4 @@ public class Account {
         this.imageSrc = imageSrc;
     }
 
-    public ArrayList<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(ArrayList<Category> categories) {
-        this.categories = categories;
-    }
-
-    public ArrayList<Todo> getTodoList() {
-        return todoList;
-    }
-
-    public void setTodoList(ArrayList<Todo> todoList) {
-        this.todoList = todoList;
-    }
-
-    public ArrayList<Note> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(ArrayList<Note> notes) {
-        this.notes = notes;
-    }
-    
 }

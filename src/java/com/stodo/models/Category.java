@@ -5,6 +5,8 @@
 package com.stodo.models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -14,20 +16,22 @@ import java.util.ArrayList;
 public class Category implements Serializable {
     protected String id;
     protected String cateName;
-    protected String iconSVG;
+    protected String iconColor;
     protected String username;
+    protected LocalDateTime dateCreate;
     
     protected ArrayList<Todo> todoList;
 
     public Category() {
     }
 
-    public Category(String id, String cateName, String iconSVG, String username, ArrayList<Todo> todoList) {
+    public Category(String id, String cateName, String iconColor, LocalDateTime dateCreate, String username, ArrayList<Todo> todoList) {
         this.id = id;
         this.cateName = cateName;
-        this.iconSVG = iconSVG;
+        this.iconColor = iconColor;
         this.username = username;
         this.todoList = todoList;
+        this.dateCreate = dateCreate;
     }
 
     public String getId() {
@@ -46,12 +50,12 @@ public class Category implements Serializable {
         this.cateName = cateName;
     }
 
-    public String getIconSVG() {
-        return iconSVG;
+    public String getIconColor() {
+        return iconColor;
     }
 
-    public void setIconSVG(String iconSVG) {
-        this.iconSVG = iconSVG;
+    public void setIconColor(String iconColor) {
+        this.iconColor = iconColor;
     }
 
     public String getUsername() {
@@ -68,6 +72,14 @@ public class Category implements Serializable {
 
     public void setTodoList(ArrayList<Todo> todoList) {
         this.todoList = todoList;
+    }
+
+    public LocalDateTime getDateCreate() {
+        return dateCreate;
+    }
+
+    public void setDateCreate(LocalDateTime dateCreate) {
+        this.dateCreate = dateCreate;
     }
     
 }

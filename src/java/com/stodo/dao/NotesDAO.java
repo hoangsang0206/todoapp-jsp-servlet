@@ -18,12 +18,8 @@ import com.stodo.models.RandomString;
  * @author Sang
  */
 public class NotesDAO {
-    public NotesDAO() {
-        
-    }
-    
-    
-    public ArrayList<Note> getNotes(String username) {
+  
+    public static ArrayList<Note> getNotes(String username) {
         try {
             JDBCConnect connect = new JDBCConnect();
             connect.getConnection();
@@ -58,7 +54,7 @@ public class NotesDAO {
     }
       
     
-    public Note getNote(String noteID, String username) {
+    public static Note getNote(String noteID, String username) {
         try {
             JDBCConnect connect = new JDBCConnect();
             connect.getConnection();
@@ -91,7 +87,7 @@ public class NotesDAO {
     }
     
     
-    public boolean createNote(Note note, String username) {
+    public static boolean createNote(Note note, String username) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
@@ -111,7 +107,7 @@ public class NotesDAO {
     }
     
     
-    public boolean deleteNote(Note note, String username) {
+    public static boolean deleteNote(Note note, String username) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
@@ -124,7 +120,7 @@ public class NotesDAO {
     }
     
     
-    public boolean updateNote(Note note, String username) {
+    public static boolean updateNote(Note note, String username) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         

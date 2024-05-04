@@ -154,9 +154,11 @@
 }
 
 .today-task-box {
-    border-bottom: 1px solid #666;
-    padding: 10px 0;
+    padding: 8px 18px;
+    border-radius: var(--radius);
     width: 100%;
+    background: var(--current-task-background);
+    box-shadow: 0 2px 3px #8a8a8a67;
 }
 
 .td-task-content {

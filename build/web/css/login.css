@@ -4,7 +4,7 @@
 }
 
 body {
-    background-image: url(/images/bg-01.jpg);
+    background-image: url(../images/bg-01.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -33,7 +33,7 @@ body {
 .login-banner, .register-banner {
     width: 52%;
     height: 100%;
-    background-image: url(/images/12085707_20944201.svg);
+    background-image: url(../images/12085707_20944201.svg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

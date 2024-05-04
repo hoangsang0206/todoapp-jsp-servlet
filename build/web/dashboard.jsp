@@ -2,6 +2,7 @@
 <%@page import="java.util.ArrayList" %>
 <%@page import="java.time.LocalDateTime" %>
 <%@page import="java.time.format.DateTimeFormatter" %>
+<%@page import="com.stodo.models.FormatLocalDateTime" %>
 <%@page import="com.stodo.models.Todo" %>
 <%@page import="com.stodo.models.Note" %>
 
@@ -171,7 +172,7 @@
 
                                         <div class="d-flex align-items-center gap-4">
                                             <div class="d-flex flex-column align-items-end gap-1">
-                                                <span><%= todo.getDateCreate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) %></span>
+                                                <span><%= FormatLocalDateTime.format(todo.getDateCreate()) %></span>
                                                 <span><%= todo.getSubTodoList().size() %> Subtasks</span>
                                             </div>
 
@@ -231,7 +232,7 @@
                                     <%= note.getContent() %>
                                 </div>
                                 <div class="note-time">
-                                    <%= note.getDateCreate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) %>
+                                    <%= FormatLocalDateTime.format(note.getDateCreate()) %>
                                 </div>
                             </div>
                             <%
@@ -249,8 +250,14 @@
             </main>
                
             <jsp:include page="layout/task_info.jsp" />
-            <jsp:include page="layout/create_task.jsp" />    
+            <jsp:include page="layout/action_form.jsp" />    
             <jsp:include page="layout/mb_navigation.jsp" />
+            
+            <button class="add-task-floating">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
+                </svg>
+            </button>
                 
             <section class="overlay"></section>
             

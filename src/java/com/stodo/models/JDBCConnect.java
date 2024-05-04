@@ -32,8 +32,8 @@ public class JDBCConnect {
             
             connection = DriverManager.getConnection(connectionURL);
             
-            System.out.println(connection == null ? "-- Kết nối cơ sở dữ liệu thất bại."
-                    : "-- Kết nối cơ sở dữ liệu thành công.");
+//            System.out.println(connection == null ? "-- Kết nối cơ sở dữ liệu thất bại."
+//                    : "-- Kết nối cơ sở dữ liệu thành công.");
             
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(JDBCConnect.class.getName()).log(Level.SEVERE, null, ex);

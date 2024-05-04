@@ -99,7 +99,7 @@ public class TodoListDAO {
             
             Todo todo = new Todo();
             String sqlTodo = "Select TOP 1 * From TodoList "
-                    + "Where username = '" + username +"' And id = '" + todoID + "'";
+                    + "Where username = '" + username + "' id = '" + todoID + "'";
             
             ResultSet rsTodo = connect.excuteQuery(sqlTodo);
             
@@ -143,7 +143,7 @@ public class TodoListDAO {
         String id = "td_" + RandomString.random(20);
         
         while(getTodo(id, username) != null) {
-            id = RandomString.random(20);
+            id = "td_" + RandomString.random(20);
         }
         
         String sql = String.format("Insert Into TodoList (id, title, description, username, dateCreate) Values ('%s', N'%s', "

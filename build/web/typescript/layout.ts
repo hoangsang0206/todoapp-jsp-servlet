@@ -4,7 +4,7 @@ function setMainWidth(): void {
     if(window.innerWidth >= 1024) {
         let main: any = $('main');
         let taskInf: any = $('.task-infomation-wrapper');
-        let nav: any = $('.navigation');
+        let nav: any = $('.sidebar');
 
         if(!taskInf.hasClass('close') && !nav.hasClass('close')) {  
             main.css('width', 'calc(100% - 570px)');
@@ -24,11 +24,7 @@ function setMainWidth(): void {
 }
 
 function showOverlay(): void {
-    if(window.innerWidth < 1024) {
-        $('.overlay').show();
-    } else {
-        $('.overlay').hide();
-    }
+    $('.overlay').show();
 }
 
 function hideOverlay(): void {
@@ -69,6 +65,160 @@ function showTaskList(taskList: any, height: number): void {
     }, duration)
 }
 
+function showActionForm(form_wrapper: any): void {
+    form_wrapper.addClass('show');
+    form_wrapper.find('.form-box').addClass('show');
+
+    $('input[type="datetime-local"]').val(() => {
+        return new Date(new Date().getTime() + 60 * 60000).toLocaleString('sv', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+    });
+}
+
+function hideActionForm(form_wrapper: any): void {
+    form_wrapper.removeClass('show');
+    form_wrapper.find('.form-box').removeClass('show');
+    form_wrapper.find('.custom-select').removeClass('open');
+}
+
+//Custom select ------
+
+function loadSelectData(): any[] {
+    // let dataList: string[];
+    // $.ajax({
+    //     url: '',
+    //     type: 'Get',
+    //     data: {
+
+    //     },
+    //     success: (response) => {
+
+    //     },
+    //     error: (error) => {
+    //         console.error(error);
+    //     }
+    // })
+
+    // return dataList;
+
+    const categories = [
+        {
+            id: 'category1',
+            cateName: 'Category 1',
+            iconColor: '#e30019',
+        },
+        {
+            id: 'category2',
+            cateName: 'Category 2',
+            iconColor: '#e30019',
+        },
+        {
+            id: 'category3',
+            cateName: 'Category 3',
+            iconColor: '#e30019',
+        },
+        {
+            id: 'category4',
+            cateName: 'Category 4',
+            iconColor: '#e30019',
+        },
+        {
+            id: 'category5',
+            cateName: 'Category 5',
+            iconColor: '#e30019',
+        },
+        {
+            id: 'category6',
+            cateName: 'Category 6',
+            iconColor: '#e30019',
+        }
+    ]
+
+    return categories;
+}
+
+function loadSelectElements(data: any[]): void {
+    $('.select-options-box').empty();
+    data.map(item => {
+        let element = `<div class="select-option" data-value="${item?.id}" data-name="${item?.cateName}" data-color="${item?.iconColor}">
+                        <span class="nav-color-icon" style="background: ${item?.iconColor};"></span>
+                        <span class="select opt-name">${item?.cateName}</span>
+                    </div>`;
+
+        $('.select-options-box').append(element);
+    })
+}
+
+loadSelectElements(loadSelectData());
+
+function getSelectedElements() {
+    return $('.selected-option').toArray();
+}
+
+function getSelectedValue() {
+
+}
+
+function checkExistItemSelected(value: string): boolean {
+    for(let element of getSelectedElements()) {
+        if($(element).data('value') === value) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+$('.show-select-options i').click(function() {
+    $(this).closest('.custom-select').toggleClass('open');
+})
+
+$(document).click(function(event) {
+    if(!$(event.target).closest('.custom-select').length) {
+        $('.custom-select').removeClass('open');
+    }
+})
+
+$(document).on('click', '.select-option', function() {
+    let value: string = $(this).data('value');
+
+    if(checkExistItemSelected(value)) {
+        return;
+    }
+
+    let itemName: string = $(this).data('name');
+    let colorData: string = $(this).data('color');
+    let selectedEl: string = `<div class="selected-option" data-value="${value}" data-name="${itemName}" data-color="${colorData}">
+                                <div class="selected-opt-content">
+                                    <span class="nav-color-icon" style="background: ${colorData};"></span>
+                                    <span class="selected-opt-name">${itemName}</span>
+                                </div>
+                                <div class="delete-selected-opt">
+                                    <i class='bx bx-x'></i>
+                                </div>
+                            </div>`;
+
+    $('.selected-box').append(selectedEl);
+})
+
+$(document).on('click', '.delete-selected-opt', function() {
+    let parentEl: any = $(this).closest('.selected-option');
+    parentEl.remove();
+})
+
+$('#search-option').keyup(function() {
+    const searchText = $(this).val();
+    const categories = loadSelectData();
+
+    if(searchText.length > 0) {
+        let filteredCategories = categories.filter(category => category?.cateName.toLowerCase().includes(searchText.toLowerCase()));
+        loadSelectElements(filteredCategories);
+    } else {
+        loadSelectElements(categories);
+    }
+})
+
+
+
 //------------------------------------------
 
 $(window).on('load', () => {
@@ -77,22 +227,22 @@ $(window).on('load', () => {
 
 $(window).resize(() => {
     if(window.innerWidth < 768) {
-        $('.navigation').removeClass('close');
+        $('.sidebar').removeClass('close');
     }
 })
 
 $('.toggle-nav').click(() => {
     if(window.innerWidth < 768) {
-        $('.navigation').removeClass('show');
+        $('.sidebar').removeClass('show');
         hideOverlay();
     } else {
-        $('.navigation').toggleClass('close');
+        $('.sidebar').toggleClass('close');
         setMainWidth();
     }
 })
 
 $('.mb-toggle-nav').click(function () { 
-    $('.navigation').removeClass('show');
+    $('.sidebar').removeClass('show');
     hideOverlay();
 });
 
@@ -103,14 +253,15 @@ $('.close-task-info').click(() => {
 })
 
 $('.overlay').click(() => {
-    $('.navigation').removeClass('show');
+    $('.sidebar').removeClass('show');
     $('.task-infomation-wrapper').addClass('close');
+    hideActionForm($('.form-full-wrapper'));
     hideOverlay();
 })
 
 //Click to show navigation (mobile)
 $('.show-nav-action').click(() => {
-    $('.navigation').addClass('show');
+    $('.sidebar').addClass('show');
     showOverlay();
 })
 
@@ -132,12 +283,34 @@ $('.toggle-task-list').click(function() {
     }
 })
 
-$('.add-new-task, .add-task-floating, .welcome-box button').click(() => {
-    $('.create-task').addClass('show');
+$('.edit-sub-task-btn').click(function() {
+    $(this).parent().find('.edit-sub-task').addClass('show');
+    $(this).parent().find('.edit-sub-task input').focus();
+    $(this).parent().find('.edit-sub-task input').val($(this).parent().find('.sub-task-label span').text())
 })
 
-$('.cancle-create-task').click(() => {
-    $('.create-task').removeClass('show');
+$('.edit-sub-task-submit').click(function() {
+    $(this).closest('.edit-sub-task').removeClass('show');
+})
+
+$('.add-new-task, .add-task-floating, .welcome-box button').click(() => {
+    showActionForm($('.create-task-wrapper'));
+    showOverlay();
+})
+
+$('.close-form-btn').click(function() {
+    hideActionForm($(this).closest('.form-container'));
+    hideOverlay();
+})
+
+$('.add-cate-header, .add-cate-action').click(() => {
+    showActionForm($('.create-category-wrapper'));
+    showOverlay();
+})
+
+$('.add-note-btn').click(() => {
+    
+    showOverlay();
 })
 
 
@@ -151,7 +324,9 @@ function setLightTheme(): void {
     $('body').css('--current-bg', 'var(--bg-light)');
     $('body').css('--current-content-bg', 'var(--bg-light-content)');
     $('body').css('--current-text-color', 'var(--text-color-black)');
+    $('body').css('--current-task-background', 'var(--task-background-light)');
     $('body').css('--nav-text', 'var(--text-color-gray)');
+    $('body').css('--border-input', '#ddd');
     
     $('.theme-toggle').css('background', '#ebebeb');
     $('.search-form').css('background', '#fff');
@@ -163,7 +338,9 @@ function setDarkTheme(): void {
     $('body').css('--current-bg', 'var(--bg-dark)');
     $('body').css('--current-content-bg', 'var(--bg-dark-content)');
     $('body').css('--current-text-color', 'var(--text-color-white)');
+    $('body').css('--current-task-background', 'var(--task-background-dark)');
     $('body').css('--nav-text', 'var(--text-color-white)');
+    $('body').css('--border-input', 'var(--border-input-dark)');
 
     $('.theme-toggle ').css('background', '#242424');
     $('.search-form').css('background', '#3a3b3c');
@@ -201,6 +378,20 @@ $(document).ready(function() {
         }
     })
 })
+//
+
+$('.sort-filter-box button').click(function() {
+    $('.view-action-box').not($(this).next('.view-action-box')).removeClass('show');
+    $(this).next('.view-action-box').toggleClass('show');
+})
+
+$('.form-container').click(function(event) {
+    if(!$(event.target).closest('.form-box').length) {
+        hideActionForm($(this));
+        hideOverlay();
+    }
+})
+
 
 
 //
@@ -262,7 +453,10 @@ $('.task-box, .task-action.info').click(function() {
     $(this).addClass('active');
     $('.task-infomation-wrapper').removeClass('close');
     setMainWidth();
-    showOverlay();
+
+    if(window.innerWidth < 768) {
+        showOverlay();
+    }
     
     showContentLoading($('.task-infomation-wrapper'));
     
@@ -270,7 +464,7 @@ $('.task-box, .task-action.info').click(function() {
         url: '/todoapp/api/todo',
         type: 'GET',
         data: {
-            user: 'admin',
+            user: 'sang',
             id: $(this).data('id')
         },
         success: (response) => {
@@ -297,3 +491,8 @@ $(document).on('click', '.edit-sub-task-btn', function() {
 $('.edit-sub-task-submit').click(function() {
     $(this).closest('.edit-sub-task').removeClass('show');
 })
+
+
+// -----------------------------------------------
+//Todo CRUD
+

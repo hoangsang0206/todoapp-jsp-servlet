@@ -5,12 +5,6 @@
 
 package com.stodo.controllers;
 
-import com.stodo.dao.AccountDAO;
-import com.stodo.models.Todo;
-import com.stodo.models.Note;
-import com.stodo.dao.NotesDAO;
-import com.stodo.dao.TodoListDAO;
-import com.stodo.models.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -20,14 +14,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 /**
  *
  * @author Sang
  */
-@WebServlet(name="DashboardServlet", urlPatterns={"/dashboard"})
-public class DashboardServlet extends HttpServlet {
+@WebServlet(name="LogoutServlet", urlPatterns={"/logout"})
+public class LogoutServlet extends HttpServlet {
+   
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -37,8 +30,15 @@ public class DashboardServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-    }
+        HttpSession session = request.getSession(false);
+        
+        if(session != null) {
+           session.removeAttribute("user");
+           session.invalidate(); // Xóa toàn bộ session
+        }
+        
+        response.sendRedirect("login");
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
@@ -51,35 +51,7 @@ public class DashboardServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        if(!AccountDAO.checkLogin(request)) {
-            response.sendRedirect("login");
-            return;
-        }
-        
-        HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute("user");
-        
-        ArrayList<Todo> todoList = TodoListDAO.getTodoList(account.getUsername());
-        ArrayList<Note> notes = NotesDAO.getNotes(account.getUsername());
-        
-        ArrayList<Todo> todayTodoList = new ArrayList<>();
-
-        LocalDateTime now = LocalDateTime.now();
-        for(Todo todo : todoList) {
-            LocalDateTime createDate = todo.getDateCreate();;
-
-            if(createDate != null) {
-                if(now.toLocalDate().isEqual(createDate.toLocalDate())) {
-                    todayTodoList.add(todo);
-                }
-            }
-        }
-
-        request.setAttribute("TodayList", todayTodoList);
-        request.setAttribute("Notes", notes);
-        request.setAttribute("ActiveNav", "dashboard");
-        
-        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+        processRequest(request, response);
     } 
 
     /** 
@@ -92,11 +64,7 @@ public class DashboardServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        if(!AccountDAO.checkLogin(request)) {
-            response.sendRedirect("login");
-            return;
-        }
-        
+        processRequest(request, response);
     }
 
     /** 
