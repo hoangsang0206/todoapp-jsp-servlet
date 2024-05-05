@@ -45,27 +45,32 @@
         <c:set var="user" value="${sessionScope.user}" />
 
         <div class="header-account position-relative">
-            <div class="nav-user-img-box">
-                <img class="nav-user-img" src="${(user.imageSrc != null && !user.imageSrc.isBlank() ? user.imageSrc : "images/user-no-image.jpg")}" alt="">
-            </div>
-            
-            <div class="account-action align-items-center gap-2">
-                <c:choose>
-                    <c:when test="${(user == null)}">
-                        <button class="login-btn s-btn text-nowrap" onclick="window.window.location.href = 'login'">Đăng nhập</button>
-                        <button class="register-btn s-btn text-nowrap" onclick="window.window.location.href = 'register'">Đăng ký</button>
-                    </c:when>
-                    <c:when test="${(user != null)}">
-                        <div class="ac-action-info">
-                            <p class="text-nowrap">
-                                Xin chào,&nbsp;${(user.fullName != null ? user.fullName : user.username)}
-                            </p>
-                            <button class="logout-btn s-btn text-nowrap mt-3" onclick="window.window.location.href = 'logout'">Đăng xuất</button>
-                        </div>
-                    </c:when>
-                </c:choose>
-            </div>
-            
+        <c:choose>
+            <c:when test="${(user != null)}">
+                <div class="nav-user-img-box">
+                    <img class="nav-user-img" src="${(user.imageSrc != null && !user.imageSrc.isBlank() ? user.imageSrc : "images/user-no-image.jpg")}" alt="">
+                </div>
+
+                <div class="account-action align-items-center gap-2">
+                    <div>
+                        <p class="text-nowrap">
+                            Xin chào,&nbsp;${(user.fullName != null ? user.fullName : user.username)}
+                        </p>
+                        <button class="logout-btn s-btn text-nowrap mt-3" onclick="window.window.location.href = 'logout'">Đăng xuất</button>
+                    </div>
+                </div>
+            </c:when>
+            <c:when test="${(user == null)}">
+                <div class="nav-user-img-box">
+                    <img class="nav-user-img" src="images/user-no-image.jpg" alt="">
+                </div>
+                
+                <div class="account-action align-items-center gap-2">
+                    <button class="login-btn s-btn text-nowrap" onclick="window.window.location.href = 'login'">Đăng nhập</button>
+                    <button class="register-btn s-btn text-nowrap" onclick="window.window.location.href = 'register'">Đăng ký</button>
+                </div>         
+            </c:when>
+        </c:choose>       
         </div>
 
         <div class="notifications-wrapper">

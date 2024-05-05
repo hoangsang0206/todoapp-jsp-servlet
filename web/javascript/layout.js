@@ -1,4 +1,4 @@
-function setMainWidth() {
+const setMainWidth = () => {
     if (window.innerWidth >= 1024) {
         let main = $('main');
         let taskInf = $('.task-infomation-wrapper');
@@ -20,24 +20,24 @@ function setMainWidth() {
             main.find('.task-list').css('grid-template-columns', 'repeat(5, 1fr)');
         }
     }
-}
-function showOverlay() {
+};
+const showOverlay = () => {
     $('.overlay').show();
-}
-function hideOverlay() {
+};
+const hideOverlay = () => {
     $('.overlay').hide();
-}
-function showContentLoading(content_box) {
+};
+const showContentLoading = (content_box) => {
     const loader_element = `<div class="loader-box"><span class="loader"></span></div>`;
     content_box.css('position', 'relative');
     content_box.append(loader_element);
-}
-function hideContentLoading(content_box) {
+};
+const hideContentLoading = (content_box) => {
     setTimeout(() => {
         content_box.find('.loader-box').remove();
     }, 1000);
-}
-function closeTaskList(taskList) {
+};
+const closeTaskList = (taskList) => {
     let height = taskList.height();
     let targetHeight = 0;
     let duration = 300;
@@ -46,84 +46,81 @@ function closeTaskList(taskList) {
         height: targetHeight
     }, duration);
     return height;
-}
-function showTaskList(taskList, height) {
+};
+const showTaskList = (taskList, height) => {
     let duration = 300;
     taskList.animate({
         height: height
     }, duration);
-}
-function showActionForm(form_wrapper) {
+};
+const showActionForm = (form_wrapper) => {
     form_wrapper.addClass('show');
     form_wrapper.find('.form-box').addClass('show');
     $('input[type="datetime-local"]').val(() => {
         return new Date(new Date().getTime() + 60 * 60000).toLocaleString('sv', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
     });
-}
-function hideActionForm(form_wrapper) {
+};
+const hideActionForm = (form_wrapper) => {
     form_wrapper.removeClass('show');
     form_wrapper.find('.form-box').removeClass('show');
     form_wrapper.find('.custom-select').removeClass('open');
-}
-function loadSelectData() {
-    const categories = [
-        {
-            id: 'category1',
-            cateName: 'Category 1',
-            iconColor: '#e30019',
-        },
-        {
-            id: 'category2',
-            cateName: 'Category 2',
-            iconColor: '#e30019',
-        },
-        {
-            id: 'category3',
-            cateName: 'Category 3',
-            iconColor: '#e30019',
-        },
-        {
-            id: 'category4',
-            cateName: 'Category 4',
-            iconColor: '#e30019',
-        },
-        {
-            id: 'category5',
-            cateName: 'Category 5',
-            iconColor: '#e30019',
-        },
-        {
-            id: 'category6',
-            cateName: 'Category 6',
-            iconColor: '#e30019',
-        }
-    ];
-    return categories;
-}
-function loadSelectElements(data) {
+};
+const loadSelectData = () => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: 'api/categories',
+            type: 'GET',
+            success: (response) => {
+                if (response != null) {
+                    resolve(response);
+                }
+                else {
+                    reject(new Error("Empty response"));
+                }
+            },
+            error: (error) => {
+                console.error(error);
+                reject(error);
+            }
+        });
+    });
+};
+const loadSelectElements = (data) => {
     $('.select-options-box').empty();
     data.map(item => {
         let element = `<div class="select-option" data-value="${item === null || item === void 0 ? void 0 : item.id}" data-name="${item === null || item === void 0 ? void 0 : item.cateName}" data-color="${item === null || item === void 0 ? void 0 : item.iconColor}">
-                        <span class="nav-color-icon" style="background: ${item === null || item === void 0 ? void 0 : item.iconColor};"></span>
+                        <span class="nav-color-icon" style="background: ${(item === null || item === void 0 ? void 0 : item.iconColor) != null ? item.iconColor : "#e30019"};"></span>
                         <span class="select opt-name">${item === null || item === void 0 ? void 0 : item.cateName}</span>
                     </div>`;
         $('.select-options-box').append(element);
     });
-}
-loadSelectElements(loadSelectData());
-function getSelectedElements() {
+};
+$(document).ready(() => {
+    loadSelectData()
+        .then((data) => {
+        loadSelectElements(data);
+    })
+        .catch((error) => { });
+});
+const getSelectedElements = () => {
     return $('.selected-option').toArray();
-}
-function getSelectedValue() {
-}
-function checkExistItemSelected(value) {
+};
+const getSelectedValue = () => {
+    const selectedElements = getSelectedElements();
+    let selectedValues = [];
+    selectedElements.map((item) => {
+        selectedValues.push($(item).data('value'));
+    });
+    return selectedValues;
+};
+const checkExistItemSelected = (value) => {
     for (let element of getSelectedElements()) {
         if ($(element).data('value') === value) {
             return true;
         }
     }
     return false;
-}
+};
 $('.show-select-options i').click(function () {
     $(this).closest('.custom-select').toggleClass('open');
 });
@@ -141,7 +138,7 @@ $(document).on('click', '.select-option', function () {
     let colorData = $(this).data('color');
     let selectedEl = `<div class="selected-option" data-value="${value}" data-name="${itemName}" data-color="${colorData}">
                                 <div class="selected-opt-content">
-                                    <span class="nav-color-icon" style="background: ${colorData};"></span>
+                                    <span class="nav-color-icon" style="background: ${colorData != 'undefined' && colorData.length > 0 ? colorData : "#e30019"};"></span>
                                     <span class="selected-opt-name">${itemName}</span>
                                 </div>
                                 <div class="delete-selected-opt">
@@ -156,14 +153,18 @@ $(document).on('click', '.delete-selected-opt', function () {
 });
 $('#search-option').keyup(function () {
     const searchText = $(this).val();
-    const categories = loadSelectData();
-    if (searchText.length > 0) {
-        let filteredCategories = categories.filter(category => category === null || category === void 0 ? void 0 : category.cateName.toLowerCase().includes(searchText.toLowerCase()));
-        loadSelectElements(filteredCategories);
-    }
-    else {
-        loadSelectElements(categories);
-    }
+    loadSelectData()
+        .then((data) => {
+        if (searchText.length > 0) {
+            let filteredCategories = data.filter(category => category === null || category === void 0 ? void 0 : category.cateName.toLowerCase().includes(searchText.toLowerCase()));
+            loadSelectElements(filteredCategories);
+        }
+        else {
+            loadSelectElements(data);
+        }
+    })
+        .catch((eror) => {
+    });
 });
 $(window).on('load', () => {
     $('.page-loader').removeClass('show');
@@ -242,7 +243,7 @@ $('.header-notifications').click(function () {
     $(this).find('.header-icon').toggleClass('active');
     $('.notifications-wrapper').toggleClass('show');
 });
-function setLightTheme() {
+const setLightTheme = () => {
     $('body').css('--current-bg', 'var(--bg-light)');
     $('body').css('--current-content-bg', 'var(--bg-light-content)');
     $('body').css('--current-text-color', 'var(--text-color-black)');
@@ -253,8 +254,8 @@ function setLightTheme() {
     $('.search-form').css('background', '#fff');
     $('.logo-text').css('color', 'var(--text-color-gray)');
     $('.sort-action, .filter-action, .view-action').css('background', '#e7e7e7');
-}
-function setDarkTheme() {
+};
+const setDarkTheme = () => {
     $('body').css('--current-bg', 'var(--bg-dark)');
     $('body').css('--current-content-bg', 'var(--bg-dark-content)');
     $('body').css('--current-text-color', 'var(--text-color-white)');
@@ -266,7 +267,7 @@ function setDarkTheme() {
     $('.search-form').css('border', 'none');
     $('.logo-text').css('color', '#fff');
     $('.sort-action, .filter-action, .view-action').css('background', 'var(--bg-dark-content)');
-}
+};
 $(document).ready(function () {
     let radioThemeLight = $('#light-theme');
     let radioThemeDark = $('#dark-theme');
@@ -302,15 +303,16 @@ $('.form-container').click(function (event) {
         hideOverlay();
     }
 });
-function appendTaskInfo(data) {
+const appendTaskInfo = (data) => {
     $('.task-inf-name').text(data.title);
     $('.task-inf-description').text(data.description);
     $('.task-inf-cate-list').empty();
     $('.sub-task-list').empty();
+    console.log(data);
     data.categories.forEach(category => {
-        let svgStr = category.iconSVG;
-        let taskInfItem = $(`<div class="task-inf-cate-item"></div>`);
-        taskInfItem.append(svgStr);
+        let iconColor = category.iconColor;
+        let taskInfItem = $(`<div class="task-inf-cate-item d-flex align-items-center"></div>`);
+        taskInfItem.append(`<span class="nav-color-icon" style="background: ${typeof iconColor !== 'undefined' ? iconColor : "#e30019"};"></span>`);
         taskInfItem.append(`<span>${category.cateName}</span>`);
         $('.task-inf-cate-list').append(taskInfItem);
     });
@@ -347,8 +349,8 @@ function appendTaskInfo(data) {
     $('.completed-task-btn').data('id', data.id);
     $('.edit-task-btn').data('id', data.id);
     $('.delete-task-btn').data('id', data.id);
-}
-$('.task-box, .task-action.info').click(function () {
+};
+$(document).on('click', '.task-box, .task-action.info', function () {
     $('.task-box').removeClass('active');
     $(this).addClass('active');
     $('.task-infomation-wrapper').removeClass('close');
@@ -358,7 +360,7 @@ $('.task-box, .task-action.info').click(function () {
     }
     showContentLoading($('.task-infomation-wrapper'));
     $.ajax({
-        url: '/todoapp/api/todo',
+        url: 'api/todo',
         type: 'GET',
         data: {
             user: 'sang',
@@ -382,3 +384,85 @@ $(document).on('click', '.edit-sub-task-btn', function () {
 $('.edit-sub-task-submit').click(function () {
     $(this).closest('.edit-sub-task').removeClass('show');
 });
+$(document).ready(() => {
+    $('.create-task form').submit(function (e) {
+        e.preventDefault();
+        const name = $(e.target).find('#task-name').val();
+        const description = $(e.target).find('#task-description').val();
+        const date = $(e.target).find('#task-time').val();
+        const categories = getSelectedValue();
+        $.ajax({
+            url: 'api/todo',
+            type: 'POST',
+            data: {
+                title: name,
+                description: description,
+                date: date,
+                categories: categories.join(',')
+            },
+            success: (response) => {
+                hideActionForm($('.create-task-wrapper'));
+                hideOverlay();
+                getTodayTodoList();
+            },
+            error: (error) => {
+                console.error('Error when create todo.');
+            }
+        });
+    });
+});
+const getTodayTodoList = () => {
+    showContentLoading($('.home-task-list'));
+    $.ajax({
+        url: 'api/todo?t=day',
+        type: 'GET',
+        success: (response) => {
+            $('.home-task-list').empty();
+            response.map((item) => {
+                let str = `<div class="today-task-box d-flex align-items-center justify-content-between gap-2">
+                                        <div class="td-task-content d-flex align-items-center gap-3">
+                                            <div class="task-status ${(item === null || item === void 0 ? void 0 : item.is_completed) ? 'completed' : 'not-complete'}">
+                                                <i class='bx bx-check'></i>
+                                            </div>
+                                            <div class="td-task-name-des d-flex flex-column gap-1">
+                                                <span class="task-name text-nowrap">${item === null || item === void 0 ? void 0 : item.title}</span>
+                                                <span class="task-des text-nowrap">${item === null || item === void 0 ? void 0 : item.description}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-4">
+                                            <div class="d-flex flex-column align-items-end gap-1">
+                                                <span>${item.dateCompleted != 'undefined' ? item.dateCompleted : ""}</span>
+                                                <span>${item === null || item === void 0 ? void 0 : item.subTodoList.length} Subtasks</span>
+                                            </div>
+
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="task-action info" data-id="${item === null || item === void 0 ? void 0 : item.id}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                                        <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
+                                                    </svg>
+                                                </div>
+
+                                                <div class="task-action edit" data-id="${item === null || item === void 0 ? void 0 : item.id}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                                        <path d="M19.045 7.401c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.378-.378-.88-.586-1.414-.586s-1.036.208-1.413.585L4 13.585V18h4.413L19.045 7.401zm-3-3 1.587 1.585-1.59 1.584-1.586-1.585 1.589-1.584zM6 16v-1.585l7.04-7.018 1.586 1.586L7.587 16H6zm-2 4h16v2H4z"></path>
+                                                    </svg>
+                                                </div>
+
+                                                <div class="task-action delete" data-id="${item === null || item === void 0 ? void 0 : item.id}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                                        <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"></path><path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                $('.home-task-list').append(str);
+            });
+            hideContentLoading($('.home-task-list'));
+        },
+        eror: (error) => {
+            console.error("Cannot get todo list.");
+        }
+    });
+};

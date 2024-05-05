@@ -2,9 +2,9 @@
 <%@page import="java.util.ArrayList" %>
 <%@page import="java.time.LocalDateTime" %>
 <%@page import="java.time.format.DateTimeFormatter" %>
-<%@page import="com.stodo.models.FormatLocalDateTime" %>
-<%@page import="com.stodo.models.Todo" %>
-<%@page import="com.stodo.models.Note" %>
+<%@page import="utils.FormatLocalDateTime" %>
+<%@page import="models.Todo" %>
+<%@page import="models.Note" %>
 
 <!DOCTYPE html>
 <html>
@@ -28,7 +28,7 @@
                             <img src="images/todo-img.png" alt="">
                             <div class="ms-5">
                                 <h4 class="m-0 p-0">
-                                    Xin chào, Lê Hoàng Sang
+                                    Xin chào,&nbsp;${(user.fullName != null ? user.fullName : user.username)}
                                 </h4>
                                 <p class="p-0 m-0">
                                     Hãy bắt đầu với một gì đó thú vị nào!
@@ -161,7 +161,7 @@
                                 %>
                                     <div class="today-task-box d-flex align-items-center justify-content-between gap-2">
                                         <div class="td-task-content d-flex align-items-center gap-3">
-                                            <div class="task-status <%= todo.getDateCompleted() != null ? "completed" : "not-complete" %>">
+                                            <div class="task-status <%= todo.isIsCompleted()  ? "completed" : "not-complete" %>">
                                                 <i class='bx bx-check'></i>
                                             </div>
                                             <div class="td-task-name-des d-flex flex-column gap-1">
@@ -172,7 +172,7 @@
 
                                         <div class="d-flex align-items-center gap-4">
                                             <div class="d-flex flex-column align-items-end gap-1">
-                                                <span><%= FormatLocalDateTime.format(todo.getDateCreate()) %></span>
+                                                <span><%= todo.getDateCompleted() != null ? FormatLocalDateTime.format(todo.getDateCompleted()) : "" %></span>
                                                 <span><%= todo.getSubTodoList().size() %> Subtasks</span>
                                             </div>
 

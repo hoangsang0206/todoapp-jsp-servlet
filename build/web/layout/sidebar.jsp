@@ -1,9 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList" %>
-<%@page import="com.stodo.dao.CategoriesDAO" %>
-<%@page import="com.stodo.models.Category" %>
-<%@page import="com.stodo.models.Account" %>
+<%@page import="dao.CategoriesDAO" %>
+<%@page import="models.Category" %>
+<%@page import="models.Account" %>
 
 <% 
     
@@ -140,14 +140,29 @@
         </div>
 
         <div class="nav-bottom d-flex flex-column gap-3 pt-2 d-none">
-            <a href="login.html" class="nav-bot-user d-flex align-items-center gap-2">
-                <div class="nav-user-img-box">
-                    <img class="nav-user-img" src="/images/netbian-anime-2.jpg" alt="">
-                </div>
-                <div class="nav-user-name">
-                    <span>Lê Hoàng Sang</span>
-                </div>
-            </a>
+            <c:set var="user" value="${sessionScope.user}" />
+            <c:choose>
+                <c:when test="${(user != null)}">
+                    <a href="javascript:void(0)" class="nav-bot-user d-flex align-items-center gap-2">               
+                        <div class="nav-user-img-box">
+                            <img class="nav-user-img" src="${(user.imageSrc != null && !user.imageSrc.isBlank() ? user.imageSrc : "images/user-no-image.jpg")}" alt="">
+                        </div>
+                        <div class="nav-user-name">
+                            <span>${(user.fullName != null ? user.fullName : user.username)}</span>
+                        </div> 
+                    </a>
+                </c:when>
+                <c:when test="${(user == null)}">
+                    <a href="login" class="nav-bot-user d-flex align-items-center gap-2">               
+                        <div class="nav-user-img-box">
+                            <img class="nav-user-img" src=images/user-no-image.jpg" alt="">
+                        </div>
+                        <div class="nav-user-name">
+                            <span>Đăng nhập/Đăng ký</span>
+                        </div> 
+                    </a>
+                </c:when>
+            </c:choose>
             <a href="javascrip:void(0)" class="nav-bot-setting d-flex align-items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24">
                     <path d="M12 16c2.206 0 4-1.794 4-4s-1.794-4-4-4-4 1.794-4 4 1.794 4 4 4zm0-6c1.084 0 2 .916 2 2s-.916 2-2 2-2-.916-2-2 .916-2 2-2z"></path>

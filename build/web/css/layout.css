@@ -914,6 +914,10 @@ main {
     cursor: auto;
 }
 
+.account-action p {
+    color: var(--current-text-color);
+}
+
 .header-account:hover .account-action {
     display: flex;
     opacity: 1;
