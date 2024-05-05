@@ -1,10 +1,19 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<fmt:setLocale value="vi_VN" />
+<c:if test="${sessionScope.lang == 'en'}">
+    <fmt:setLocale value="en_US" />
+</c:if>
+
+<fmt:setBundle basename="languages.lang" var="bundle" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng nhập</title>
+    <title><fmt:message bundle="${bundle}" key="login" /></title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
@@ -27,33 +36,14 @@
 </head>
 <body>
 
-    <div class="page-loader show">
-        <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster">
-            <div class="wheel"></div>
-            <div class="hamster">
-                <div class="hamster__body">
-                    <div class="hamster__head">
-                        <div class="hamster__ear"></div>
-                        <div class="hamster__eye"></div>
-                        <div class="hamster__nose"></div>
-                    </div>
-                    <div class="hamster__limb hamster__limb--fr"></div>
-                    <div class="hamster__limb hamster__limb--fl"></div>
-                    <div class="hamster__limb hamster__limb--br"></div>
-                    <div class="hamster__limb hamster__limb--bl"></div>
-                    <div class="hamster__tail"></div>
-                </div>
-            </div>
-            <div class="spoke"></div>
-        </div>
-    </div>
+    <jsp:include page="layout/page_loader.jsp" />
 
     <div class="login-page">
         <div class="login-wrapper d-flex">
             <div class="login-banner">
             </div>
             <div class="login-form-box d-flex flex-column align-items-center justify-content-center">
-                <h4 class="text-center mb-4">Đăng nhập</h4>
+                <h4 class="text-center mb-4"><fmt:message bundle="${bundle}" key="login" /></h4>
                 <% 
                     String error = (String) request.getAttribute("Error");
                     if(error != null && !error.isEmpty()) { 
@@ -67,29 +57,29 @@
                 <% } %>
                 <form action="login" method="post" class="login-form d-flex flex-column align-items-center">
                     <div class="d-flex flex-column mt-2">
-                        <label class="ac-label" for="username">Tài khoản</label>
+                        <label class="ac-label" for="username"><fmt:message bundle="${bundle}" key="username" /></label>
                         <div class="ac-input-box d-flex align-items-center">
                             <i class='bx bx-user'></i>
-                            <input type="text" name="username" id="username" placeholder="Tài khoản" autocomplete="off" required>
+                            <input type="text" name="username" id="username" placeholder="<fmt:message bundle="${bundle}" key="username" />" autocomplete="off" required>
                             <span class="ac-input-focus"></span>
                         </div>
                     </div>
                     <div class="d-flex flex-column mt-4">
-                        <label class=ac-label for="password">Mật khẩu</label>
+                        <label class=ac-label for="password"><fmt:message bundle="${bundle}" key="password" /></label>
                         <div class="ac-input-box d-flex align-items-center">
                             <i class='bx bx-lock-alt'></i>
-                            <input type="password" name="password" id="password" placeholder="Mật khẩu" required>
+                            <input type="password" name="password" id="password" placeholder="<fmt:message bundle="${bundle}" key="password" />" required>
                             <span class="ac-input-focus"></span>
                         </div>
                     </div>
                     <div class="register-forgot-action d-flex justify-content-between mt-2">
-                        <a href="register">Đăng ký tài khoản</a>
-                        <a href="#">Quên mật khẩu?</a>
+                        <a href="register${(param.lang == 'en') ? "?lang=en" : ""}"><fmt:message bundle="${bundle}" key="register" /></a>
+                        <a href="#"><fmt:message bundle="${bundle}" key="forgot_password" />?</a>
                     </div>
-                    <button class="ac-button mt-4" type="submit">Đăng nhập</button>
+                    <button class="ac-button mt-4" type="submit"><fmt:message bundle="${bundle}" key="login" /></button>
                 </form>
                 <div class="login-break d-flex align-items-center mt-4">
-                    <p>Hoặc đăng nhập bằng</p>
+                    <p><fmt:message bundle="${bundle}" key="orther_login" /></p>
                 </div>
                 <div class="other-login-med d-flex gap-3 mt-3">
                     <a href="#">

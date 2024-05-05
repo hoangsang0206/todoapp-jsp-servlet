@@ -6,12 +6,22 @@
 <%@page import="models.Todo" %>
 <%@page import="models.Note" %>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<fmt:setLocale value="vi_VN" />
+<c:if test="${sessionScope.lang == 'en'}">
+    <fmt:setLocale value="en_US" />
+</c:if>
+
+<fmt:setBundle basename="languages.lang" var="bundle" />
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tổng quan</title>
+        <title><fmt:message bundle="${bundle}" key="title_dashboard" /></title>
         <jsp:include page="layout/header.jsp"/>
     </head>
     <body>

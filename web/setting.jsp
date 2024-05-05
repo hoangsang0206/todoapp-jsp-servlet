@@ -15,7 +15,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><fmt:message bundle="${bundle}" key="title_today" /></title>
+        <title>Cài đặt</title>
         <jsp:include page="layout/header.jsp"/>
     </head>
     <body>
@@ -27,7 +27,7 @@
                 <jsp:include page="layout/header_navigation.jsp" />
                 
                 <section class="main-contents">
-                    <jsp:include page="layout/view_action.jsp" />
+                    
                 </section>
                 
             </main>

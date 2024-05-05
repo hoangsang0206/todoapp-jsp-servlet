@@ -1,3 +1,6 @@
+$(window).on('load', () => {
+    $('.page-loader').removeClass('show');
+});
 const setMainWidth = () => {
     if (window.innerWidth >= 1024) {
         let main = $('main');
@@ -28,7 +31,11 @@ const hideOverlay = () => {
     $('.overlay').hide();
 };
 const showContentLoading = (content_box) => {
-    const loader_element = `<div class="loader-box"><span class="loader"></span></div>`;
+    const loader_element = `<div class="loader-box">
+        <svg class="loader-container" viewBox="0 0 40 40" height="40" width="40">
+            <circle class="track" cx="20" cy="20" r="17.5" pathlength="100" stroke-width="3px" fill="none" />
+            <circle class="car" cx="20" cy="20" r="17.5" pathlength="100" stroke-width="3px" fill="none" />
+        </svg></span></div>`;
     content_box.css('position', 'relative');
     content_box.append(loader_element);
 };
@@ -129,6 +136,18 @@ $(document).click(function (event) {
         $('.custom-select').removeClass('open');
     }
 });
+const pushSelectItem = (value, name, color) => {
+    let selectedEl = `<div class="selected-option" data-value="${value}" data-name="${name}" data-color="${color}">
+                                <div class="selected-opt-content">
+                                    <span class="nav-color-icon" style="background: ${color != 'undefined' && color.length > 0 ? color : "#e30019"};"></span>
+                                    <span class="selected-opt-name">${name}</span>
+                                </div>
+                                <div class="delete-selected-opt">
+                                    <i class='bx bx-x'></i>
+                                </div>
+                            </div>`;
+    $('.selected-box').append(selectedEl);
+};
 $(document).on('click', '.select-option', function () {
     let value = $(this).data('value');
     if (checkExistItemSelected(value)) {
@@ -136,22 +155,13 @@ $(document).on('click', '.select-option', function () {
     }
     let itemName = $(this).data('name');
     let colorData = $(this).data('color');
-    let selectedEl = `<div class="selected-option" data-value="${value}" data-name="${itemName}" data-color="${colorData}">
-                                <div class="selected-opt-content">
-                                    <span class="nav-color-icon" style="background: ${colorData != 'undefined' && colorData.length > 0 ? colorData : "#e30019"};"></span>
-                                    <span class="selected-opt-name">${itemName}</span>
-                                </div>
-                                <div class="delete-selected-opt">
-                                    <i class='bx bx-x'></i>
-                                </div>
-                            </div>`;
-    $('.selected-box').append(selectedEl);
+    pushSelectItem(value, itemName, colorData);
 });
 $(document).on('click', '.delete-selected-opt', function () {
     let parentEl = $(this).closest('.selected-option');
     parentEl.remove();
 });
-$('#search-option').keyup(function () {
+$('input[name="search-option"]').keyup(function () {
     const searchText = $(this).val();
     loadSelectData()
         .then((data) => {
@@ -165,9 +175,6 @@ $('#search-option').keyup(function () {
     })
         .catch((eror) => {
     });
-});
-$(window).on('load', () => {
-    $('.page-loader').removeClass('show');
 });
 $(window).resize(() => {
     if (window.innerWidth < 768) {
@@ -244,6 +251,7 @@ $('.header-notifications').click(function () {
     $('.notifications-wrapper').toggleClass('show');
 });
 const setLightTheme = () => {
+    $('body').css('--loader-color', 'var(--loader-color-dark)');
     $('body').css('--current-bg', 'var(--bg-light)');
     $('body').css('--current-content-bg', 'var(--bg-light-content)');
     $('body').css('--current-text-color', 'var(--text-color-black)');
@@ -256,6 +264,7 @@ const setLightTheme = () => {
     $('.sort-action, .filter-action, .view-action').css('background', '#e7e7e7');
 };
 const setDarkTheme = () => {
+    $('body').css('--loader-color', 'var(--loader-color-light)');
     $('body').css('--current-bg', 'var(--bg-dark)');
     $('body').css('--current-content-bg', 'var(--bg-dark-content)');
     $('body').css('--current-text-color', 'var(--text-color-white)');
@@ -308,7 +317,9 @@ const appendTaskInfo = (data) => {
     $('.task-inf-description').text(data.description);
     $('.task-inf-cate-list').empty();
     $('.sub-task-list').empty();
-    console.log(data);
+    $('.completed-task-btn').data('id', data.id);
+    $('.edit-task-btn').data('id', data.id);
+    $('.delete-task-btn').data('id', data.id);
     data.categories.forEach(category => {
         let iconColor = category.iconColor;
         let taskInfItem = $(`<div class="task-inf-cate-item d-flex align-items-center"></div>`);
@@ -466,3 +477,66 @@ const getTodayTodoList = () => {
         }
     });
 };
+const getTodo = (id) => {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `api/todo?id=${id}`,
+            type: 'GET',
+            success: (response) => {
+                resolve(response);
+            },
+            error: (error) => {
+                console.error(`Cannot get Todo ${id}`);
+                reject(error);
+            }
+        });
+    });
+};
+$(document).on('click', '.task-action.edit, .edit-task-btn', function () {
+    showActionForm($('.edit-task-wrapper'));
+    showOverlay();
+    const id = $(this).data('id');
+    getTodo(id).then((data) => {
+        $('#edit-task-id').val(data.id);
+        $('#edit-task-name').val(data.title);
+        $('#edit-task-description').val(data.description);
+        const date = data === null || data === void 0 ? void 0 : data.dateCompleted;
+        if (typeof date !== 'undefined') {
+            $('#edit-task-time').val(() => {
+                const [datePart, timePart] = date.split(' ');
+                const [day, month, year] = datePart.split('/');
+                const [hour, minute] = timePart.split(':');
+                return `${year}-${month}-${day}T${hour}:${minute}`;
+            });
+        }
+    })
+        .catch((error) => { });
+});
+$(document).ready(() => {
+    $('.create-task form').submit(function (e) {
+        e.preventDefault();
+        const name = $(e.target).find('#task-name').val();
+        const description = $(e.target).find('#task-description').val();
+        const date = $(e.target).find('#task-time').val();
+        const categories = getSelectedValue();
+        $.ajax({
+            url: 'api/todo',
+            type: 'PUT',
+            data: {
+                id: '',
+                title: name,
+                description: description,
+                date: date,
+                categories: categories.join(',')
+            },
+            success: (response) => {
+                hideActionForm($('.edit-task-wrapper'));
+                hideOverlay();
+                getTodayTodoList();
+            },
+            error: (error) => {
+                console.error('Error when create todo.');
+            }
+        });
+    });
+});

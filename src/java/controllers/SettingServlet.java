@@ -3,34 +3,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package apicontrollers;
+package controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import dao.AccountDAO;
-import dao.CategoriesDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.lang.reflect.Array;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import models.Account;
-import models.Category;
-import utils.LocalDateTimeAdapter;
 
 /**
  *
  * @author Sang
  */
-@WebServlet(name="Categories", urlPatterns={"/api/categories"})
-public class CategoriesServlet extends HttpServlet {
+@WebServlet(name="SettingServlet", urlPatterns={"/setting"})
+public class SettingServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -55,26 +44,11 @@ public class CategoriesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        PrintWriter printWriter = response.getWriter();
-        
-        if(!AccountDAO.checkLogin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            printWriter.print("403 Forbidden - No permission to access this resource");
-            return;
-        }
-        
-        response.setContentType("application/json");
-        
-        Account account = AccountDAO.getLoggedInUser(request);
-        
-        if(account != null) {
-            ArrayList<Category> categories = CategoriesDAO.getUserCategories(account.getUsername());
-            Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .create();
-            
-            printWriter.print(gson.toJson(categories));
-        }
+//        HttpSession session = request.getSession();
+//        session.setAttribute("lang", "en");
+
+        request.setAttribute("activeHeader", "setting");
+        request.getRequestDispatcher("setting.jsp").forward(request, response);
     } 
 
     /** 
@@ -89,8 +63,6 @@ public class CategoriesServlet extends HttpServlet {
     throws ServletException, IOException {
         
     }
-    
-    
 
     /** 
      * Returns a short description of the servlet.

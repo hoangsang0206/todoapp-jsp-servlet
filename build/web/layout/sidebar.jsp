@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList" %>
 <%@page import="dao.CategoriesDAO" %>
@@ -18,12 +20,20 @@
 
 %>
 
+<fmt:setLocale value="vi_VN" />
+<c:if test="${sessionScope.lang == 'en'}">
+    <fmt:setLocale value="en_US" />
+</c:if>
+
+<fmt:setBundle basename="languages.lang" var="bundle" />
 
 <nav class="d-flex flex-column position-relative sidebar">
     <div class="nav-header d-flex align-items-center justify-content-between">
-        <div class="logo-wrapper d-flex align-items-center">          
-            <img src="images/logo-rmbg.webp" alt="Logo" class="logo-img">
-            <span class="logo-text">STodo</span>
+        <div class="logo-wrapper">          
+            <a class="d-flex align-items-center text-decoration-none gap-1" href="dashboard${(param.lang == 'en') ? "?lang=en" : ""}">
+                <img src="images/logo-rmbg.webp" alt="Logo" class="logo-img">
+                <span class="logo-text">STodo</span>
+            </a>
         </div>
 
         <div class="mb-toggle-nav">
@@ -39,28 +49,28 @@
         <div class="nav-contents">
             <div class="nav-item">
                 <div class="nav-item-header">
-                    <span>Nhiệm vụ</span>
+                    <span><fmt:message bundle="${bundle}" key="nav_title_tasks" /></span>
                 </div>
                 <ul class="nav-item-list">
                     <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between <%= activeNav == "dashboard" ? "active" : "" %>" href="dashboard">
+                        <a class="nav-link d-flex align-items-center justify-content-between <%= activeNav == "dashboard" ? "active" : "" %>" href="dashboard${(param.lang == 'en') ? "?lang=en" : ""}">
                             <div class="nav-link-box d-flex align-items-center">
                                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
                                     <path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm7 7v-5h4v5h-4zm2-15.586 6 6V15l.001 5H16v-5c0-1.103-.897-2-2-2h-4c-1.103 0-2 .897-2 2v5H6v-9.586l6-6z"></path>
                                 </svg>
 
-                                <span class="nav-link-text">Tổng quan</span>
+                                <span class="nav-link-text"><fmt:message bundle="${bundle}" key="nav_dashboard" /></span>
                             </div>
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between <%= activeNav == "today" ? "active" : "" %>" href="today">
+                        <a class="nav-link d-flex align-items-center justify-content-between <%= activeNav == "today" ? "active" : "" %>" href="today${(param.lang == 'en') ? "?lang=en" : ""}">
                             <div class="nav-link-box d-flex align-items-center">
                                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
                                     <path d="M19 4h-3V2h-2v2h-4V2H8v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2zM5 20V7h14V6l.002 14H5z"></path><path d="m15.628 12.183-1.8-1.799 1.37-1.371 1.8 1.799zm-7.623 4.018V18h1.799l4.976-4.97-1.799-1.799z"></path>
                                 </svg>
 
-                                <span class="nav-link-text">Hôm nay</span>
+                                <span class="nav-link-text"><fmt:message bundle="${bundle}" key="nav_today" /></span>
                             </div>
                         </a>
                     </li>
@@ -72,7 +82,7 @@
                                     <path d="M7 9h10v2H7zm0 4h5v2H7z"></path>
                                 </svg>
 
-                                <span class="nav-link-text">Tất cả</span>
+                                <span class="nav-link-text"><fmt:message bundle="${bundle}" key="nav_all" /></span>
                             </div> 
                         </a>
                     </li>
@@ -84,7 +94,7 @@
                                     <path d="M5 22h14c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-2V2h-2v2H9V2H7v2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2zM19 8l.001 12H5V8h14z"></path>
                                 </svg>
 
-                                <span class="nav-link-text">Lịch</span>
+                                <span class="nav-link-text"><fmt:message bundle="${bundle}" key="nav_calendar" /></span>
                             </div> 
                         </a>
                     </li>
@@ -95,7 +105,7 @@
                                     <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8l8-8V5a2 2 0 0 0-2-2zm-7 16v-7h7l-7 7z"></path>
                                 </svg>
 
-                                <span class="nav-link-text">Ghi chú</span>
+                                <span class="nav-link-text"><fmt:message bundle="${bundle}" key="nav_notes" /></span>
                             </div>
                         </a>
                     </li>
@@ -106,7 +116,7 @@
 
             <div class="nav-item">
                 <div class="nav-item-header d-flex align-items-center justify-content-between">
-                    <span>Danh mục</span>
+                    <span><fmt:message bundle="${bundle}" key="nav_title_categories" /></span>
                     <a href="javascript:void(0)" class="add-cate-header">
                         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                             <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
@@ -132,7 +142,7 @@
                                 <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
                             </svg>
 
-                            Thêm danh mục
+                            <fmt:message bundle="${bundle}" key="create_category_btn" />
                         </a>
                     </li>
                 </ul>
