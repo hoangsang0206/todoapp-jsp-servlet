@@ -45,11 +45,7 @@ public class TodayTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        if(!AccountDAO.checkLogin(request)) {
-            response.sendRedirect("login");
-            return;
-        }
-        
+
         request.setAttribute("ActiveNav", "today");
         
         request.getRequestDispatcher("today.jsp").forward(request, response);
@@ -65,10 +61,7 @@ public class TodayTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        if(!AccountDAO.checkLogin(request)) {
-            response.sendRedirect("login");
-            return;
-        }
+
         
     }
 

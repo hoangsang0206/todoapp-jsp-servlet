@@ -50,12 +50,7 @@ public class DashboardServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        if(!AccountDAO.checkLogin(request)) {
-            response.sendRedirect("login");
-            return;
-        }
-        
+    throws ServletException, IOException {   
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("user");
         
@@ -94,11 +89,7 @@ public class DashboardServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        if(!AccountDAO.checkLogin(request)) {
-            response.sendRedirect("login");
-            return;
-        }
-        
+
     }
 
     /** 

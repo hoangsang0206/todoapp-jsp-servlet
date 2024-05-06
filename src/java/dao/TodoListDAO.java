@@ -19,7 +19,6 @@ import models.JDBCConnect;
 import models.RandomString;
 import models.Todo;
 import models.SubTodo;
-import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import utils.FormatLocalDateTime;
 
 public class TodoListDAO {
@@ -173,7 +172,7 @@ public class TodoListDAO {
         connect.close();
         
         return result > 0;
-    }
+    }    
     
     
     public static boolean deleteTodo(Todo todo, String username) {
@@ -218,6 +217,78 @@ public class TodoListDAO {
             }
         }
         
+        connect.close();
+        
+        return result > 0;
+    }
+    
+        public static SubTodo getSubTodo(String id) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        SubTodo subTodo = new SubTodo();
+        String sql = "Select TOP 1 * From Sub_TodoList Where id = '" + id + "'";
+        ResultSet rs = connect.excuteQuery(sql);
+        try {
+            if(rs.next()) {
+                subTodo.setId(rs.getString("id"));
+                subTodo.setTodoId(rs.getString("todoID"));
+                subTodo.setTitle(rs.getString("title"));
+                subTodo.setIsCompleted(rs.getBoolean("is_completed"));
+                
+                connect.close();
+                return subTodo;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TodoListDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        connect.close();
+        return null;
+    }
+    
+    public static boolean createSubTodo(String todoID, String title) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String id = "std_" + RandomString.random(20);
+        
+        while(getSubTodo(id) != null) {
+            id = "std_" + RandomString.random(20);
+        }
+        
+        String sql = String.format("Insert Into Sub_TodoList (id, todoID, title) Values ('%s', '%s', '%s')",
+                id, todoID, title);
+        
+        int result = connect.excuteUpdate(sql);
+
+        connect.close();
+        
+        return result > 0;
+    }
+    
+    public static boolean updateSubtodo(SubTodo stodo, String type) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Update Sub_TodoList Set " 
+                + (type.equals("update") ? "title='" + stodo.getTitle() + "'" 
+                : " is_completed='" + stodo.isIsCompleted() + "'")
+                + " Where id='" + stodo.getId() + "'";
+        
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        return result > 0;
+    }
+    
+    public static boolean deleteSubTodo(String id) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Delete Sub_TodoList Where id = '" + id + "'";
+        
+        int result = connect.excuteUpdate(sql);
         connect.close();
         
         return result > 0;

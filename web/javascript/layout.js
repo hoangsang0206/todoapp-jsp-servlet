@@ -232,10 +232,9 @@ $('.toggle-task-list').click(function () {
         showTaskList(taskList, height);
     }
 });
-$('.edit-sub-task-btn').click(function () {
+$(document).on('click', '.edit-sub-task-btn', function () {
     $(this).parent().find('.edit-sub-task').addClass('show');
-    $(this).parent().find('.edit-sub-task input').focus();
-    $(this).parent().find('.edit-sub-task input').val($(this).parent().find('.sub-task-label span').text());
+    $(this).parent().find('.edit-sub-task input[name="subtodo_title"]').focus();
 });
 $('.edit-sub-task-submit').click(function () {
     $(this).closest('.edit-sub-task').removeClass('show');
@@ -335,11 +334,13 @@ $('.confirm-wrapper').click(function (event) {
 const appendTaskInfo = (data) => {
     $('.task-inf-name').text(data.title);
     $('.task-inf-description').text(data.description);
+    $('.task-inf-time').text(data.dateCompleted);
     $('.task-inf-cate-list').empty();
     $('.sub-task-list').empty();
     $('.completed-task-btn').data('id', data.id);
     $('.edit-task-btn').data('id', data.id);
     $('.delete-task-btn').data('id', data.id);
+    $('.add-sub-task').data('id', data.id);
     data.categories.forEach(category => {
         let iconColor = category.iconColor;
         let taskInfItem = $(`<div class="task-inf-cate-item d-flex align-items-center"></div>`);
@@ -347,10 +348,12 @@ const appendTaskInfo = (data) => {
         taskInfItem.append(`<span>${category.cateName}</span>`);
         $('.task-inf-cate-list').append(taskInfItem);
     });
+    let i = 0;
     data.subTodoList.forEach(subTodo => {
+        i++;
         let str = `<div class="sub-task-item d-flex align-items-center">
-                        <label for="sub-task-cbox-1" class="sub-task-label d-flex align-items-center gap-2">                         
-                            <input type="checkbox" id="sub-task-cbox-1">
+                        <label for="sub-task-cbox-${i}" class="sub-task-label d-flex align-items-center gap-2">                         
+                            <input type="checkbox" id="sub-task-cbox-${i}" value="${subTodo.id}" name="sub-task-cbox" ${subTodo.isCompleted ? 'checked' : ''}>
                             <span>${subTodo.title}</span>
                         </label>
                         <div class="edit-sub-task-btn">
@@ -359,9 +362,9 @@ const appendTaskInfo = (data) => {
                             </svg>
                         </div>
                         <div class="edit-sub-task d-flex align-items-center">
-                            <form action="#" method="#">
-                                <input type="text" name="subtodo_title" required autocomplete="off">
-                                <input type="hidden" name="subtdo_id" value="${subTodo.id}" required />
+                            <form action="#" method="POST">
+                                <input type="text" name="subtodo_title" value=${subTodo.title} required autocomplete="off">
+                                <input type="hidden" name="subtodo_id" value="${subTodo.id}" required />
                                 <button type="submit" class="edit-sub-task-submit">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
                                         <path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path>
@@ -406,11 +409,6 @@ $(document).on('click', '.task-box, .task-action.info', function () {
 });
 $('.completed-task-btn').click(function () {
     console.log($(this).data('id'));
-});
-$(document).on('click', '.edit-sub-task-btn', function () {
-    $(this).parent().find('.edit-sub-task').addClass('show');
-    $(this).parent().find('.edit-sub-task input').focus();
-    $(this).parent().find('.edit-sub-task input').val($(this).parent().find('.sub-task-label span').text());
 });
 $('.edit-sub-task-submit').click(function () {
     $(this).closest('.edit-sub-task').removeClass('show');
@@ -562,4 +560,123 @@ $(document).ready(() => {
 $(document).on('click', '.task-action.delete, .delete-task-btn', function () {
     showConfirmBox('Xác nhận xóa 123?', 'delete-todo');
     showOverlay();
+});
+$('.add-sub-task').click(function () {
+    const str = `<div class="create-subtask">
+                            <form action="#" method="POST">
+                                <input type="text" required autocomplete="off">
+                                <button type="submit" class="submit-create-subtask">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                        <path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path>
+                                    </svg>
+                                </button>
+                                <button type="button" class="cancel-create-subtask">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                        <path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                    </div>`;
+    $('.sub-task-list').append(str);
+});
+$(document).on('click', '.cancel-create-subtask', function () {
+    $(this).closest('.create-subtask').remove();
+});
+$(document).on('submit', '.create-subtask form', function (e) {
+    e.preventDefault();
+    const todoId = $('.add-sub-task').data('id');
+    const value = $(this).find('input').val();
+    $.ajax({
+        url: `api/subtodo?id=${todoId}&title=${value}`,
+        type: 'POST',
+        success: (response) => {
+            $(this).closest('.create-subtask').remove();
+            loadSubTasks(todoId);
+        },
+        error: (error) => {
+            console.error(`Cannot create sub task ${error}`);
+        }
+    });
+});
+$(document).on('submit', '.edit-sub-task form', function (e) {
+    e.preventDefault();
+    const id = $(e.target).find('input[name="subtodo_id"]').val();
+    const title = $(e.target).find('input[name="subtodo_title"]').val();
+    $.ajax({
+        url: `api/subtodo?t=update&id=${id}&title=${title}`,
+        type: 'PUT',
+        success: (response) => {
+            loadSubTasks($('.edit-task-btn').data('id'));
+        },
+        error: (error) => {
+        }
+    });
+});
+$(document).on('change', 'input[name="sub-task-cbox"]', function () {
+    const complete = $(this).is(':checked');
+    const id = $(this).val();
+    $.ajax({
+        url: `api/subtodo?t=complete&id=${id}&complete=${complete}`,
+        type: 'PUT',
+        success: (response) => {
+            loadSubTasks($('.edit-task-btn').data('id'));
+        },
+        error: (error) => {
+        }
+    });
+});
+const loadSubTasks = (id) => {
+    $.ajax({
+        url: `api/todo?id=${id}`,
+        type: 'GET',
+        success: (response) => {
+            $('.sub-task-list').empty();
+            let i = 0;
+            response.subTodoList.forEach(subTodo => {
+                i++;
+                let str = `<div class="sub-task-item d-flex align-items-center">
+                        <label for="sub-task-cbox-${i}" class="sub-task-label d-flex align-items-center gap-2">                         
+                            <input type="checkbox" id="sub-task-cbox-${i}" value="${subTodo.id}" name="sub-task-cbox" ${subTodo.isCompleted ? 'checked' : ''}>
+                            <span>${subTodo.title}</span>
+                        </label>
+                        <div class="edit-sub-task-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                <path d="M19.045 7.401c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.378-.378-.88-.586-1.414-.586s-1.036.208-1.413.585L4 13.585V18h4.413L19.045 7.401zm-3-3 1.587 1.585-1.59 1.584-1.586-1.585 1.589-1.584zM6 16v-1.585l7.04-7.018 1.586 1.586L7.587 16H6zm-2 4h16v2H4z"></path>
+                            </svg>
+                        </div>
+                        <div class="edit-sub-task d-flex align-items-center">
+                            <form action="#" method="POST">
+                                <input type="text" name="subtodo_title" value=${subTodo.title} required autocomplete="off">
+                                <input type="hidden" name="subtodo_id" value="${subTodo.id}" required />
+                                <button type="submit" class="edit-sub-task-submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                        <path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                            <button class="delete-sub-task" data-id="${subTodo.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"></path><path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>`;
+                $('.sub-task-list').append(str);
+            });
+        },
+        error: (error) => {
+        }
+    });
+};
+$(document).on('click', '.delete-sub-task', function () {
+    const id = $(this).data('id');
+    $.ajax({
+        url: `api/subtodo?id=${id}`,
+        type: 'DELETE',
+        success: (response) => {
+            loadSubTasks($('.edit-task-btn').data('id'));
+        },
+        error: () => {
+        }
+    });
 });

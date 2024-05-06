@@ -59,12 +59,6 @@ public class TodoServlet extends HttpServlet {
     throws ServletException, IOException {
         PrintWriter printWriter = response.getWriter();
         
-        if(!AccountDAO.checkLogin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            printWriter.print("403 Forbidden - No permission to access this resource");
-            return;
-        }
-        
         response.setContentType("application/json");
         
         Gson gson = new GsonBuilder()
@@ -100,16 +94,7 @@ public class TodoServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        PrintWriter printWriter = response.getWriter();
-        
-        if(!AccountDAO.checkLogin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            printWriter.print("403 Forbidden - No permission");
-            return;
-        }
-        
-        
+    throws ServletException, IOException {   
         String title = request.getParameter("title");
         String description = request.getParameter("description");
         String date = request.getParameter("date");
@@ -150,15 +135,6 @@ public class TodoServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) 
     throws ServletException, IOException {
-        
-        PrintWriter printWriter = response.getWriter();
-        
-        if(!AccountDAO.checkLogin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            printWriter.print("403 Forbidden - No permission");
-            return;
-        }
-        
         String id = request.getParameter("id");
         String title = request.getParameter("title");
         String description = request.getParameter("description");
@@ -198,6 +174,13 @@ public class TodoServlet extends HttpServlet {
         }        
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+       
+    }
+
+    
     /** 
      * Returns a short description of the servlet.
      * @return a String containing servlet description

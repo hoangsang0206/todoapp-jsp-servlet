@@ -1238,11 +1238,15 @@ main {
 }
 
 .task-inf-box {
+    width: 100%;
+    overflow: hidden;
     display: grid;
     place-items: center;
 }
 
 .task-inf {
+    width: 100%;
+    overflow: hidden;
     border-radius: 8px;
     background: var(--current-bg);
     width: 100%;
@@ -1265,10 +1269,25 @@ main {
     margin: 15px 0;
 }
 
+.task-inf-main {
+    width: 100%;
+    overflow: hidden;
+}
+
 .task-inf-name {
     font-weight: 600;
     font-size: 20px;
 }
+
+.task-inf-name,
+.task-inf-description {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
 
 .task-inf-description {
     font-weight: normal;
@@ -1316,22 +1335,20 @@ main {
 
 .sub-task-list {
     width: 100%;
-}
-
-.sub-task-list {
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 250px;
+    max-height: 265px;
     padding-bottom: 10px;
 }
 
-.sub-task-item {
+.sub-task-item,
+.create-subtask {
     width: 100%;
+    height: 40px;
     border: 2px solid #eee;
     border-radius: 7px;
     padding-right: 10px;
     position: relative;
-    overflow: hidden;
 }
 
 .sub-task-label {
@@ -1375,7 +1392,7 @@ main {
     height: 100%;
 }
 
-.edit-sub-task input {
+.edit-sub-task input[name="subtodo_title"] {
     width: calc(100% - 39px);
     height: 100%;
     outline: none;
@@ -1399,6 +1416,44 @@ main {
 
 .edit-sub-task-btn:hover svg {
     fill: var(--btn-color-purple);
+}
+
+.create-subtask form {
+    padding: 6px 0 6px 10px;
+    width: 100%;
+}
+
+.create-subtask form input {
+    padding: 0 5px;
+    width: calc(100% - 63px);
+    border: none;
+    outline: none;
+}
+
+.submit-create-subtask {
+    width: 27px;
+    height: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    background: none;
+}
+
+.submit-create-subtask svg {
+    fill: var(--btn-color-green);
+}
+
+.cancel-create-subtask {
+    width: 27px;
+    height: 100%;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+    background: none;
+}
+
+.cancel-create-subtask svg {
+    fill: var(--btn-color-red);
 }
 
 .delete-sub-task {

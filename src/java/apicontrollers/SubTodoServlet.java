@@ -6,9 +6,8 @@
 package apicontrollers;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import dao.SubTodoDAO;
-import utils.LocalDateTimeAdapter;
+import dao.TodoListDAO;
 import models.SubTodo;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,7 +16,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -49,6 +47,8 @@ public class SubTodoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        PrintWriter printWriter = response.getWriter();
+        
         response.setContentType("application/json");
         
         String user = request.getParameter("user");
@@ -59,7 +59,6 @@ public class SubTodoServlet extends HttpServlet {
         Gson gson = new Gson();
         
         String json = gson.toJson(subTodo);
-        PrintWriter printWriter = response.getWriter();
 
         printWriter.print(json);
     } 
@@ -74,8 +73,53 @@ public class SubTodoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        String id = request.getParameter("id");
+        String title = request.getParameter("title");
+        
+        if(TodoListDAO.createSubTodo(id, title)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+    throws ServletException, IOException {
+        String type = request.getParameter("t");
+        String id = request.getParameter("id");
+        String title = request.getParameter("title");
+        String isComplete = request.getParameter("complete");
+        
+        SubTodo stodo = new SubTodo();
+        
+        if(isComplete != null && !isComplete.isEmpty()) {
+            stodo.setIsCompleted(Boolean.parseBoolean(isComplete));
+        }
+        
+        stodo.setId(id);
+        stodo.setTitle(title);
+        
+        if(TodoListDAO.updateSubtodo(stodo, type)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+    throws ServletException, IOException {
+        String id = request.getParameter("id");
+        
+        if(TodoListDAO.deleteSubTodo(id)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+ 
+    
 
     /** 
      * Returns a short description of the servlet.

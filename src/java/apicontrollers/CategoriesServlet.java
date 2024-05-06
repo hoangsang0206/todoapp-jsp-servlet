@@ -57,12 +57,6 @@ public class CategoriesServlet extends HttpServlet {
     throws ServletException, IOException {
         PrintWriter printWriter = response.getWriter();
         
-        if(!AccountDAO.checkLogin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            printWriter.print("403 Forbidden - No permission to access this resource");
-            return;
-        }
-        
         response.setContentType("application/json");
         
         Account account = AccountDAO.getLoggedInUser(request);
