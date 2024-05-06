@@ -44,7 +44,7 @@
         </div>
 
         <div class="header-settings d-flex align-items-center">
-            <a href="javascript:void(0)" class="d-flex align-items-center justify-content-center">
+            <a href="setting" class="d-flex align-items-center justify-content-center">
                 <i class='bx bx-cog header-icon ${(requestScope.activeHeader == "setting") ? "active" : ""}'></i>
             </a>
         </div>

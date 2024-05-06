@@ -89,7 +89,7 @@
                     <button class="ac-button mt-4" type="submit"><fmt:message bundle="${bundle}" key="register" /></button>
                 </form>
                 <div class="login-break d-flex align-items-center mt-4">
-                    <p><fmt:message bundle="${bundle}" key="orther_login" /></p>
+                    <p><fmt:message bundle="${bundle}" key="other_login" /></p>
                 </div>
                 <div class="other-login-med d-flex gap-3 mt-3">
                     <a href="#">

@@ -1,0 +1,124 @@
+.setting {
+    width: 100%;
+    height: 100%;
+    padding: 15px 20px;
+    background: var(--current-content-bg);
+    border-radius: var(--radius);
+    
+}
+
+.setting .input-box {
+    width: 400px !important;
+}
+
+.setting-main {
+    margin-top: 20px;
+    height: calc(100% - 70px);
+}
+
+.setting-side {
+    width: 220px;
+    height: 100%;
+    border-right: 2px solid var(--border-color);
+    padding: 0 20px 0 0;
+}
+
+.setting-side-item {
+    padding: 8px 0;
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.setting-side-item * {
+    font-size: 16px;
+}
+
+.setting-side-item i {
+    font-size: 18px;
+}
+
+.setting-side-item:hover *,
+.setting-side-item.active * {
+    font-weight: 700;
+}
+
+.setting-content {
+    width: calc(100% - 220px);
+    height: 100%;
+    padding: 10px 0 0 25px;
+}
+
+.setting-content-main {
+    height: calc(100% - 50px);
+}
+
+.setting-content-bot {
+    height: 50px;
+}
+
+.setting-content-item {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none !important;
+}
+
+.setting-content-item.current {
+    display: flex !important;
+}
+
+.st-ac-img {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.st-ac-img img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.change-img {
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.lang-select {
+    width: 200px;
+    position: relative;  
+}
+
+.lang-select-btn {
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    padding: 7px 10px;
+    cursor: pointer;
+}
+
+.lang-select-content {
+    width: 100%;
+    position: absolute;
+    top: calc(100% + 3px);
+    left: 0;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    display: none;
+}
+
+.lang-select-content.show {
+    display: block;
+}
+
+.lang-item {
+    padding: 7px 10px;
+    cursor: pointer;
+}
+
+.lang-item:hover {
+    background: #eee;
+}
+

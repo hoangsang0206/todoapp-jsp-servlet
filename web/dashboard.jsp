@@ -260,7 +260,8 @@
             </main>
                
             <jsp:include page="layout/task_info.jsp" />
-            <jsp:include page="layout/action_form.jsp" />    
+            <jsp:include page="layout/action_form.jsp" />
+            <jsp:include page="layout/confirm_box.jsp" />
             <jsp:include page="layout/mb_navigation.jsp" />
             
             <button class="add-task-floating">

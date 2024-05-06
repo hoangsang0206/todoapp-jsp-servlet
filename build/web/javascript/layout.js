@@ -72,6 +72,19 @@ const hideActionForm = (form_wrapper) => {
     form_wrapper.find('.form-box').removeClass('show');
     form_wrapper.find('.custom-select').removeClass('open');
 };
+const showConfirmBox = (message, data_action) => {
+    $('.confirm-wrapper').addClass('show');
+    $('.confirm-box').addClass('show');
+    $('.confirm-message').empty().append(message);
+    $('.cancel-btn').data('confirm', data_action);
+    $('.confirm-btn').data('confirm', data_action);
+};
+const hideConfirmBox = () => {
+    $('.confirm-wrapper').removeClass('show');
+    $('.confirm-box').removeClass('show');
+    $('.cancel-btn').removeAttr('data-confirm');
+    $('.confirm-btn').removeAttr('data-confirm');
+};
 const loadSelectData = () => {
     return new Promise((resolve, reject) => {
         $.ajax({
@@ -92,36 +105,29 @@ const loadSelectData = () => {
         });
     });
 };
-const loadSelectElements = (data) => {
-    $('.select-options-box').empty();
+const loadSelectElements = (data, form_box) => {
+    form_box.find('.select-options-box').empty();
     data.map(item => {
         let element = `<div class="select-option" data-value="${item === null || item === void 0 ? void 0 : item.id}" data-name="${item === null || item === void 0 ? void 0 : item.cateName}" data-color="${item === null || item === void 0 ? void 0 : item.iconColor}">
                         <span class="nav-color-icon" style="background: ${(item === null || item === void 0 ? void 0 : item.iconColor) != null ? item.iconColor : "#e30019"};"></span>
                         <span class="select opt-name">${item === null || item === void 0 ? void 0 : item.cateName}</span>
                     </div>`;
-        $('.select-options-box').append(element);
+        form_box.find('.select-options-box').append(element);
     });
 };
-$(document).ready(() => {
-    loadSelectData()
-        .then((data) => {
-        loadSelectElements(data);
-    })
-        .catch((error) => { });
-});
-const getSelectedElements = () => {
-    return $('.selected-option').toArray();
+const getSelectedElements = (form_box) => {
+    return form_box.find('.selected-option').toArray();
 };
-const getSelectedValue = () => {
-    const selectedElements = getSelectedElements();
+const getSelectedValue = (form_box) => {
+    const selectedElements = getSelectedElements(form_box);
     let selectedValues = [];
     selectedElements.map((item) => {
         selectedValues.push($(item).data('value'));
     });
     return selectedValues;
 };
-const checkExistItemSelected = (value) => {
-    for (let element of getSelectedElements()) {
+const checkExistItemSelected = (value, form_box) => {
+    for (let element of getSelectedElements(form_box)) {
         if ($(element).data('value') === value) {
             return true;
         }
@@ -136,7 +142,7 @@ $(document).click(function (event) {
         $('.custom-select').removeClass('open');
     }
 });
-const pushSelectItem = (value, name, color) => {
+const pushSelectItem = (form_box, value, name, color) => {
     let selectedEl = `<div class="selected-option" data-value="${value}" data-name="${name}" data-color="${color}">
                                 <div class="selected-opt-content">
                                     <span class="nav-color-icon" style="background: ${color != 'undefined' && color.length > 0 ? color : "#e30019"};"></span>
@@ -146,16 +152,16 @@ const pushSelectItem = (value, name, color) => {
                                     <i class='bx bx-x'></i>
                                 </div>
                             </div>`;
-    $('.selected-box').append(selectedEl);
+    form_box.find('.selected-box').append(selectedEl);
 };
 $(document).on('click', '.select-option', function () {
     let value = $(this).data('value');
-    if (checkExistItemSelected(value)) {
+    if (checkExistItemSelected(value, $(this).closest('.form-box'))) {
         return;
     }
     let itemName = $(this).data('name');
     let colorData = $(this).data('color');
-    pushSelectItem(value, itemName, colorData);
+    pushSelectItem($(this).closest('.form-box'), value, itemName, colorData);
 });
 $(document).on('click', '.delete-selected-opt', function () {
     let parentEl = $(this).closest('.selected-option');
@@ -167,10 +173,10 @@ $('input[name="search-option"]').keyup(function () {
         .then((data) => {
         if (searchText.length > 0) {
             let filteredCategories = data.filter(category => category === null || category === void 0 ? void 0 : category.cateName.toLowerCase().includes(searchText.toLowerCase()));
-            loadSelectElements(filteredCategories);
+            loadSelectElements(filteredCategories, $(this).closest('.form-box'));
         }
         else {
-            loadSelectElements(data);
+            loadSelectElements(data, $(this).closest('.form-box'));
         }
     })
         .catch((eror) => {
@@ -202,9 +208,12 @@ $('.close-task-info').click(() => {
 });
 $('.overlay').click(() => {
     $('.sidebar').removeClass('show');
-    $('.task-infomation-wrapper').addClass('close');
     hideActionForm($('.form-full-wrapper'));
+    if (window.innerWidth < 1024) {
+        $('.task-infomation-wrapper').addClass('close');
+    }
     hideOverlay();
+    hideConfirmBox();
 });
 $('.show-nav-action').click(() => {
     $('.sidebar').addClass('show');
@@ -234,6 +243,11 @@ $('.edit-sub-task-submit').click(function () {
 $('.add-new-task, .add-task-floating, .welcome-box button').click(() => {
     showActionForm($('.create-task-wrapper'));
     showOverlay();
+    loadSelectData()
+        .then((data) => {
+        loadSelectElements(data, $('.create-task'));
+    })
+        .catch((error) => { });
 });
 $('.close-form-btn').click(function () {
     hideActionForm($(this).closest('.form-container'));
@@ -309,6 +323,12 @@ $('.sort-filter-box button').click(function () {
 $('.form-container').click(function (event) {
     if (!$(event.target).closest('.form-box').length) {
         hideActionForm($(this));
+        hideOverlay();
+    }
+});
+$('.confirm-wrapper').click(function (event) {
+    if (!$(event.target).closest('.confirm-box').length) {
+        hideConfirmBox();
         hideOverlay();
     }
 });
@@ -401,7 +421,7 @@ $(document).ready(() => {
         const name = $(e.target).find('#task-name').val();
         const description = $(e.target).find('#task-description').val();
         const date = $(e.target).find('#task-time').val();
-        const categories = getSelectedValue();
+        const categories = getSelectedValue($(this).closest('.form-box'));
         $.ajax({
             url: 'api/todo',
             type: 'POST',
@@ -495,6 +515,11 @@ const getTodo = (id) => {
 $(document).on('click', '.task-action.edit, .edit-task-btn', function () {
     showActionForm($('.edit-task-wrapper'));
     showOverlay();
+    loadSelectData()
+        .then((data) => {
+        loadSelectElements(data, $('.edit-task'));
+    })
+        .catch((error) => { });
     const id = $(this).data('id');
     getTodo(id).then((data) => {
         $('#edit-task-id').val(data.id);
@@ -513,30 +538,28 @@ $(document).on('click', '.task-action.edit, .edit-task-btn', function () {
         .catch((error) => { });
 });
 $(document).ready(() => {
-    $('.create-task form').submit(function (e) {
+    $('.edit-task form').submit(function (e) {
         e.preventDefault();
-        const name = $(e.target).find('#task-name').val();
-        const description = $(e.target).find('#task-description').val();
-        const date = $(e.target).find('#task-time').val();
-        const categories = getSelectedValue();
+        const id = $(e.target).find('#edit-task-id').val();
+        const name = $(e.target).find('#edit-task-name').val();
+        const description = $(e.target).find('#edit-task-description').val();
+        const date = $(e.target).find('#edit-task-time').val();
+        const categories = getSelectedValue($(this).closest('.form-box'));
         $.ajax({
-            url: 'api/todo',
+            url: `api/todo?id=${id}&title=${name}&description=${description}&date=${date}&categories=${categories}`,
             type: 'PUT',
-            data: {
-                id: '',
-                title: name,
-                description: description,
-                date: date,
-                categories: categories.join(',')
-            },
             success: (response) => {
                 hideActionForm($('.edit-task-wrapper'));
                 hideOverlay();
                 getTodayTodoList();
             },
             error: (error) => {
-                console.error('Error when create todo.');
+                console.error('Error when update todo.');
             }
         });
     });
+});
+$(document).on('click', '.task-action.delete, .delete-task-btn', function () {
+    showConfirmBox('Xác nhận xóa 123?', 'delete-todo');
+    showOverlay();
 });

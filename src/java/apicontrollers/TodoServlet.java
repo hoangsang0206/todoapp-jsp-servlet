@@ -136,15 +136,67 @@ public class TodoServlet extends HttpServlet {
                     categories.add(category);
                 }
             }
+            
+            todo.setCategories(categories);
         }
         
-        if(TodoListDAO.createTodo(todo, categories, account.getUsername())) {
+        if(TodoListDAO.createTodo(todo, account.getUsername())) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }        
     }
-    
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+    throws ServletException, IOException {
+        
+        PrintWriter printWriter = response.getWriter();
+        
+        if(!AccountDAO.checkLogin(request)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            printWriter.print("403 Forbidden - No permission");
+            return;
+        }
+        
+        String id = request.getParameter("id");
+        String title = request.getParameter("title");
+        String description = request.getParameter("description");
+        String date = request.getParameter("date");
+        String listCate = request.getParameter("categories");
+        
+        LocalDateTime dateTime = LocalDateTime.parse(date);
+        
+        Account account = AccountDAO.getLoggedInUser(request);
+        
+        Todo todo = new Todo();
+        todo.setId(id);
+        todo.setTitle(title);
+        todo.setDescription(description);
+        todo.setDateCreate(LocalDateTime.now());
+        todo.setDateCompleted(dateTime);
+        
+        ArrayList<Category> categories = new ArrayList<>();
+        if(listCate != null && !listCate.isEmpty()) {
+            String[] values = listCate.split(",");
+            for(String value : values) {
+                if(value != null && !value.isEmpty()) {
+                    Category category = new Category();
+                    category.setId(value);
+                    
+                    categories.add(category);
+                }
+            }
+            
+            todo.setCategories(categories);
+        }
+        
+        if(TodoListDAO.updateTodo(todo, account.getUsername())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }        
+    }
 
     /** 
      * Returns a short description of the servlet.

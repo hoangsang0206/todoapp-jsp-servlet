@@ -59,7 +59,7 @@
             </div>
 
             <div class="form-action d-flex gap-3 align-items-center">
-                <button type="submit" class="s-btn submit-form-btn sm-create-task">
+                <button type="submit" class="s-btn submit-form-btn">
                     <fmt:message bundle="${bundle}" key="form_create_btn" />
                 </button>
                 <button type="button" class="s-btn close-form-btn">
@@ -122,7 +122,7 @@
             </div>
 
             <div class="form-action d-flex gap-3 align-items-center">
-                <button type="submit" class="s-btn submit-form-btn sm-create-task">
+                <button type="submit" class="s-btn submit-form-btn">
                     <fmt:message bundle="${bundle}" key="form_edit_btn" />
                 </button>
                 <button type="button" class="s-btn close-form-btn">
@@ -165,6 +165,18 @@
     </section>
 </section>
 
-<section class="create-note-wrapper">
+<section class="create-note-wrapper form-container">
 
+</section>
+                
+
+<section class="upload-image-wrapper form-container">
+    <section class="upload-image form-box">
+        <div class="form-box-header">
+            <h4>Upload hình ảnh</h4>
+        </div>
+        <form class="form-main" action="#" method="POST">
+            
+        </form>
+    </section>
 </section>

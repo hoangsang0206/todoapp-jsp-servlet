@@ -90,6 +90,23 @@ const hideActionForm = (form_wrapper: any): void => {
     form_wrapper.find('.custom-select').removeClass('open');
 }
 
+const showConfirmBox = (message: string, data_action: string) => {
+    $('.confirm-wrapper').addClass('show');
+    $('.confirm-box').addClass('show');
+    
+    $('.confirm-message').empty().append(message);
+    $('.cancel-btn').data('confirm', data_action);
+    $('.confirm-btn').data('confirm', data_action);
+}
+
+const hideConfirmBox = () => {
+    $('.confirm-wrapper').removeClass('show');
+    $('.confirm-box').removeClass('show');
+    
+    $('.cancel-btn').removeAttr('data-confirm');
+    $('.confirm-btn').removeAttr('data-confirm');
+}
+
 //Custom select ------
 
 const loadSelectData = (): Promise<any[]> => {
@@ -112,32 +129,24 @@ const loadSelectData = (): Promise<any[]> => {
     })
 }
 
-const loadSelectElements = (data: any[]): void => {
-    $('.select-options-box').empty();
+const loadSelectElements = (data: any[], form_box: any): void => {
+    form_box.find('.select-options-box').empty();
     data.map(item => {
         let element = `<div class="select-option" data-value="${item?.id}" data-name="${item?.cateName}" data-color="${item?.iconColor}">
                         <span class="nav-color-icon" style="background: ${item?.iconColor != null ? item.iconColor : "#e30019"};"></span>
                         <span class="select opt-name">${item?.cateName}</span>
                     </div>`;
 
-        $('.select-options-box').append(element);
+        form_box.find('.select-options-box').append(element);
     })  
 }
 
-$(document).ready(() => {
-    loadSelectData()
-        .then((data) => {
-            loadSelectElements(data)
-        })
-        .catch((error) => { })
-})
-
-const getSelectedElements = () => {
-    return $('.selected-option').toArray();
+const getSelectedElements = (form_box: any) => {
+    return form_box.find('.selected-option').toArray();
 }
 
-const getSelectedValue = (): string[] => {
-    const selectedElements = getSelectedElements();
+const getSelectedValue = (form_box: any): string[] => {
+    const selectedElements = getSelectedElements(form_box);
     let selectedValues: string[] = [];
     selectedElements.map((item) => {
         selectedValues.push($(item).data('value'))
@@ -146,8 +155,8 @@ const getSelectedValue = (): string[] => {
     return selectedValues;
 }
 
-const checkExistItemSelected = (value: string): boolean => {
-    for(let element of getSelectedElements()) {
+const checkExistItemSelected = (value: string, form_box: any): boolean => {
+    for(let element of getSelectedElements(form_box)) {
         if($(element).data('value') === value) {
             return true;
         }
@@ -166,7 +175,7 @@ $(document).click(function(event) {
     }
 })
 
-const pushSelectItem = (value, name, color) => {
+const pushSelectItem = (form_box: any, value: string, name: string, color: string) => {
     let selectedEl: string = `<div class="selected-option" data-value="${value}" data-name="${name}" data-color="${color}">
                                 <div class="selected-opt-content">
                                     <span class="nav-color-icon" style="background: ${color != 'undefined' && color.length > 0 ? color : "#e30019"};"></span>
@@ -177,20 +186,20 @@ const pushSelectItem = (value, name, color) => {
                                 </div>
                             </div>`;
 
-    $('.selected-box').append(selectedEl);
+    form_box.find('.selected-box').append(selectedEl);
 }
 
 $(document).on('click', '.select-option', function() {
     let value: string = $(this).data('value');
 
-    if(checkExistItemSelected(value)) {
+    if(checkExistItemSelected(value, $(this).closest('.form-box'))) {
         return;
     }
 
     let itemName: string = $(this).data('name');
     let colorData: string = $(this).data('color');
     
-    pushSelectItem(value, itemName, colorData);
+    pushSelectItem($(this).closest('.form-box'), value, itemName, colorData);
 })
 
 $(document).on('click', '.delete-selected-opt', function() {
@@ -205,9 +214,9 @@ $('input[name="search-option"]').keyup(function() {
         .then((data) => {
             if(searchText.length > 0) {
                 let filteredCategories = data.filter(category => category?.cateName.toLowerCase().includes(searchText.toLowerCase()));
-                loadSelectElements(filteredCategories);
+                loadSelectElements(filteredCategories, $(this).closest('.form-box'));
             } else {
-                loadSelectElements(data);
+                loadSelectElements(data, $(this).closest('.form-box'));
             }
         })
         .catch((eror) => {
@@ -248,9 +257,14 @@ $('.close-task-info').click(() => {
 
 $('.overlay').click(() => {
     $('.sidebar').removeClass('show');
-    $('.task-infomation-wrapper').addClass('close');
     hideActionForm($('.form-full-wrapper'));
+    
+    if(window.innerWidth < 1024) {
+        $('.task-infomation-wrapper').addClass('close');   
+    }
+    
     hideOverlay();
+    hideConfirmBox();
 })
 
 //Click to show navigation (mobile)
@@ -290,6 +304,12 @@ $('.edit-sub-task-submit').click(function() {
 $('.add-new-task, .add-task-floating, .welcome-box button').click(() => {
     showActionForm($('.create-task-wrapper'));
     showOverlay();
+    
+    loadSelectData()
+        .then((data) => {
+            loadSelectElements(data, $('.create-task'))
+        })
+        .catch((error) => { })
 })
 
 $('.close-form-btn').click(function() {
@@ -384,6 +404,13 @@ $('.sort-filter-box button').click(function() {
 $('.form-container').click(function(event) {
     if(!$(event.target).closest('.form-box').length) {
         hideActionForm($(this));
+        hideOverlay();
+    }
+})
+
+$('.confirm-wrapper').click(function(event) {
+    if(!$(event.target).closest('.confirm-box').length) {
+        hideConfirmBox();
         hideOverlay();
     }
 })
@@ -502,7 +529,7 @@ $(document).ready(() => {
         const name: string = $(e.target).find('#task-name').val();
         const description: string = $(e.target).find('#task-description').val();
         const date: string = $(e.target).find('#task-time').val();
-        const categories = getSelectedValue();
+        const categories = getSelectedValue($(this).closest('.form-box'));
         
         $.ajax({
             url: 'api/todo',
@@ -607,6 +634,12 @@ $(document).on('click', '.task-action.edit, .edit-task-btn', function() {
     showActionForm($('.edit-task-wrapper'));
     showOverlay();
     
+    loadSelectData()
+        .then((data) => {
+            loadSelectElements(data, $('.edit-task'))
+        })
+        .catch((error) => { })
+    
     const id = $(this).data('id');
     getTodo(id).then((data) => {
         $('#edit-task-id').val(data.id);
@@ -628,32 +661,33 @@ $(document).on('click', '.task-action.edit, .edit-task-btn', function() {
 })
 
 $(document).ready(() => {
-    $('.create-task form').submit(function(e) {
+    $('.edit-task form').submit(function(e) {
         e.preventDefault();
         
-        const name: string = $(e.target).find('#task-name').val();
-        const description: string = $(e.target).find('#task-description').val();
-        const date: string = $(e.target).find('#task-time').val();
-        const categories = getSelectedValue();
+        const id: string =  $(e.target).find('#edit-task-id').val();
+        const name: string = $(e.target).find('#edit-task-name').val();
+        const description: string = $(e.target).find('#edit-task-description').val();
+        const date: string = $(e.target).find('#edit-task-time').val();
+        const categories = getSelectedValue($(this).closest('.form-box'));
         
         $.ajax({
-            url: 'api/todo',
+            url: `api/todo?id=${id}&title=${name}&description=${description}&date=${date}&categories=${categories}`,
             type: 'PUT',
-            data: {
-               id: '',
-               title: name,
-               description: description,
-               date: date,
-               categories: categories.join(',')
-            },
             success: (response) => {
                 hideActionForm($('.edit-task-wrapper'));
                 hideOverlay();
                 getTodayTodoList();
             },
             error: (error) => {
-                console.error('Error when create todo.')
+                console.error('Error when update todo.')
             }
         })
     })
+})
+
+//Delete Todo
+
+$(document).on('click', '.task-action.delete, .delete-task-btn', function() {
+    showConfirmBox('Xác nhận xóa 123?', 'delete-todo');
+    showOverlay();
 })

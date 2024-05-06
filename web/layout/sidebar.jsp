@@ -155,7 +155,7 @@
                 <c:when test="${(user != null)}">
                     <a href="javascript:void(0)" class="nav-bot-user d-flex align-items-center gap-2">               
                         <div class="nav-user-img-box">
-                            <img class="nav-user-img" src="${(user.imageSrc != null && !user.imageSrc.isBlank() ? user.imageSrc : "images/user-no-image.jpg")}" alt="">
+                            <img class="nav-user-img" src="${(user.imageSrc != null && !user.imageSrc.isBlank()) ? user.imageSrc : "images/user-no-image.jpg"}" alt="">
                         </div>
                         <div class="nav-user-name">
                             <span>${(user.fullName != null ? user.fullName : user.username)}</span>
@@ -165,7 +165,7 @@
                 <c:when test="${(user == null)}">
                     <a href="login" class="nav-bot-user d-flex align-items-center gap-2">               
                         <div class="nav-user-img-box">
-                            <img class="nav-user-img" src=images/user-no-image.jpg" alt="">
+                            <img class="nav-user-img" src="images/user-no-image.jpg" alt="">
                         </div>
                         <div class="nav-user-name">
                             <span>Đăng nhập/Đăng ký</span>
