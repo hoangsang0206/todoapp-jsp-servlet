@@ -1,6 +1,5 @@
 declare const $: any;
 
-
 $(window).on('load', () => {
     $('.page-loader').removeClass('show');
 })
@@ -13,17 +12,17 @@ const setMainWidth = (): void => {
 
         if(!taskInf.hasClass('close') && !nav.hasClass('close')) {  
             main.css('width', 'calc(100% - 570px)');
-            main.find('.task-list').css('grid-template-columns', 'repeat(3, 1fr)')
+            main.find('.task-list').css('grid-template-columns', 'repeat(3, minmax(0, 1fr))')
 
         } else if(!nav.hasClass('close') && taskInf.hasClass('close')) {
             main.css('width', 'calc(100% - 270px)');
-            main.find('.task-list').css('grid-template-columns', 'repeat(4, 1fr)')
+            main.find('.task-list').css('grid-template-columns', 'repeat(4, minmax(0, 1fr))')
         } else if(nav.hasClass('close') && !taskInf.hasClass('close')) {
             main.css('width', 'calc(100% - 370px)');
-            main.find('.task-list').css('grid-template-columns', 'repeat(4, 1fr)')
+            main.find('.task-list').css('grid-template-columns', 'repeat(4, minmax(0, 1fr))')
         } else {
             main.css('width', 'calc(100% - 70px)');
-            main.find('.task-list').css('grid-template-columns', 'repeat(5, 1fr)')
+            main.find('.task-list').css('grid-template-columns', 'repeat(5, minmax(0, 1fr))')
         }
     }
 }
@@ -37,14 +36,16 @@ const hideOverlay = (): void => {
 }
 
 const showContentLoading = (content_box: any): void => {
-    const loader_element: string = `<div class="loader-box">
+    if(content_box.find('.loader-box').length <= 0) {
+        const loader_element: string = `<div class="loader-box">
         <svg class="loader-container" viewBox="0 0 40 40" height="40" width="40">
             <circle class="track" cx="20" cy="20" r="17.5" pathlength="100" stroke-width="3px" fill="none" />
             <circle class="car" cx="20" cy="20" r="17.5" pathlength="100" stroke-width="3px" fill="none" />
         </svg></span></div>`;
         
-    content_box.css('position', 'relative');
-    content_box.append(loader_element);
+        content_box.css('position', 'relative');
+        content_box.append(loader_element);
+    } 
 }
 
 const hideContentLoading = (content_box: any): void => {
@@ -459,6 +460,52 @@ $('.confirm-wrapper').click(function(event) {
     }
 })
 
+const getURL = (): URL => {
+    return new URL(window.location.href);
+}
+
+const getParams = (): URLSearchParams => {
+    const url: URL = getURL();
+    const params = url.searchParams
+    
+    return params;
+}
+
+$('input[name="view-type"]').on('change', function() {
+    if($(this).prop('checked')) {
+        const value: string = $(this).val();
+        const url: URL = getURL();
+        const params: URLSearchParams = getParams();
+        
+        if(params.has('view')) {
+            params.set('view', value);
+        } else {
+            params.append('view', value);
+        }
+        
+        url.search = params.toString();
+        window.location.href = url.href;
+    }
+    
+})
+
+$('input[name="sort-by"]').on('change', function() {
+    if($(this).prop('checked')) {
+        const value: string = $(this).val();
+        const url: URL = getURL();
+        const params: URLSearchParams = getParams();
+        
+        if(params.has('sort')) {
+            params.set('sort', value);
+        } else {
+            params.append('sort', value);
+        }
+        
+        url.search = params.toString();
+        window.location.href = url.href;
+    }
+})
+
 
 
 //
@@ -536,13 +583,13 @@ $(document).on('click', '.task-box, .task-action.info', function() {
     }
     
     showContentLoading($('.task-infomation-wrapper'));
+    const id = $(this).data('id');
     
     $.ajax({
         url: 'api/todo',
         type: 'GET',
         data: {
-            user: 'sang',
-            id: $(this).data('id')
+            id: id
         },
         success: (response) => {
             appendTaskInfo(response);
@@ -584,9 +631,7 @@ $(document).ready(() => {
                date: date,
                categories: categories.join(',')
             },
-            success: (response) => {
-//                hideActionForm($('.create-task-wrapper'));
-//                hideOverlay();   
+            success: (response) => {  
                 setTimeout(() => {
                     clearFormValue($(e.target))
                     hideButtonLoader(submitBtn, btn_element)
@@ -602,64 +647,164 @@ $(document).ready(() => {
 
 
 //GET today todo list
+const appendTodayTodoList = (data) => {
+    if(data.length > 0) {
+        $('.home-task-list').empty();
+        data.map((item) => {
+            let str: string = `<div class="today-task-box d-flex align-items-center justify-content-between gap-2">
+                            <div class="td-task-content d-flex align-items-center gap-3">
+                                <div class="task-status ${item?.isCompleted ? 'completed' : 'not-complete'}" data-id="${item?.id}">
+                                    <i class='bx bx-check'></i>
+                                </div>
+                                <div class="td-task-name-des d-flex flex-column gap-1">
+                                    <span class="task-name text-nowrap">${item?.title}</span>
+                                    <span class="task-des text-nowrap">${item?.description}</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="d-flex flex-column align-items-end gap-1">
+                                    <span>${item.dateCompleted != 'undefined' ? item.dateCompleted : ""}</span>
+                                    <span>${item?.subTodoList.length} Việc cần làm</span>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="task-action info" data-id="${item?.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                            <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
+                                        </svg>
+                                    </div>
+
+                                    <div class="task-action edit" data-id="${item?.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                            <path d="M19.045 7.401c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.378-.378-.88-.586-1.414-.586s-1.036.208-1.413.585L4 13.585V18h4.413L19.045 7.401zm-3-3 1.587 1.585-1.59 1.584-1.586-1.585 1.589-1.584zM6 16v-1.585l7.04-7.018 1.586 1.586L7.587 16H6zm-2 4h16v2H4z"></path>
+                                        </svg>
+                                    </div>
+
+                                    <div class="task-action delete" data-id="${item?.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                            <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"></path><path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+            $('.home-task-list').append(str);
+        });
+    } else {
+        $('.home-task-list').html(`<div class="d-flex align-items-center justify-content-center w-100 h-100">
+                            <span>Không có gì ở đây cả..</span>
+                        </div>`);
+    }
+}
+
+const appendTodoList = (data) => {
+    if(data.length > 0) {
+        $('.task-list').empty();
+        const params: URLSearchParams = getParams();
+    
+        data.map((item) => {
+            let str;
+
+            if(params.has('view') && params.get('view') === 'grid') {
+                str = `<div class="task-box d-flex flex-column justify-content-between" data-id="${item.id}">
+                        <div class="task-box-header d-flex align-items-start justify-content-between">
+                            <div class="task-box-categories d-flex align-items-center gap-3 me-2">
+                                ${item.categories.map(cate =>
+                                     `<div class="task-box-category d-flex align-items-center gap-2">
+                                        <span class="nav-color-icon" style="background: ${cate.iconColor};"></span>
+                                        <span>${cate.cateName}</span>
+                                    </div>`
+                                ).join('')}
+                            </div>
+                            <div class="show-task-inf">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="task-box-main">
+                            <div class="task-box-name">
+                                ${item.title}
+                            </div>
+                            <div class="task-box-des">
+                                ${item.description}
+                            </div>
+                        </div>
+                        <div class="task-box-time d-flex align-items-center justify-content-between gap-3">
+                            <span>${item.dateCompleted != 'undefined' ? item.dateCompleted.split(' ')[1] : ""}</span>
+                            <span>${item.dateCompleted != 'undefined' ? item.dateCompleted.split(' ')[0] : ""}</span>
+                        </div>
+                    </div>`;
+                    
+                   
+            } else if(!params.has('view') || params.get('view') !== 'grid') {
+                str = `<div class="horizon-task-box d-flex align-items-center justify-content-between gap-2">
+                        <div class="td-task-content d-flex align-items-center gap-3">
+                            <div class="task-status ${item.isCompleted ? "completed" : "not-complete"}" data-id="${!item.isCompleted ? item.id : ""}">
+                                <i class='bx bx-check'></i>
+                            </div>
+                            <div class="td-task-name-des d-flex flex-column">
+                                <span class="task-name text-nowrap">${item.title}</span>
+                                <span class="task-des text-nowrap">${item.description}</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="d-flex flex-column align-items-end">
+                                <span>${item.dateCompleted}</span>
+                                <span>${item.subTodoList.length} Việc cần làm</span>
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="task-action info" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
+                                    </svg>
+                                </div>
+
+                                <div class="task-action edit" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                        <path d="M19.045 7.401c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.378-.378-.88-.586-1.414-.586s-1.036.208-1.413.585L4 13.585V18h4.413L19.045 7.401zm-3-3 1.587 1.585-1.59 1.584-1.586-1.585 1.589-1.584zM6 16v-1.585l7.04-7.018 1.586 1.586L7.587 16H6zm-2 4h16v2H4z"></path>
+                                    </svg>
+                                </div>
+
+                                <div class="task-action delete" data-id="${item.id}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                                        <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"></path><path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+            
+            $('.task-list').append(str);
+        });
+    }
+}
+
+
 const getTodayTodoList = () => {
     showContentLoading($('.home-task-list'));
+    showContentLoading($('.main-contents.today-page'));
+    
     $.ajax({
         url: 'api/todo?t=day',
         type: 'GET',
         success: (response) => {
-            $('.home-task-list').empty();
+            const homeTask = $('.home-task-list');
+            const taskList = $('.task-list');
             
-            if(response.length > 0) {
-                response.map((item) => {
-                    let str: string = `<div class="today-task-box d-flex align-items-center justify-content-between gap-2">
-                                        <div class="td-task-content d-flex align-items-center gap-3">
-                                            <div class="task-status ${item?.isCompleted ? 'completed' : 'not-complete'}" data-id="${item?.id}">
-                                                <i class='bx bx-check'></i>
-                                            </div>
-                                            <div class="td-task-name-des d-flex flex-column gap-1">
-                                                <span class="task-name text-nowrap">${item?.title}</span>
-                                                <span class="task-des text-nowrap">${item?.description}</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="d-flex align-items-center gap-4">
-                                            <div class="d-flex flex-column align-items-end gap-1">
-                                                <span>${item.dateCompleted != 'undefined' ? item.dateCompleted : ""}</span>
-                                                <span>${item?.subTodoList.length} Việc cần làm</span>
-                                            </div>
-
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="task-action info" data-id="${item?.id}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                                                        <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
-                                                    </svg>
-                                                </div>
-
-                                                <div class="task-action edit" data-id="${item?.id}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                                                        <path d="M19.045 7.401c.378-.378.586-.88.586-1.414s-.208-1.036-.586-1.414l-1.586-1.586c-.378-.378-.88-.586-1.414-.586s-1.036.208-1.413.585L4 13.585V18h4.413L19.045 7.401zm-3-3 1.587 1.585-1.59 1.584-1.586-1.585 1.589-1.584zM6 16v-1.585l7.04-7.018 1.586 1.586L7.587 16H6zm-2 4h16v2H4z"></path>
-                                                    </svg>
-                                                </div>
-
-                                                <div class="task-action delete" data-id="${item?.id}">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                                                        <path d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"></path><path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>`;
-                    $('.home-task-list').append(str);
-                });
-            } else {
-                $('.home-task-list').html(`<div class="d-flex align-items-center justify-content-center w-100 h-100">
-                                    <span>Không có gì ở đây cả..</span>
-                                </div>`);
+            if(homeTask.length > 0) {
+                appendTodayTodoList(response);
+                hideContentLoading(homeTask);
+            } else if(taskList.length > 0) {
+                appendTodoList(response);   
+                hideContentLoading($('.main-contents.today-page'));
             }
-            
-            
-            hideContentLoading($('.home-task-list'));
+                        
         },
         eror: (error) => {
             console.error("Cannot get todo list.")
@@ -690,6 +835,8 @@ $(document).on('click', '.task-action.edit, .edit-task-btn', function() {
     showActionForm($('.edit-task-wrapper'));
     showOverlay();
     
+    clearFormValue($('.edit-task form'));
+    
     loadSelectData()
         .then((data) => {
             loadSelectElements(data, $('.edit-task'))
@@ -717,6 +864,10 @@ $(document).on('click', '.task-action.edit, .edit-task-btn', function() {
                 return `${year}-${month}-${day}T${hour}:${minute}`;
             });
         }
+        
+        data.categories.map((item) => {
+            pushSelectItem($('.edit-task'), item.id, item.cateName, item.iconColor);
+        })
     })
     .catch((error) => {})
 })

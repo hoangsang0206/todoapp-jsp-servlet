@@ -1,7 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList" %>
-<%@page import="java.time.LocalDateTime" %>
-<%@page import="java.time.format.DateTimeFormatter" %>
 <%@page import="utils.FormatLocalDateTime" %>
 <%@page import="models.Todo" %>
 <%@page import="models.Note" %>
@@ -42,13 +40,13 @@
                     int monthCompleted = (int) request.getAttribute("MonthCompleted");
                     int weekCompleted = (int) request.getAttribute("WeekCompleted");
                     
-                    String todayPercent = String.format("%.2f", ((float) todayCompleted / todayList.size()) * 100);
-                    String allPercent = String.format("%.2f", ((float) allCompleted / allCount) * 100);
-                    String monthPercent = String.format("%.2f", ((float) monthCompleted / monthCount) * 100);
-                    String weekPercent = String.format("%.2f", ((float) weekCompleted / weekCount) * 100);
+                    String todayPercent = todayList.size() > 0 ? String.format("%.2f", ((float) todayCompleted / todayList.size()) * 100) : "0";
+                    String allPercent = allCount > 0 ? String.format("%.2f", ((float) allCompleted / allCount) * 100) : "0";
+                    String monthPercent = monthCount > 0 ? String.format("%.2f", ((float) monthCompleted / monthCount) * 100) : "0";
+                    String weekPercent = weekCount > 0 ? String.format("%.2f", ((float) weekCompleted / weekCount) * 100) : "0";
                 %>
                 
-                <section class="main-contents">
+                <section class="main-contents dashboard-page">
                     <div class="welcome-box d-flex align-items-center justify-content-between mt-2 mb-4">
                         <div class="d-flex align-items-center">
                             <img src="images/todo-img.png" alt="">

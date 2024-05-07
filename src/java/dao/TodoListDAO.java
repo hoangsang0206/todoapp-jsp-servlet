@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -76,7 +77,7 @@ public class TodoListDAO {
     
     public static ArrayList<Todo> getTodayTodoList(String username) {
         String sqlTodo = "Select * From TodoList Where username = '" + username 
-                +"' And Convert(DATE, dateCreate) = Convert(DATE, Getdate()) Order By dateCreate ASC";
+                +"' And Convert(DATE, dateCompleted) = Convert(DATE, Getdate()) Order By dateCreate ASC";
         ArrayList<Todo> todoList = getTodoListBySQL(sqlTodo);
         
         return todoList;
@@ -218,20 +219,26 @@ public class TodoListDAO {
                 FormatLocalDateTime.formatSQL(todo.getDateCompleted()), todo.isIsCompleted(), todo.getId(), username);
         }
         
-        
-        
+              
         int result = connect.excuteUpdate(sql);
-        if(result > 0 && type.equals("status") && todo.getCategories() != null && todo.getCategories().size() > 0) {
-            ArrayList<Category> categories = CategoriesDAO.getTodoCategories(todo.getId());
+        if(result > 0 && todo.getCategories() != null && todo.getCategories().size() > 0) {            
             for(Category category : todo.getCategories()) {
-                if(categories != null && categories.size() > 0) {
-                    String sqlCate = "Update Todo_Categories Set cateID = '" + category.getId() + "'"
-                        + " Where todoID = '" + todo.getId() + "'";
-                    connect.excuteUpdate(sqlCate);
-                } else {
+                if(!CategoriesDAO.checkTodoCategoryExist(todo.getId(), category.getId())) {
                     String sqlCate = "Insert Into Todo_Categories Values ('" + todo.getId() + "', '" + category.getId() + "')";
                     connect.excuteUpdate(sqlCate);
-                } 
+                }
+            }
+            
+            ArrayList<Category> categoroies = CategoriesDAO.getTodoCategories(todo.getId());
+            ArrayList<Category> categoriesNotExist = new ArrayList<>();
+            
+            categoriesNotExist = (ArrayList<Category>) categoroies.stream()
+                    .filter(category -> todo.getCategories().stream().noneMatch(item -> item.getId().equals(category.getId())))
+                    .collect(Collectors.toList());
+            
+            for(Category category : categoriesNotExist) {
+                String sqlDel = "Delete From Todo_Categories Where todoID = '" + todo.getId() + "' And cateID = '" + category.getId() + "'";
+                connect.excuteUpdate(sqlDel);
             }
         }
         
@@ -244,7 +251,7 @@ public class TodoListDAO {
     //
     public static ArrayList<Todo> filterTodayTodoList(ArrayList<Todo> todoList) {
         return (ArrayList<Todo>) todoList.stream()
-                .filter(todo -> todo.getDateCreate().toLocalDate().isEqual(LocalDate.now()))
+                .filter(todo -> todo.getDateCompleted().toLocalDate().isEqual(LocalDate.now()))
                 .collect(Collectors.toList());
     }
     
@@ -256,7 +263,7 @@ public class TodoListDAO {
         ArrayList<Todo> weekTodoList = new ArrayList<>();
         
         for(Todo todo : todoList) {
-            LocalDate itemDate = todo.getDateCreate().toLocalDate();
+            LocalDate itemDate = todo.getDateCompleted().toLocalDate();
             if(itemDate.isEqual(startOfWeek) || (itemDate.isAfter(startOfWeek) && itemDate.isBefore(endOfWeek))) {
                 weekTodoList.add(todo);
             }
@@ -273,7 +280,7 @@ public class TodoListDAO {
         ArrayList<Todo> monthTodoList = new ArrayList<>();
         
         for(Todo todo : todoList) {
-            LocalDate itemDate = todo.getDateCreate().toLocalDate();
+            LocalDate itemDate = todo.getDateCompleted().toLocalDate();
             if(itemDate.getMonthValue() == month && itemDate.getYear() == year) {
                 monthTodoList.add(todo);
             }
@@ -284,5 +291,16 @@ public class TodoListDAO {
     
     public static ArrayList<Todo> filterCompletedTodo(ArrayList<Todo> todoList) { 
         return (ArrayList<Todo>) todoList.stream().filter(todo -> todo.isIsCompleted()).collect(Collectors.toList());
+    }
+    
+    public static ArrayList<Todo> sortTodoList(ArrayList<Todo> todoList, String sort) {
+        if(sort.equals("desc")) {
+            todoList.sort(Comparator.comparing(Todo::getDateCompleted).reversed());
+        } else {
+            todoList.sort(Comparator.comparing(Todo::getDateCompleted));
+        }
+        
+        
+        return todoList;
     }
 }

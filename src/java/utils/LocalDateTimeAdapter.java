@@ -17,7 +17,7 @@ public class LocalDateTimeAdapter implements JsonSerializer<LocalDateTime> {
     private DateTimeFormatter formatter;
     
     public LocalDateTimeAdapter() {
-        this.formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm");
+        this.formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     }
 
     @Override

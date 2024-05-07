@@ -195,4 +195,25 @@ public class CategoriesDAO {
         connect.close();
         return result > 0;
     }
+    
+    //
+    public static boolean checkTodoCategoryExist(String todoID, String cateID) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Select TOP 1 * From Todo_Categories Where todoID = '" + todoID + "' And cateID = '" + cateID + "'";
+        ResultSet rs = connect.excuteQuery(sql);
+        
+        try {
+            if(rs.next()) {
+                connect.close();
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoriesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                
+        connect.close();
+        return false;
+    }
 }

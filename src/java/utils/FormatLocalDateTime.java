@@ -16,6 +16,14 @@ public class FormatLocalDateTime {
         return datetime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
     
+    public static String formatOnlyDate(LocalDateTime datetime) {
+        return datetime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+    
+    public static String formatOnlyTime(LocalDateTime datetime) {
+        return datetime.format(DateTimeFormatter.ofPattern("HH:mm"));
+    }
+    
     public static String formatSQL(LocalDateTime datetime) {
         return datetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }

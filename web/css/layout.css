@@ -1078,7 +1078,7 @@ main {
 
 .task-list.view-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-gap: 20px;
 }
 
@@ -1089,7 +1089,7 @@ main {
 }
 
 .sidebar.close ~ main .task-list {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .task-box {
@@ -1614,9 +1614,9 @@ main {
 }
 
 .sort-selection label:hover,
-.sort-selection label.active,
+input[name="sort-by"]:checked ~ label,
 .view-selection label:hover,
-.view-selection label.active {
+input[name="view-type"]:checked ~ label {
     background: var(--gradient-color-2);
     color: #fff;
 }
@@ -1710,7 +1710,7 @@ main {
 
 .note-list {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     grid-gap: 20px;
 }
 

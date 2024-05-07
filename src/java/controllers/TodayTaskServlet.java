@@ -6,6 +6,7 @@
 package controllers;
 
 import dao.AccountDAO;
+import dao.TodoListDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import models.Account;
 import models.Todo;
 
 /**
@@ -47,9 +49,17 @@ public class TodayTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        ArrayList<Todo> todoList = new ArrayList<>();
+        String sort = request.getParameter("sort");
+        
+        Account account = AccountDAO.getLoggedInUser(request);
+        ArrayList<Todo> todoList = TodoListDAO.getTodayTodoList(account.getUsername());
 
-        request.setAttribute("ActiveNav", "today");   
+        if(sort != null && !sort.isBlank()) {
+            todoList = TodoListDAO.sortTodoList(todoList, sort);
+        }
+        
+        request.setAttribute("ActiveNav", "today");
+        request.setAttribute("TodoList", todoList);
         request.getRequestDispatcher("today.jsp").forward(request, response);
     } 
 

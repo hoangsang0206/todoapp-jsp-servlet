@@ -16,6 +16,14 @@
     height: calc(100% - 70px);
 }
 
+.setting-main * {
+    color: var(--current-text-color);
+}
+
+.setting-main input {
+    background: var(--current-content-bg);
+}
+
 .setting-side {
     width: 220px;
     height: 100%;
