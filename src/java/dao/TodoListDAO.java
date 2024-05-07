@@ -11,10 +11,12 @@ package dao;
 import models.Category;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import models.JDBCConnect;
 import models.RandomString;
 import models.Todo;
@@ -187,6 +189,13 @@ public class TodoListDAO {
             connect.excuteUpdate(sql1);
         }
         
+        ArrayList<SubTodo> stodoList = SubTodoDAO.getSubTodoList(id);
+        if(stodoList.size() > 0) {
+            for(SubTodo stodo : stodoList ) {
+                SubTodoDAO.deleteSubTodo(stodo.getId());
+            }
+        }
+        
         int result = connect.excuteUpdate(sql);
         connect.close();
         
@@ -231,76 +240,49 @@ public class TodoListDAO {
         return result > 0;
     }
     
-        public static SubTodo getSubTodo(String id) {
-        JDBCConnect connect = new JDBCConnect();
-        connect.getConnection();
+    
+    //
+    public static ArrayList<Todo> filterTodayTodoList(ArrayList<Todo> todoList) {
+        return (ArrayList<Todo>) todoList.stream()
+                .filter(todo -> todo.getDateCreate().toLocalDate().isEqual(LocalDate.now()))
+                .collect(Collectors.toList());
+    }
+    
+    public static ArrayList<Todo> filterWeekTodoList(ArrayList<Todo> todoList) {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+        LocalDate endOfWeek = startOfWeek.plusDays(6);
         
-        SubTodo subTodo = new SubTodo();
-        String sql = "Select TOP 1 * From Sub_TodoList Where id = '" + id + "'";
-        ResultSet rs = connect.excuteQuery(sql);
-        try {
-            if(rs.next()) {
-                subTodo.setId(rs.getString("id"));
-                subTodo.setTodoId(rs.getString("todoID"));
-                subTodo.setTitle(rs.getString("title"));
-                subTodo.setIsCompleted(rs.getBoolean("is_completed"));
-                
-                connect.close();
-                return subTodo;
+        ArrayList<Todo> weekTodoList = new ArrayList<>();
+        
+        for(Todo todo : todoList) {
+            LocalDate itemDate = todo.getDateCreate().toLocalDate();
+            if(itemDate.isEqual(startOfWeek) || (itemDate.isAfter(startOfWeek) && itemDate.isBefore(endOfWeek))) {
+                weekTodoList.add(todo);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(TodoListDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        connect.close();
-        return null;
+        return weekTodoList;
     }
     
-    public static boolean createSubTodo(String todoID, String title) {
-        JDBCConnect connect = new JDBCConnect();
-        connect.getConnection();
+    public static ArrayList<Todo> filterMonthTodoList(ArrayList<Todo> todoList) {
+        LocalDate today = LocalDate.now();
+        int month = today.getMonthValue();
+        int year = today.getYear();
         
-        String id = "std_" + RandomString.random(20);
+        ArrayList<Todo> monthTodoList = new ArrayList<>();
         
-        while(getSubTodo(id) != null) {
-            id = "std_" + RandomString.random(20);
+        for(Todo todo : todoList) {
+            LocalDate itemDate = todo.getDateCreate().toLocalDate();
+            if(itemDate.getMonthValue() == month && itemDate.getYear() == year) {
+                monthTodoList.add(todo);
+            }
         }
         
-        String sql = String.format("Insert Into Sub_TodoList (id, todoID, title) Values ('%s', '%s', '%s')",
-                id, todoID, title);
-        
-        int result = connect.excuteUpdate(sql);
-
-        connect.close();
-        
-        return result > 0;
+        return monthTodoList;
     }
     
-    public static boolean updateSubtodo(SubTodo stodo, String type) {
-        JDBCConnect connect = new JDBCConnect();
-        connect.getConnection();
-        
-        String sql = "Update Sub_TodoList Set " 
-                + (type.equals("update") ? "title='" + stodo.getTitle() + "'" 
-                : " is_completed='" + stodo.isIsCompleted() + "'")
-                + " Where id='" + stodo.getId() + "'";
-        
-        int result = connect.excuteUpdate(sql);
-        connect.close();
-        
-        return result > 0;
+    public static ArrayList<Todo> filterCompletedTodo(ArrayList<Todo> todoList) { 
+        return (ArrayList<Todo>) todoList.stream().filter(todo -> todo.isIsCompleted()).collect(Collectors.toList());
     }
-    
-    public static boolean deleteSubTodo(String id) {
-        JDBCConnect connect = new JDBCConnect();
-        connect.getConnection();
-        
-        String sql = "Delete Sub_TodoList Where id = '" + id + "'";
-        
-        int result = connect.excuteUpdate(sql);
-        connect.close();
-        
-        return result > 0;
-    }
-    
 }

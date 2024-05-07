@@ -13,6 +13,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import models.Todo;
 
 /**
  *
@@ -45,9 +47,9 @@ public class TodayTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        ArrayList<Todo> todoList = new ArrayList<>();
 
-        request.setAttribute("ActiveNav", "today");
-        
+        request.setAttribute("ActiveNav", "today");   
         request.getRequestDispatcher("today.jsp").forward(request, response);
     } 
 

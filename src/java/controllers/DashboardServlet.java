@@ -54,28 +54,26 @@ public class DashboardServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("user");
         
-        ArrayList<Todo> todoList = new ArrayList<>();
+        ArrayList<Todo> todoList, todayTodoList, weekTodoList, monthTodoList = new ArrayList<>();
         todoList = TodoListDAO.getTodoList(account.getUsername());
+        
+        todayTodoList = TodoListDAO.filterTodayTodoList(todoList);
+        weekTodoList = TodoListDAO.filterWeekTodoList(todoList);
+        monthTodoList = TodoListDAO.filterMonthTodoList(todoList);
+        
         ArrayList<Note> notes = new ArrayList<>();
         notes = NotesDAO.getNotes(account.getUsername());
         
-        ArrayList<Todo> todayTodoList = new ArrayList<>();
-
-        LocalDateTime now = LocalDateTime.now();
-        for(Todo todo : todoList) {
-            LocalDateTime createDate = todo.getDateCreate();;
-
-            if(createDate != null) {
-                if(now.toLocalDate().isEqual(createDate.toLocalDate())) {
-                    todayTodoList.add(todo);
-                }
-            }
-        }
-
         request.setAttribute("TodayList", todayTodoList);
+        request.setAttribute("AllCount", todoList.size());
+        request.setAttribute("MonthCount", monthTodoList.size());
+        request.setAttribute("WeekCount", weekTodoList.size());
+        request.setAttribute("TodayCompleted", TodoListDAO.filterCompletedTodo(todayTodoList).size());
+        request.setAttribute("AllCompleted", TodoListDAO.filterCompletedTodo(todoList).size());
+        request.setAttribute("MonthCompleted", TodoListDAO.filterCompletedTodo(monthTodoList).size());
+        request.setAttribute("WeekCompleted", TodoListDAO.filterCompletedTodo(weekTodoList).size());
         request.setAttribute("Notes", notes);
         request.setAttribute("ActiveNav", "dashboard");
-        
         request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     } 
 

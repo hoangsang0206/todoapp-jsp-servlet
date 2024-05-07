@@ -78,6 +78,9 @@ const showTaskList = (taskList: any, height: number): void => {
 const showActionForm = (form_wrapper: any): void => {
     form_wrapper.addClass('show');
     form_wrapper.find('.form-box').addClass('show');
+    if(window.innerWidth < 1024) {
+        $('.sidebar').removeClass('show');
+    }
 
     $('input[type="datetime-local"]').val(() => {
         return new Date(new Date().getTime() + 60 * 60000).toLocaleString('sv', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
@@ -103,11 +106,13 @@ const clearFormValue = (form: any) => {
     })
 }
 
-const showConfirmBox = (message: string, data_action: string) => {
+const showConfirmBox = (message: string, sub_message: string, data_action: string) => {
     $('.confirm-wrapper').addClass('show');
     $('.confirm-box').addClass('show');
     
-    $('.confirm-message').empty().append(message);
+    $('.confirm-message').html(message);
+    $('.confirm-sub-message').html(sub_message)
+    
     $('.cancel-btn').data('confirm', data_action);
     $('.confirm-btn').data('confirm', data_action);
 }
@@ -356,7 +361,7 @@ $('.close-form-btn').click(function() {
     hideOverlay();
 })
 
-$('.add-cate-header, .add-cate-action').click(() => {
+$(document).on('click', '.add-cate-header, .add-cate-action', () => {
     showActionForm($('.create-category-wrapper'));
     showOverlay();
 })
@@ -463,10 +468,17 @@ const appendTaskInfo = (data: any) => {
     $('.task-inf-time').text(data.dateCompleted);
     $('.task-inf-cate-list').empty();
     $('.sub-task-list').empty();
-    $('.completed-task-btn').data('id', data.id);
     $('.edit-task-btn').data('id', data.id);
     $('.delete-task-btn').data('id', data.id); 
     $('.add-sub-task').data('id', data.id);
+    
+    if(!data.isCompleted) {
+        $('.completed-task-btn').data('id', data.id);
+        $('.completed-task-btn').prop('disabled', false);
+    } else {
+        $('.completed-task-btn').removeAttr('id');
+        $('.completed-task-btn').prop('disabled', true);
+    }
               
     data.categories.forEach(category => {
         let iconColor: string = category.iconColor;
@@ -510,10 +522,6 @@ const appendTaskInfo = (data: any) => {
                     
         $('.sub-task-list').append(str);
     });
-    
-    $('.completed-task-btn').data('id', data.id);
-    $('.edit-task-btn').data('id', data.id);
-    $('.delete-task-btn').data('id', data.id);
 }
 
 
@@ -546,10 +554,6 @@ $(document).on('click', '.task-box, .task-action.info', function() {
    
 })
 
-
-$('.completed-task-btn').click(function() {
-    console.log($(this).data('id'));
-});
 
 $('.edit-sub-task-submit').click(function() {
     $(this).closest('.edit-sub-task').removeClass('show');
@@ -749,7 +753,7 @@ $(document).ready(() => {
     })
 })
 
-$(document).on('click', '.task-status.not-complete', function() {
+$(document).on('click', '.task-status.not-complete, .completed-task-btn', function() {
     const id: string = $(this).data('id');
     
     $.ajax({
@@ -765,7 +769,7 @@ $(document).on('click', '.task-status.not-complete', function() {
 
 //Delete Todo
 $(document).on('click', '.task-action.delete, .delete-task-btn', function() {
-    showConfirmBox('Xác nhận xóa công việc này?', 'delete-todo');
+    showConfirmBox('Xác nhận xóa công việc này?', '', 'delete-todo');
     showOverlay();
     
     const id = $(this).data('id');
@@ -792,7 +796,6 @@ $(document).on('click', '.task-action.delete, .delete-task-btn', function() {
                 },
                 error: (error) => {
                     console.error(`Cannot delete todo ${id}`);
-                    hideButtonLoader(btn, btn_element);
                 }
             })
         }
@@ -946,15 +949,144 @@ $(document).on('click', '.delete-sub-task', function() {
 $('.create-category form').submit((e) => {
     e.preventDefault();
     const name: string = $(e.target).find('#cate-name').val();
-    const color: string = $(e.target).find('#cate-icon').val();
+    const color: string = encodeURIComponent($(e.target).find('#cate-icon').val());
+    
+    const submitBtn = $(e.target).find('.submit-form-btn');
+    const btn_element = showButtonLoader(submitBtn);
     
     $.ajax({
-        url: `api/categories`,
+        url: `api/categories?name=${name}&color=${color}`,
         type: 'POST',
         success: (response) => {
+            setTimeout(() => {
+                clearFormValue($(e.target));
+                getCategories();
+                hideButtonLoader(submitBtn, btn_element);
+            }, 1000);
+        },
+        error: (error) => {
+        }
+    })
+})
+
+//GET categories
+const getCategories = () => {
+    $.ajax({
+        url: 'api/categories',
+        type: 'GET',
+        success: (response) => {
+            if(response.length > 0) {
+                $('.nav-categories').empty();
+                response.map((item) => {
+                    const str = `<li>
+                                <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
+                                    <div class="nav-link-box d-flex align-items-center">
+                                        <span class="nav-color-icon" style="background: ${typeof item.iconColor !== 'undefined' ? item.iconColor : "#e30019"};"></span>
+
+                                        <span class="nav-link-text">${item.cateName}</span>
+                                    </div>
+                                    
+                                    <div class="nav-cate-action d-flex align-items-center gap-2">
+                                        <i class='nav-edit-cate bx bx-edit' data-id="${item.id}"></i>
+                                        <i class='nav-del-cate bx bx-trash' data-id="${item.id}"></i>
+                                    </div>
+                                </a>
+                            </li>`;
+                            
+                     $('.nav-categories').append(str);
+                })
+                
+                $('.nav-categories').append(`<li>
+                        <a href="#" class="add-cate-action d-flex align-items-center">
+                            <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
+                                <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
+                            </svg>
+
+                            Thêm danh mục
+                        </a>
+                    </li>`);
+            }
             
         },
         error: (error) => {
+        }
+    })
+}
+
+//Update category
+$(document).on('click', '.nav-edit-cate', function() {
+    showActionForm($('.edit-category-wrapper'));
+    showOverlay();
+    
+    const id = $(this).data('id');
+    
+    $.ajax({
+        url: `api/categories?id=${id}`,
+        type: 'GET',
+        success: (response) => {
+            $('#edit-cate-id').val(response.id);
+            $('#edit-cate-name').val(response.cateName);
+            $('#edit-cate-icon').val(response.iconColor.length > 0 ? response.iconColor : '#e30019');
+        },
+        error: (error) => {
+        }
+    });
+})
+
+$('.edit-category form').submit(function(e) {
+    e.preventDefault();
+    const id = $(e.target).find('#edit-cate-id').val();
+    const name = $(e.target).find('#edit-cate-name').val();
+    const color = encodeURIComponent($(e.target).find('#edit-cate-icon').val());
+    
+    const submitBtn = $(e.target).find('.submit-form-btn');
+    const btn_element = showButtonLoader(submitBtn);
+    
+    $.ajax({
+        url: `api/categories?id=${id}&name=${name}&color=${color}`,
+        type: 'PUT',
+        success: (response) => {
+            setTimeout(() => {
+                getCategories();
+                hideButtonLoader(submitBtn, btn_element);
+                hideActionForm($('.edit-category-wrapper'))
+                hideOverlay();
+            }, 1000)
+        },
+        error: (error) => {
+        }
+    })
+})
+
+//DELETE category
+$(document).on('click', '.nav-del-cate', function() {
+    const id = $(this).data('id');
+    showConfirmBox('Xóa danh mục này?', 'Danh mục này và các công việc liên quan sẽ bị xóa.', 'delete-cate');
+    showOverlay();
+    
+    $('.confirm-btn').off('click').click(function() {
+        const action = $(this).data('confirm');
+        
+        if(action === 'delete-cate') { 
+            const btn = $(this);
+            const btn_element = showButtonLoader(btn);
+            
+            $.ajax({
+                url: `api/categories?id=${id}`,
+                type: 'DELETE',
+                success: (response) => {
+                    setTimeout(() => {
+                        getCategories();
+                        hideButtonLoader(btn, btn_element);
+                        hideConfirmBox();
+                        hideOverlay();
+                    }, 1000);
+                    
+                },
+                error: (error) => {
+                    console.error(`Cannot delete category ${id}`);
+                }
+            })
         }
     })
 })

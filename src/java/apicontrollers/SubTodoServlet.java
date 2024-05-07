@@ -54,8 +54,7 @@ public class SubTodoServlet extends HttpServlet {
         String user = request.getParameter("user");
         String todoId = request.getParameter("id");
         
-        SubTodoDAO subtodoDAO = new SubTodoDAO();
-        ArrayList<SubTodo> subTodo = subtodoDAO.getSubTodoList(todoId);
+        ArrayList<SubTodo> subTodo = SubTodoDAO.getSubTodoList(todoId);
         Gson gson = new Gson();
         
         String json = gson.toJson(subTodo);
@@ -76,7 +75,7 @@ public class SubTodoServlet extends HttpServlet {
         String id = request.getParameter("id");
         String title = request.getParameter("title");
         
-        if(TodoListDAO.createSubTodo(id, title)) {
+        if(SubTodoDAO.createSubTodo(id, title)) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -100,7 +99,7 @@ public class SubTodoServlet extends HttpServlet {
         stodo.setId(id);
         stodo.setTitle(title);
         
-        if(TodoListDAO.updateSubtodo(stodo, type)) {
+        if(SubTodoDAO.updateSubtodo(stodo, type)) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -112,7 +111,7 @@ public class SubTodoServlet extends HttpServlet {
     throws ServletException, IOException {
         String id = request.getParameter("id");
         
-        if(TodoListDAO.deleteSubTodo(id)) {
+        if(SubTodoDAO.deleteSubTodo(id)) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

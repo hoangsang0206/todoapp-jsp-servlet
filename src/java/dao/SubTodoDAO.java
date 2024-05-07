@@ -48,80 +48,76 @@ public class SubTodoDAO {
         }
         
         return null;
-    }
+    }  
     
-    
-    public static SubTodo getTodo(String subTodoId) {
+    public static SubTodo getSubTodo(String id) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        SubTodo subTodo = new SubTodo();
+        String sql = "Select TOP 1 * From Sub_TodoList Where id = '" + id + "'";
+        ResultSet rs = connect.excuteQuery(sql);
         try {
-            JDBCConnect connect = new JDBCConnect();
-            connect.getConnection();
-            
-            SubTodo subTodo = new SubTodo();
-            String sqlTodo = "Select TOP 1 From Sub_TodoList"
-                    + "Where id = '" + subTodoId + "'";
-            
-            ResultSet resultSet = connect.excuteQuery(sqlTodo);
-            
-            while(resultSet.next()) {
-                subTodo.setId(resultSet.getString("id"));
-                subTodo.setTodoId(resultSet.getString("todoID"));
-                subTodo.setTitle(resultSet.getString("title"));
-                subTodo.setIsCompleted(resultSet.getBoolean("is_completed"));
+            if(rs.next()) {
+                subTodo.setId(rs.getString("id"));
+                subTodo.setTodoId(rs.getString("todoID"));
+                subTodo.setTitle(rs.getString("title"));
+                subTodo.setIsCompleted(rs.getBoolean("is_completed"));
                 
-                break;
+                connect.close();
+                return subTodo;
             }
-            
-            connect.close();
-            
-            return subTodo;
         } catch (SQLException ex) {
             Logger.getLogger(TodoListDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        connect.close();
         return null;
     }
     
-    
-    public static boolean createTodo(SubTodo subTodo) {
+    public static boolean createSubTodo(String todoID, String title) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
         String id = "std_" + RandomString.random(20);
         
-        while(getTodo(id) != null) {
-            id = RandomString.random(20);
+        while(getSubTodo(id) != null) {
+            id = "std_" + RandomString.random(20);
         }
         
-        String sql = "Insert Into Sub_TodoList Values ('" + id + ", '" + subTodo.getTodoId() + "'"
-                + "'" + subTodo.getTitle() + "', 0)";
-        int result = connect.excuteUpdate(sql);
+        String sql = String.format("Insert Into Sub_TodoList (id, todoID, title) Values ('%s', '%s', N'%s')",
+                id, todoID, title);
         
+        int result = connect.excuteUpdate(sql);
+
         connect.close();
         
         return result > 0;
     }
     
-    
-    public static boolean deleteTodo(SubTodo subTodo) {
+    public static boolean updateSubtodo(SubTodo stodo, String type) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
-        String sql = "Delete From Sub_TodoList Where id = '" + subTodo.getId() + "'";
-        int result = connect.excuteUpdate(sql);
+        String sql = "Update Sub_TodoList Set " 
+                + (type.equals("update") ? "title=N'" + stodo.getTitle() + "'" 
+                : " is_completed='" + stodo.isIsCompleted() + "'")
+                + " Where id='" + stodo.getId() + "'";
         
+        int result = connect.excuteUpdate(sql);
         connect.close();
         
         return result > 0;
     }
     
-    
-    public static boolean updateTodo(SubTodo subTodo) {
+    public static boolean deleteSubTodo(String id) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
-        String sql = "Delete From Sub_TodoList Where id = '" + subTodo.getId() + "'";
+        String sql = "Delete Sub_TodoList Where id = '" + id + "'";
         
         int result = connect.excuteUpdate(sql);
+        connect.close();
         
         return result > 0;
     }

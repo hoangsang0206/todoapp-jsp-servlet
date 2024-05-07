@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.lang.reflect.Array;
+import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import models.Account;
@@ -59,14 +60,18 @@ public class CategoriesServlet extends HttpServlet {
         
         response.setContentType("application/json");
         
+        String id = request.getParameter("id");
         Account account = AccountDAO.getLoggedInUser(request);
         
-        if(account != null) {
-            ArrayList<Category> categories = CategoriesDAO.getUserCategories(account.getUsername());
-            Gson gson = new GsonBuilder()
+        Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
-            
+        
+        if(id != null && !id.isEmpty()) {
+            Category category = CategoriesDAO.getCategory(id);
+            printWriter.print(gson.toJson(category));
+        } else {
+            ArrayList<Category> categories = CategoriesDAO.getUserCategories(account.getUsername());
             printWriter.print(gson.toJson(categories));
         }
     } 
@@ -82,20 +87,57 @@ public class CategoriesServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String name = request.getParameter("name");
-        String color = request.getParameter("color");
+        String color = URLDecoder.decode(request.getParameter("color"), "UTF-8");
         
         Account account = AccountDAO.getLoggedInUser(request);
         
         Category category = new Category();
         category.setCateName(name);
         category.setIconColor(color);
+        category.setDateCreate(LocalDateTime.now());
         
         if(CategoriesDAO.createCategory(category, account.getUsername())) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+
     }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+    throws ServletException, IOException {
+        String id = request.getParameter("id");
+        String name = request.getParameter("name");
+        String color = URLDecoder.decode(request.getParameter("color"), "UTF-8");
+        
+        Account account = AccountDAO.getLoggedInUser(request);
+        
+        Category category = new Category();
+        category.setId(id);
+        category.setCateName(name);
+        category.setIconColor(color);
+        
+        if(CategoriesDAO.updateCategory(category, account.getUsername())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        String id = request.getParameter("id");
+        Account account = AccountDAO.getLoggedInUser(request);
+        
+        if(CategoriesDAO.deleteCategory(id, account.getUsername())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+    
     
     
 

@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import models.SubTodo;
 
 /**
  *
@@ -149,8 +150,6 @@ public class CategoriesDAO {
             id = "c_" + RandomString.random(20);
         }
         
-        
-        
         String sql = String.format("Insert Into Categories Values ('%s', N'%s', '%s', N'%s', '%s')",
                 id, category.getCateName(), username, category.getIconColor(), FormatLocalDateTime.formatSQL(category.getDateCreate()));
         
@@ -158,6 +157,42 @@ public class CategoriesDAO {
         
         connect.close();
         
+        return result > 0;
+    }
+    
+    public static boolean updateCategory(Category category, String username) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Update Categories Set cateName = N'" + category.getCateName() + "', iconColor = N'" + category.getIconColor() + "'"
+                + " Where id = '" + category.getId() + "' And username = '" + username + "'";
+        
+        int result = connect.excuteUpdate(sql);
+        
+        connect.close();
+        return result > 0;
+    }
+    
+    public static boolean deleteCategory(String id, String username) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        ArrayList<Todo> todoList = TodoListDAO.getTodoListByCategory(id);
+        if(todoList.size() > 0) {
+            for(Todo todo : todoList) {
+                ArrayList<Category> categories = CategoriesDAO.getTodoCategories(todo.getId());
+                if(categories.size() == 1) {
+                    TodoListDAO.deleteTodo(todo.getId(), username);
+                }
+            }
+        }
+        
+        String sql1 = "Delete From Todo_Categories Where cateID = '" + id + "'";
+        String sql2 = "Delete From Categories Where id = '" + id + "' And username = '" + username + "'";
+        connect.excuteUpdate(sql1);
+        int result = connect.excuteUpdate(sql2);
+        
+        connect.close();
         return result > 0;
     }
 }

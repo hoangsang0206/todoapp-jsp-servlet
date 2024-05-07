@@ -166,8 +166,39 @@
             </div>
 
             <div class="form-action d-flex gap-3 align-items-center">
-                <button type="submit" class="s-btn submit-form-btn sm-create-task">
+                <button type="submit" class="s-btn submit-form-btn">
                     <fmt:message bundle="${bundle}" key="form_create_btn" />
+                </button>
+                <button type="button" class="s-btn close-form-btn">
+                    <fmt:message bundle="${bundle}" key="form_close_btn" />
+                </button>
+            </div>
+
+        </form>
+    </section>
+</section>
+                
+<section class="edit-category-wrapper form-container">
+    <section class="edit-category form-box">
+        <div class="form-box-header">
+            <h4><fmt:message bundle="${bundle}" key="form_editcate_title" /></h4>
+        </div>
+        <form class="form-main" action="#" method="POST">
+            <input type="hidden" id="edit-cate-id" name="edit-cate-id"  />
+            <div>
+                <div class="input-box d-flex flex-column">
+                    <label for="edit-cate-name"><fmt:message bundle="${bundle}" key="form_cate_label_name" /></label>
+                    <input type="text" name="edit-cate-name" id="edit-cate-name" autocomplete="off" required />
+                </div>
+                <div class="input-box d-flex flex-column mt-3">
+                    <label for="cate-icon"><fmt:message bundle="${bundle}" key="form_cate_label_color" /></label>
+                    <input type="color" value="#e30019" name="edit-cate-icon" id="edit-cate-icon" />
+                </div>
+            </div>
+
+            <div class="form-action d-flex gap-3 align-items-center">
+                <button type="submit" class="s-btn submit-form-btn">
+                    <fmt:message bundle="${bundle}" key="form_edit_btn" />
                 </button>
                 <button type="button" class="s-btn close-form-btn">
                     <fmt:message bundle="${bundle}" key="form_close_btn" />
@@ -179,7 +210,7 @@
 </section>
 
 <section class="create-note-wrapper form-container">
-
+    
 </section>
                 
 

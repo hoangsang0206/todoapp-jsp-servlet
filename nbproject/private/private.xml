@@ -4,12 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/typescript/main.ts</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/register.jsp</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/layout/action_form.jsp</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/dao/CategoriesDAO.java</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/dao/TodoListDAO.java</file>
             <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/css/layout.css</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/apicontrollers/TodoServlet.java</file>
+            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/dashboard.jsp</file>
+            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/controllers/DashboardServlet.java</file>
+            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/controllers/TodayTaskServlet.java</file>
+            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/today.jsp</file>
         </group>
     </open-files>
 </project-private>

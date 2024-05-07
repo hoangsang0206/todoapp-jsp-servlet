@@ -132,6 +132,11 @@
 
                                 <span class="nav-link-text"><%= category.getCateName() %></span>
                             </div>
+                            
+                            <div class="nav-cate-action d-flex align-items-center gap-2">
+                                <i class='nav-edit-cate bx bx-edit' data-id="<%= category.getId() %>"></i>
+                                <i class='nav-del-cate bx bx-trash' data-id="<%= category.getId() %>"></i>
+                            </div>
                         </a>
                     </li>
                 <% } %>                  

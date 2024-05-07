@@ -32,6 +32,22 @@
             <main>
                 <jsp:include page="layout/header_navigation.jsp" />
                 
+                <%
+                    ArrayList<Todo> todayList = (ArrayList<Todo>) request.getAttribute("TodayList");
+                    int allCount = (int) request.getAttribute("AllCount");
+                    int monthCount = (int) request.getAttribute("MonthCount");
+                    int weekCount = (int) request.getAttribute("WeekCount");
+                    int todayCompleted = (int) request.getAttribute("TodayCompleted");
+                    int allCompleted = (int) request.getAttribute("AllCompleted");
+                    int monthCompleted = (int) request.getAttribute("MonthCompleted");
+                    int weekCompleted = (int) request.getAttribute("WeekCompleted");
+                    
+                    String todayPercent = String.format("%.2f", ((float) todayCompleted / todayList.size()) * 100);
+                    String allPercent = String.format("%.2f", ((float) allCompleted / allCount) * 100);
+                    String monthPercent = String.format("%.2f", ((float) monthCompleted / monthCount) * 100);
+                    String weekPercent = String.format("%.2f", ((float) weekCompleted / weekCount) * 100);
+                %>
+                
                 <section class="main-contents">
                     <div class="welcome-box d-flex align-items-center justify-content-between mt-2 mb-4">
                         <div class="d-flex align-items-center">
@@ -53,26 +69,20 @@
 
                     <div class="statistic mt-3">
                         <div class="statistic-box d-flex flex-column justify-content-between">
-                            <%
-//                                float allPercent = (float) request.getAttribute("AllPercent");
-//                                float monthPercent = (float) request.getAttribute("MonthPercent");
-//                                float weekPercent = (float) request.getAttribute("WeekPercent");
-//                                float dayPercent = (float) request.getAttribute("DayPercent");
-                            %>
                             <div>
                                 <p class="sta-cate-name m-0">
                                     Tất cả
                                 </p>
                                 <p class="sta-task-count m-0">
-                                    12 Việc
+                                    <%= allCount %> Việc
                                 </p>
                             </div>
                             <div class="completed-percent-box mt-4">
                                 <p class="m-0">
-                                    <%%>%
+                                    <%= allPercent %>% (<%= allCompleted %>)
                                 </p>
                                 <div class="completed-percent-bar">
-                                    <div style="width: 50%;"></div>
+                                    <div style="width: <%= allPercent %>%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -83,15 +93,15 @@
                                     Tháng này
                                 </p>
                                 <p class="sta-task-count m-0">
-                                    12 Việc
+                                    <%= monthCount %> Việc
                                 </p>
                             </div>
                             <div class="completed-percent-box mt-4">
                                 <p class="m-0">
-                                    <%%>%
+                                    <%= monthPercent %>% (<%= monthCompleted %>)
                                 </p>
                                 <div class="completed-percent-bar">
-                                    <div style="width: 50%;"></div>
+                                    <div style="width: <%= monthPercent %>%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -102,15 +112,15 @@
                                     Tuần này
                                 </p>
                                 <p class="sta-task-count m-0">
-                                    12 Việc
+                                    <%= weekCount %> Việc
                                 </p>
                             </div>
                             <div class="completed-percent-box mt-4">
                                 <p class="m-0">
-                                    <%%>%
+                                    <%= weekPercent %>% (<%= weekCompleted %>)
                                 </p>
                                 <div class="completed-percent-bar">
-                                    <div style="width: 50%;"></div>
+                                    <div style="width: <%= weekPercent %>%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -121,15 +131,15 @@
                                     Hôm nay
                                 </p>
                                 <p class="sta-task-count m-0">
-                                    12 Việc
+                                    <%= todayList.size() %> Việc
                                 </p>
                             </div>
                             <div class="completed-percent-box mt-4">
                                 <p class="m-0">
-                                    <%%>%
+                                    <%= todayPercent %>% (<%= todayCompleted %>)
                                 </p>
                                 <div class="completed-percent-bar">
-                                    <div style="width: 50%;"></div>
+                                    <div style="width: <%= todayPercent %>%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -165,7 +175,6 @@
                             <div class="home-task-list d-flex flex-column gap-2 mt-2">
                                 
                                 <%
-                                    ArrayList<Todo> todayList = (ArrayList<Todo>) request.getAttribute("TodayList");  
                                     if(todayList.size() > 0) {
                                         for(Todo todo : todayList) {
                                 %>
