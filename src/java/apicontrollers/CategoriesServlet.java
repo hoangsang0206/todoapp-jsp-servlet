@@ -81,7 +81,20 @@ public class CategoriesServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String name = request.getParameter("name");
+        String color = request.getParameter("color");
         
+        Account account = AccountDAO.getLoggedInUser(request);
+        
+        Category category = new Category();
+        category.setCateName(name);
+        category.setIconColor(color);
+        
+        if(CategoriesDAO.createCategory(category, account.getUsername())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
     
     

@@ -21,7 +21,7 @@ integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
 
 <!-- Javascript -->
-<script type="text/javascript" src="javascript/layout.js" defer></script>
+<script type="text/javascript" src="javascript/main.js" defer></script>
 <script type="text/javascript" src="javascript/index.js" defer></script>
 
 <!-- Bootstrap -->

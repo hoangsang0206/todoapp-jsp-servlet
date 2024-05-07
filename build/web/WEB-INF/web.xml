@@ -37,6 +37,10 @@
         <url-pattern>/today</url-pattern>
     </filter-mapping>
     <filter-mapping>
+        <filter-name>AuthenFilter</filter-name>
+        <url-pattern>/</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
         <filter-name>UrlFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>

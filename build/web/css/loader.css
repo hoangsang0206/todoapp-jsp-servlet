@@ -154,6 +154,19 @@
     overflow: visible;
 }
 
+.button-loader {
+    --uib-size: 20px;
+    --uib-color: #fff;
+    --uib-speed: 2s;
+    --uib-bg-opacity: 0;
+    height: var(--uib-size);
+    width: var(--uib-size);
+    transform-origin: center;
+    animation: rotate var(--uib-speed) linear infinite;
+    will-change: transform;
+    overflow: visible;
+}
+
  .car {
     fill: none;
     stroke: var(--uib-color);

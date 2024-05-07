@@ -135,39 +135,46 @@ public class TodoServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) 
     throws ServletException, IOException {
+        String type = request.getParameter("t");
         String id = request.getParameter("id");
-        String title = request.getParameter("title");
-        String description = request.getParameter("description");
-        String date = request.getParameter("date");
-        String listCate = request.getParameter("categories");
-        
-        LocalDateTime dateTime = LocalDateTime.parse(date);
+        String status = request.getParameter("status");
         
         Account account = AccountDAO.getLoggedInUser(request);
         
         Todo todo = new Todo();
         todo.setId(id);
-        todo.setTitle(title);
-        todo.setDescription(description);
-        todo.setDateCreate(LocalDateTime.now());
-        todo.setDateCompleted(dateTime);
-        
-        ArrayList<Category> categories = new ArrayList<>();
-        if(listCate != null && !listCate.isEmpty()) {
-            String[] values = listCate.split(",");
-            for(String value : values) {
-                if(value != null && !value.isEmpty()) {
-                    Category category = new Category();
-                    category.setId(value);
+        if(type != null && type.equals("status")) {
+            todo.setIsCompleted(status.equals("completed"));
+        } else {
+            String title = request.getParameter("title");
+            String description = request.getParameter("description");
+            String date = request.getParameter("date");
+            String listCate = request.getParameter("categories");
+            LocalDateTime dateTime = LocalDateTime.parse(date);
                     
-                    categories.add(category);
-                }
-            }
+            todo.setTitle(title);
+            todo.setDescription(description);
+            todo.setDateCreate(LocalDateTime.now());
+            todo.setDateCompleted(dateTime);
+            todo.setIsCompleted(status.equals("completed"));
             
-            todo.setCategories(categories);
+            ArrayList<Category> categories = new ArrayList<>();
+            if(listCate != null && !listCate.isEmpty()) {
+                String[] values = listCate.split(",");
+                for(String value : values) {
+                    if(value != null && !value.isEmpty()) {
+                        Category category = new Category();
+                        category.setId(value);
+
+                        categories.add(category);
+                    }
+                }
+
+                todo.setCategories(categories);
+            }
         }
-        
-        if(TodoListDAO.updateTodo(todo, account.getUsername())) {
+             
+        if(TodoListDAO.updateTodo(type, todo, account.getUsername())) {
             response.setStatus(HttpServletResponse.SC_OK);
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -177,7 +184,14 @@ public class TodoServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-       
+        String id = request.getParameter("id");
+        Account account = AccountDAO.getLoggedInUser(request);
+        
+        if(TodoListDAO.deleteTodo(id, account.getUsername())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 
     

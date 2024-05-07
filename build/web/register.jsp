@@ -47,17 +47,17 @@
                 <h4 class="text-center mb-4"><fmt:message bundle="${bundle}" key="register" /></h4>
                 <form action="register" method="post" class="register-form d-flex flex-column align-items-center">
                     
-                <% 
-                    String error = (String) request.getAttribute("Error");
-                    if(error != null && !error.isEmpty()) { 
-                %>
+                    <% 
+                        String error = (String) request.getAttribute("Error");
+                        if(error != null && !error.isEmpty()) { 
+                    %>
                     
-                <div class="form-error">
-                    <i class="form-error-icon fa-solid fa-circle-exclamation"></i>
-                    <span class="form-error-msg"><%= error %></span>
-                </div>
+                    <div class="form-error">
+                        <i class="form-error-icon fa-solid fa-circle-exclamation"></i>
+                        <span class="form-error-msg"><%= error %></span>
+                    </div>
                     
-                <% } %>
+                    <% } %>
                     
                     <div class="d-flex flex-column mt-2">
                         <label class="ac-label" for="username"><fmt:message bundle="${bundle}" key="username" /></label>
@@ -109,7 +109,7 @@
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
 
         <!-- Javascript -->
-        <script type="text/javascript" src="javascript/layout.js" defer></script>
+        <script type="text/javascript" src="javascript/main.js" defer></script>
 
 </body>
 </html>

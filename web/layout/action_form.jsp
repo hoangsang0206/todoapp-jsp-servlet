@@ -118,6 +118,19 @@
                 <div class="input-box d-flex flex-column mt-3">
                     <label for="task-time"><fmt:message bundle="${bundle}" key="form_todo_label_time" /></label>
                     <input type="datetime-local" name="edit-task-time" id="edit-task-time" required>
+                </div> 
+                <div class="input-box d-flex flex-column mt-3">
+                    <label><fmt:message bundle="${bundle}" key="form_todo_status" /></label>
+                    <div class="d-flex align-items-center gap-3 ps-3">
+                        <div class="d-flex align-items-center gap-1">
+                            <input type="radio" value="completed" id="todo_completed" name="todo_status" />
+                            <label for="todo_completed"><fmt:message bundle="${bundle}" key="form_todo_status_1" /></label>
+                        </div>
+                        <div class="d-flex align-items-center gap-1">
+                            <input type="radio" value="notcomplete" id="todo_notcomplete" name="todo_status" />
+                            <label for="todo_notcomplete"><fmt:message bundle="${bundle}" key="form_todo_status_2" /></label>
+                        </div>
+                    </div>
                 </div>
             </div>
 

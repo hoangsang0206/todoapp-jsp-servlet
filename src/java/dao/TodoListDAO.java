@@ -175,15 +175,15 @@ public class TodoListDAO {
     }    
     
     
-    public static boolean deleteTodo(Todo todo, String username) {
+    public static boolean deleteTodo(String id, String username) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
-        String sql = "Delete From TodoList Where id = '" + todo.getId() + "' And username = '" + username + "'";
+        String sql = "Delete From TodoList Where id = '" + id + "' And username = '" + username + "'";
         
-        ArrayList<Category> categories = CategoriesDAO.getTodoCategories(todo.getId());
+        ArrayList<Category> categories = CategoriesDAO.getTodoCategories(id);
         if(categories != null && categories.size() > 0) {
-            String sql1 = "Delete From Todo_Categories Where todoID = '" + todo.getId() + "'";
+            String sql1 = "Delete From Todo_Categories Where todoID = '" + id + "'";
             connect.excuteUpdate(sql1);
         }
         
@@ -194,16 +194,25 @@ public class TodoListDAO {
     }
     
     
-    public static boolean updateTodo(Todo todo, String username) {
+    public static boolean updateTodo(String type, Todo todo, String username) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
-        String sql = String.format("Update TodoList Set title = N'%s', description = N'%s', dateCompleted = '%s'"
+        String sql;
+        
+        if(type != null && type.equals("status")) {
+            sql = "Update TodoList Set is_completed='" + todo.isIsCompleted() + "'"
+                    + " Where id = '" + todo.getId() + "' And username = '" + username +"'";
+        } else {
+            sql = String.format("Update TodoList Set title = N'%s', description = N'%s', dateCompleted = '%s', is_completed='%b'"
                 + " Where id = '%s' And username = '%s'", todo.getTitle(), todo.getDescription(),
-                FormatLocalDateTime.formatSQL(todo.getDateCompleted()), todo.getId(), username);
+                FormatLocalDateTime.formatSQL(todo.getDateCompleted()), todo.isIsCompleted(), todo.getId(), username);
+        }
+        
+        
         
         int result = connect.excuteUpdate(sql);
-        if(result > 0 && todo.getCategories() != null && todo.getCategories().size() > 0) {
+        if(result > 0 && type.equals("status") && todo.getCategories() != null && todo.getCategories().size() > 0) {
             ArrayList<Category> categories = CategoriesDAO.getTodoCategories(todo.getId());
             for(Category category : todo.getCategories()) {
                 if(categories != null && categories.size() > 0) {

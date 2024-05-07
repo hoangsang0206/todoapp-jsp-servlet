@@ -171,7 +171,7 @@
                                 %>
                                     <div class="today-task-box d-flex align-items-center justify-content-between gap-2">
                                         <div class="td-task-content d-flex align-items-center gap-3">
-                                            <div class="task-status <%= todo.isIsCompleted()  ? "completed" : "not-complete" %>">
+                                            <div class="task-status <%= todo.isIsCompleted()  ? "completed" : "not-complete" %>" data-id="<%= todo.getId() %>">
                                                 <i class='bx bx-check'></i>
                                             </div>
                                             <div class="td-task-name-des d-flex flex-column gap-1">
@@ -183,7 +183,7 @@
                                         <div class="d-flex align-items-center gap-4">
                                             <div class="d-flex flex-column align-items-end gap-1">
                                                 <span><%= todo.getDateCompleted() != null ? FormatLocalDateTime.format(todo.getDateCompleted()) : "" %></span>
-                                                <span><%= todo.getSubTodoList().size() %> Subtasks</span>
+                                                <span><%= todo.getSubTodoList().size() %> Việc cần làm</span>
                                             </div>
 
                                             <div class="d-flex align-items-center gap-2">

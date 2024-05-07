@@ -128,12 +128,14 @@ public class CategoriesDAO {
                 category.setUsername(rs.getString("username"));
                 category.setIconColor(rs.getString("iconColor"));
                 
+                connect.close();
                 return category;
             }
         } catch (SQLException ex) {
             Logger.getLogger(CategoriesDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        connect.close();
         return null;
     }
     

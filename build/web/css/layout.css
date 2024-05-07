@@ -370,6 +370,7 @@ input[type="checkbox"]:checked::after {
     max-height: 250px;
     display: none;
     overflow: hidden;
+    z-index: 10;
 }
 
 .custom-select.open .select-box {
@@ -417,6 +418,22 @@ input[type="checkbox"]:checked::after {
 
 .select-option:hover * {
     color: #000;
+}
+
+
+.confirm-message {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.cancel-btn {
+    
+}
+
+.confirm-btn {
+    background: var(--btn-color-red);
+    color: var(--text-color-white);
 }
 
 /**/
@@ -1786,8 +1803,9 @@ main {
         display: block;
     }
 
-    .create-task {
+    .form-box, .confirm-box {
         width: calc(100% - 10px);
+        padding: 20px 15px;
     }
 }
 
