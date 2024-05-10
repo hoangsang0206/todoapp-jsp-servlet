@@ -198,20 +198,20 @@ button:disabled {
     padding-top: 20px;
 }
 
-.submit-form-btn {
+.submit-form-btn, .submit-crop-image {
     background-color: var(--btn-color-purple);
     color: #fff;
 }
 
-.submit-form-btn:hover {
+.submit-form-btn:hover, .submit-crop-image:hover {
     background-color: var(--btn-purple-hover);
 }
 
-.close-form-btn {
+.close-form-btn, .close-crop-image {
     color: #000;
 }
 
-.close-form-btn:hover {
+.close-form-btn:hover, .close-crop-image:hover {
     background-color: var(--btn-normal-hover);
 }
 
@@ -486,14 +486,14 @@ hr {
 }
 
 .nav-header {
-    height: 40px;
     width: 100%;
     margin-bottom: 25px;
 }
 
-.logo-img {
-    height: 40px;
+.logo-img{
+    width: 45px;
 }
+
 
 .logo-text {
     font-size: 37px;
@@ -1854,7 +1854,7 @@ input[name="view-type"]:checked ~ label {
     }
 
     .form-box, .confirm-box {
-        width: calc(100% - 10px);
+        width: calc(100% - 10px) !important;
         padding: 20px 15px;
     }
 }

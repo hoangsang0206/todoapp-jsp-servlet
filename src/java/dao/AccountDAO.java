@@ -78,6 +78,17 @@ public class AccountDAO {
         return false;
     }
     
+    public static boolean updateImage(String username, String imageSrc) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Update Account Set imageSrc = N'" + imageSrc + "' Where username = '" + username + "'";
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        return result > 0;
+    }
+    
     public static boolean existUser(String username) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();

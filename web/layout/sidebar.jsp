@@ -31,8 +31,8 @@
     <div class="nav-header d-flex align-items-center justify-content-between">
         <div class="logo-wrapper">          
             <a class="d-flex align-items-center text-decoration-none gap-1" href="dashboard">
-                <img src="images/logo-rmbg.webp" alt="Logo" class="logo-img">
-                <span class="logo-text">STodo</span>
+                <img src="images/logo.svg" alt="Logo" class="logo-img">
+                <span class="logo-text">Todo</span>
             </a>
         </div>
 

@@ -47,7 +47,7 @@ public class JDBCConnect {
             connection.close();
             statement.close();
             
-            System.out.println("-- Đã dừng kết nối cơ sở dữ liệu.");
+//            System.out.println("-- Đã dừng kết nối cơ sở dữ liệu.");
         } catch (SQLException ex) {
             Logger.getLogger(JDBCConnect.class.getName()).log(Level.SEVERE, null, ex);
         }

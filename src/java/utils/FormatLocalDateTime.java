@@ -27,4 +27,8 @@ public class FormatLocalDateTime {
     public static String formatSQL(LocalDateTime datetime) {
         return datetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
+    
+    public static String formatSQLOnlyDate(LocalDateTime datetime) {
+        return datetime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
 }

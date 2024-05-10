@@ -78,7 +78,7 @@ const hideActionForm = (form_wrapper) => {
     form_wrapper.find('.custom-select').removeClass('open');
 };
 const clearFormValue = (form) => {
-    const input_elements = form.find('input').not('[type="datetime-local"]').toArray();
+    const input_elements = form.find('input').not('[type="datetime-local"], [type="radio"]').toArray();
     const selectedOptions = form.find('.selected-option').toArray();
     input_elements.map((input) => {
         $(input).val('');
@@ -245,7 +245,9 @@ $('.close-task-info').click(() => {
 });
 $('.overlay').click(() => {
     $('.sidebar').removeClass('show');
-    hideActionForm($('.form-full-wrapper'));
+    $('.form-container').toArray().map((item) => {
+        hideActionForm($(item));
+    });
     if (window.innerWidth < 1024) {
         $('.task-infomation-wrapper').addClass('close');
     }
@@ -358,7 +360,7 @@ $('.sort-filter-box button').click(function () {
 });
 $('.form-container').click(function (event) {
     if (!$(event.target).closest('.form-box').length) {
-        hideActionForm($(this));
+        hideActionForm($('.form-container'));
         hideOverlay();
     }
 });

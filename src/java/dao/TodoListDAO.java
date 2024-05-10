@@ -94,6 +94,14 @@ public class TodoListDAO {
         return todoList;
     }
     
+    public static ArrayList<Todo> getTodoListByDateRange(LocalDateTime startDate, LocalDateTime endDate, String username) {
+        String sql = String.format("Select * From TodoList Where username = '%s' And (dateComplete Between '%s' And '%s')",
+                username, FormatLocalDateTime.formatSQLOnlyDate(startDate), FormatLocalDateTime.formatSQLOnlyDate(endDate));
+        ArrayList<Todo> todoList = getTodoListBySQL(sql);
+         
+        return todoList;
+    }
+    
     public static ArrayList<Todo> searchTodoList(String username, String todoName) {
         String sqlTodo = "Select * From TodoList "
                 + "Where username = '" + username +"' And title = '" + todoName + "' "

@@ -95,7 +95,7 @@ const hideActionForm = (form_wrapper: any): void => {
 }
 
 const clearFormValue = (form: any) => {
-    const input_elements = form.find('input').not('[type="datetime-local"]').toArray();
+    const input_elements = form.find('input').not('[type="datetime-local"], [type="radio"]').toArray();
     const selectedOptions = form.find('.selected-option').toArray();
     
     input_elements.map((input) => {
@@ -303,7 +303,10 @@ $('.close-task-info').click(() => {
 
 $('.overlay').click(() => {
     $('.sidebar').removeClass('show');
-    hideActionForm($('.form-full-wrapper'));
+    
+    $('.form-container').toArray().map((item) => {
+        hideActionForm($(item));
+    })
     
     if(window.innerWidth < 1024) {
         $('.task-infomation-wrapper').addClass('close');   
@@ -448,7 +451,7 @@ $('.sort-filter-box button').click(function() {
 
 $('.form-container').click(function(event) {
     if(!$(event.target).closest('.form-box').length) {
-        hideActionForm($(this));
+        hideActionForm($('.form-container'));
         hideOverlay();
     }
 })
@@ -1186,9 +1189,9 @@ $(document).on('click', '.nav-edit-cate', function() {
 
 $('.edit-category form').submit(function(e) {
     e.preventDefault();
-    const id = $(e.target).find('#edit-cate-id').val();
-    const name = $(e.target).find('#edit-cate-name').val();
-    const color = encodeURIComponent($(e.target).find('#edit-cate-icon').val());
+    const id: string = $(e.target).find('#edit-cate-id').val();
+    const name: string = $(e.target).find('#edit-cate-name').val();
+    const color: string = encodeURIComponent($(e.target).find('#edit-cate-icon').val());
     
     const submitBtn = $(e.target).find('.submit-form-btn');
     const btn_element = showButtonLoader(submitBtn);

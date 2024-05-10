@@ -61,7 +61,15 @@ public class SettingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String type = request.getParameter("t");
+        String value = request.getParameter("v");
         
+        if(type.equals("lang")) {
+            HttpSession session = request.getSession();
+            session.setAttribute("lang", value != null && value.equals("en") ? "en" : "vi");
+            
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
     }
 
     /** 

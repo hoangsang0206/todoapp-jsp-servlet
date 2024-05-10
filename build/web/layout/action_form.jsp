@@ -212,15 +212,3 @@
 <section class="create-note-wrapper form-container">
     
 </section>
-                
-
-<section class="upload-image-wrapper form-container">
-    <section class="upload-image form-box">
-        <div class="form-box-header">
-            <h4>Upload hình ảnh</h4>
-        </div>
-        <form class="form-main" action="#" method="POST">
-            
-        </form>
-    </section>
-</section>
