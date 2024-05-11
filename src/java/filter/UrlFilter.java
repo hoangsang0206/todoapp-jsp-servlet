@@ -104,8 +104,9 @@ public class UrlFilter implements Filter {
 	doBeforeProcessing(request, response);
         
         String url = ((HttpServletRequest) request).getServletPath();
-        if(url.endsWith(".jsp") && !url.contains("error.jsp")) {
-            ((HttpServletResponse) response).sendRedirect("dashboard");
+        if(url.endsWith(".jsp")) {
+            ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_NOT_FOUND);
+            ((HttpServletResponse) response).sendRedirect("error");
             return;
         }
 	

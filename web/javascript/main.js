@@ -109,7 +109,7 @@ $('.cancel-btn').click(() => {
 const loadSelectData = () => {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: 'api/categories',
+            url: './api/categories',
             type: 'GET',
             success: (response) => {
                 if (response != null) {
@@ -451,7 +451,7 @@ $(document).on('click', '.task-box, .task-action.info', function () {
     showContentLoading($('.task-infomation-wrapper'));
     const id = $(this).data('id');
     $.ajax({
-        url: 'api/todo',
+        url: './api/todo',
         type: 'GET',
         data: {
             id: id
@@ -476,7 +476,7 @@ $(document).ready(() => {
         const submitBtn = $(e.target).find('.submit-form-btn');
         const btn_element = showButtonLoader(submitBtn);
         $.ajax({
-            url: 'api/todo',
+            url: './api/todo',
             type: 'POST',
             data: {
                 title: name,
@@ -634,7 +634,7 @@ const getTodayTodoList = () => {
     showContentLoading($('.home-task-list'));
     showContentLoading($('.main-contents.today-page, .main-contents.all-page'));
     $.ajax({
-        url: 'api/todo?t=day',
+        url: './api/todo?t=day',
         type: 'GET',
         success: (response) => {
             const homeTask = $('.home-task-list');
@@ -656,7 +656,7 @@ const getTodayTodoList = () => {
 const getUpcomingTodoList = () => {
     showContentLoading($('.main-contents.today-page, .main-contents.all-page'));
     $.ajax({
-        url: 'api/todo?t=upcoming',
+        url: './api/todo?t=upcoming',
         type: 'GET',
         success: (response) => {
             const taskBox = $('.tasks-box.upcoming');
@@ -671,7 +671,7 @@ const getUpcomingTodoList = () => {
 const getTodo = (id) => {
     return new Promise((resolve, reject) => {
         $.ajax({
-            url: `api/todo?id=${id}`,
+            url: `./api/todo?id=${id}`,
             type: 'GET',
             success: (response) => {
                 resolve(response);
@@ -730,7 +730,7 @@ $(document).ready(() => {
         const submitBtn = $(e.target).find('.submit-form-btn');
         const btn_element = showButtonLoader(submitBtn);
         $.ajax({
-            url: `api/todo?id=${id}&title=${name}&description=${description}&date=${date}&status=${status}&categories=${categories}`,
+            url: `./api/todo?id=${id}&title=${name}&description=${description}&date=${date}&status=${status}&categories=${categories}`,
             type: 'PUT',
             success: (response) => {
                 setTimeout(() => {
@@ -752,7 +752,7 @@ $(document).ready(() => {
 $(document).on('click', '.task-status.not-complete, .completed-task-btn', function () {
     const id = $(this).data('id');
     $.ajax({
-        url: `api/todo?t=status&id=${id}&status=completed`,
+        url: `./api/todo?t=status&id=${id}&status=completed`,
         type: 'PUT',
         success: (response) => {
             getTodayTodoList();
@@ -774,7 +774,7 @@ $(document).on('click', '.task-action.delete, .delete-task-btn', function () {
             const btn = $(this);
             const btn_element = showButtonLoader(btn);
             $.ajax({
-                url: `api/todo?id=${id}`,
+                url: `./api/todo?id=${id}`,
                 type: 'DELETE',
                 success: (response) => {
                     getTodayTodoList();
@@ -822,7 +822,7 @@ $(document).on('submit', '.create-subtask form', function (e) {
     const todoId = $('.add-sub-task').data('id');
     const value = $(this).find('input').val();
     $.ajax({
-        url: `api/subtodo?id=${todoId}&title=${value}`,
+        url: `./api/subtodo?id=${todoId}&title=${value}`,
         type: 'POST',
         success: (response) => {
             $(this).closest('.create-subtask').remove();
@@ -838,7 +838,7 @@ $(document).on('submit', '.edit-sub-task form', function (e) {
     const id = $(e.target).find('input[name="subtodo_id"]').val();
     const title = $(e.target).find('input[name="subtodo_title"]').val();
     $.ajax({
-        url: `api/subtodo?t=update&id=${id}&title=${title}`,
+        url: `./api/subtodo?t=update&id=${id}&title=${title}`,
         type: 'PUT',
         success: (response) => {
             loadSubTasks($('.edit-task-btn').data('id'));
@@ -851,7 +851,7 @@ $(document).on('change', 'input[name="sub-task-cbox"]', function () {
     const complete = $(this).is(':checked');
     const id = $(this).val();
     $.ajax({
-        url: `api/subtodo?t=complete&id=${id}&complete=${complete}`,
+        url: `./api/subtodo?t=complete&id=${id}&complete=${complete}`,
         type: 'PUT',
         success: (response) => {
             loadSubTasks($('.edit-task-btn').data('id'));
@@ -862,7 +862,7 @@ $(document).on('change', 'input[name="sub-task-cbox"]', function () {
 });
 const loadSubTasks = (id) => {
     $.ajax({
-        url: `api/todo?id=${id}`,
+        url: `./api/todo?id=${id}`,
         type: 'GET',
         success: (response) => {
             $('.sub-task-list').empty();
@@ -906,7 +906,7 @@ const loadSubTasks = (id) => {
 $(document).on('click', '.delete-sub-task', function () {
     const id = $(this).data('id');
     $.ajax({
-        url: `api/subtodo?id=${id}`,
+        url: `./api/subtodo?id=${id}`,
         type: 'DELETE',
         success: (response) => {
             loadSubTasks($('.edit-task-btn').data('id'));
@@ -922,7 +922,7 @@ $('.create-category form').submit((e) => {
     const submitBtn = $(e.target).find('.submit-form-btn');
     const btn_element = showButtonLoader(submitBtn);
     $.ajax({
-        url: `api/categories?name=${name}&color=${color}`,
+        url: `./api/categories?name=${name}&color=${color}`,
         type: 'POST',
         success: (response) => {
             setTimeout(() => {
@@ -937,7 +937,7 @@ $('.create-category form').submit((e) => {
 });
 const getCategories = () => {
     $.ajax({
-        url: 'api/categories',
+        url: './api/categories',
         type: 'GET',
         success: (response) => {
             if (response.length > 0) {
@@ -979,7 +979,7 @@ $(document).on('click', '.nav-edit-cate', function () {
     showOverlay();
     const id = $(this).data('id');
     $.ajax({
-        url: `api/categories?id=${id}`,
+        url: `./api/categories?id=${id}`,
         type: 'GET',
         success: (response) => {
             $('#edit-cate-id').val(response.id);
@@ -998,7 +998,7 @@ $('.edit-category form').submit(function (e) {
     const submitBtn = $(e.target).find('.submit-form-btn');
     const btn_element = showButtonLoader(submitBtn);
     $.ajax({
-        url: `api/categories?id=${id}&name=${name}&color=${color}`,
+        url: `./api/categories?id=${id}&name=${name}&color=${color}`,
         type: 'PUT',
         success: (response) => {
             setTimeout(() => {
@@ -1022,7 +1022,7 @@ $(document).on('click', '.nav-del-cate', function () {
             const btn = $(this);
             const btn_element = showButtonLoader(btn);
             $.ajax({
-                url: `api/categories?id=${id}`,
+                url: `./api/categories?id=${id}`,
                 type: 'DELETE',
                 success: (response) => {
                     setTimeout(() => {

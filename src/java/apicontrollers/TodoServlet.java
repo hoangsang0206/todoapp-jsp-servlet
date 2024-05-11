@@ -40,7 +40,6 @@ public class TodoServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -70,25 +69,37 @@ public class TodoServlet extends HttpServlet {
             Todo todo = TodoListDAO.getTodo(id, account.getUsername());
             printWriter.print(gson.toJson(todo));
             
-        } else if(type != null && !type.isEmpty() && type.equals("day")) {
-            ArrayList<Todo> todoList = TodoListDAO.getTodayTodoList(account.getUsername());
-            printWriter.print(gson.toJson(todoList));
-            
-        } else if(type != null && !type.isEmpty() && type.equals("upcoming")) {
-            ArrayList<Todo> todoList = TodoListDAO.getTodayTodoList(account.getUsername());
-            printWriter.print(gson.toJson(TodoListDAO.filterUpcomingTodo(todoList)));
-            
-        } else if(type != null && !type.isEmpty() && type.equals("daterange")) {
-            String startDate= request.getParameter("s");
-            String endDate = request.getParameter("e");
-            if(startDate == null || endDate == null || startDate.isEmpty() || endDate.isEmpty()) {
-                return;
-            }
-            
-            ArrayList<Todo> todoList = TodoListDAO.getTodoListByDateRange(LocalDate.parse(startDate).atStartOfDay(), 
+        } else if(type != null && !type.isEmpty()) {
+            switch (type) {
+                case "day":
+                {
+                    ArrayList<Todo> todoList = TodoListDAO.getTodayTodoList(account.getUsername());
+                    printWriter.print(gson.toJson(todoList));
+                    break;
+                }
+                case "upcoming":
+                {
+                    ArrayList<Todo> todoList = TodoListDAO.getTodayTodoList(account.getUsername());
+                    printWriter.print(gson.toJson(TodoListDAO.filterUpcomingTodo(todoList)));
+                    break;
+                }
+                case "daterange":
+                {
+                    String startDate= request.getParameter("s");
+                    String endDate = request.getParameter("e");
+                    if(startDate == null || endDate == null || startDate.isEmpty() || endDate.isEmpty()) {
+                        return;
+                    }       
+                    ArrayList<Todo> todoList = TodoListDAO.getTodoListByDateRange(LocalDate.parse(startDate).atStartOfDay(), 
                     LocalDate.parse(endDate).atStartOfDay(), account.getUsername());
-            printWriter.print(gson.toJson(todoList));
-            
+                    printWriter.print(gson.toJson(todoList));
+                    break;   
+                }
+                case "filter":
+                    break;
+                default:
+                    break;
+            }
         } else {
             ArrayList<Todo> todoList = TodoListDAO.getTodoList(account.getUsername());
             printWriter.print(gson.toJson(todoList));

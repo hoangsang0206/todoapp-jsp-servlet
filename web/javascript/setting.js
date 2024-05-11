@@ -106,8 +106,9 @@ $('.lang-item').click(function () {
     const value = $(this).data('lang');
     $.ajax({
         type: 'POST',
-        url: `setting?t=lang&v=${value}`,
+        url: `./setting?t=lang&v=${value}`,
         success: () => {
+            localStorage.setItem('lang', value);
             window.location.href = '';
         },
         error: (error) => {

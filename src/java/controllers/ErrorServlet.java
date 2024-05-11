@@ -4,24 +4,20 @@
  */
 
 package controllers;
-import dao.AccountDAO;
-import dao.TodoListDAO;
+
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import models.Account;
-import models.Todo;
 
 /**
  *
  * @author Sang
  */
-@WebServlet(name="AllTaskServlet", urlPatterns={"/all"})
-public class AllTaskServlet extends HttpServlet {
+@WebServlet(name="ErrorServlet", urlPatterns={"/error"})
+public class ErrorServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -32,6 +28,22 @@ public class AllTaskServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        Integer statusCode = (Integer) request.getAttribute("jakarta.servlet.error.status_code");
+        String errorMessage = "";
+        
+        if(statusCode != null) {
+            if(statusCode == 404) {
+                errorMessage = "404 - Không tìm thấy trang";
+            } else if(statusCode != null && statusCode == 500) {
+                errorMessage = "500 - Đã xảy ra lỗi";
+            } else {
+                errorMessage = "Đã xảy ra lỗi không xác định";
+            }
+        }
+        
+        
+        request.setAttribute("errorMsg", errorMessage);
+        request.getRequestDispatcher("error.jsp").forward(request, response);
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -45,27 +57,7 @@ public class AllTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String sort = request.getParameter("sort");
-        
-        Account account = AccountDAO.getLoggedInUser(request);
-        ArrayList<Todo> todoList = TodoListDAO.getTodoList(account.getUsername());
-
-        if(sort != null && !sort.isBlank()) {
-            todoList = TodoListDAO.sortTodoList(todoList, sort);
-        }
-        
-        ArrayList<Todo> upcomingTodoList, todayTodoList, weekTodoList, beforeWeekTodoList;
-        todayTodoList = TodoListDAO.filterTodayTodoList(todoList);
-        upcomingTodoList = TodoListDAO.filterUpcomingTodo(todayTodoList);
-        weekTodoList = TodoListDAO.filterWeekTodoList(todoList);
-        beforeWeekTodoList = TodoListDAO.filterBeforeWeekTodoList(todoList);
-        
-        request.setAttribute("ActiveNav", "all");
-        request.setAttribute("Upcoming", upcomingTodoList);
-        request.setAttribute("TodayTodoList", todayTodoList);
-        request.setAttribute("WeekTodoList", weekTodoList);
-        request.setAttribute("BeforeWeekTodoList", beforeWeekTodoList);
-        request.getRequestDispatcher("all.jsp").forward(request, response);
+        processRequest(request, response);
     } 
 
     /** 
@@ -78,7 +70,7 @@ public class AllTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        
+        processRequest(request, response);
     }
 
     /** 
