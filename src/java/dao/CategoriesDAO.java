@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import models.SubTodo;
 
 /**
  *
@@ -54,8 +53,8 @@ public class CategoriesDAO {
 
                     todo.setDateCreate(rsTodo.getTimestamp("dateCreate") != null
                             ? rsTodo.getTimestamp("dateCreate").toLocalDateTime() : LocalDateTime.now());
-                    todo.setDateCompleted(rsTodo.getTimestamp("dateCompleted") != null
-                            ? rsTodo.getTimestamp("dateCompleted").toLocalDateTime() : null);
+                    todo.setDateToComplete(rsTodo.getTimestamp("dateToComplete") != null
+                            ? rsTodo.getTimestamp("dateToComplete").toLocalDateTime() : null);
                     
                     todoList.add(todo);
                 }

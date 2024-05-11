@@ -59,6 +59,7 @@ public class TodayTaskServlet extends HttpServlet {
         }
         
         request.setAttribute("ActiveNav", "today");
+        request.setAttribute("Upcoming", TodoListDAO.filterUpcomingTodo(todoList));
         request.setAttribute("TodoList", todoList);
         request.getRequestDispatcher("today.jsp").forward(request, response);
     } 

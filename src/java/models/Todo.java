@@ -18,7 +18,7 @@ public class Todo implements Serializable {
     protected String description;
     protected String username;
     protected LocalDateTime dateCreate;
-    protected LocalDateTime dateCompleted;
+    protected LocalDateTime dateToComplete;
     protected boolean isCompleted;
     
     protected ArrayList<Category> categories;
@@ -27,14 +27,14 @@ public class Todo implements Serializable {
     public Todo() {
     }
 
-    public Todo(String id, String title, String description, String username, LocalDateTime dateCreate, LocalDateTime dateCompleted, 
+    public Todo(String id, String title, String description, String username, LocalDateTime dateCreate, LocalDateTime dateToComplete, 
             ArrayList<Category> categories, ArrayList<SubTodo> subTodoList, boolean isCompleted) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.username = username;
         this.dateCreate = dateCreate;
-        this.dateCompleted = dateCompleted;
+        this.dateToComplete = dateToComplete;
         this.categories = categories;
         this.subTodoList = subTodoList;
         this.isCompleted = isCompleted;
@@ -80,12 +80,12 @@ public class Todo implements Serializable {
         this.dateCreate = dateCreate;
     }
 
-    public LocalDateTime getDateCompleted() {
-        return dateCompleted;
+    public LocalDateTime getDateToComplete() {
+        return dateToComplete;
     }
 
-    public void setDateCompleted(LocalDateTime dateCompleted) {
-        this.dateCompleted = dateCompleted;
+    public void setDateToComplete(LocalDateTime dateToComplete) {
+        this.dateToComplete = dateToComplete;
     }
 
     public ArrayList<Category> getCategories() {

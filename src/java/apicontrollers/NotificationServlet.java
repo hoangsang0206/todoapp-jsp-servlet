@@ -3,9 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package controllers;
-import dao.AccountDAO;
-import dao.TodoListDAO;
+package apicontrollers;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -13,16 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import models.Account;
-import models.Todo;
 
 /**
  *
  * @author Sang
  */
-@WebServlet(name="AllTaskServlet", urlPatterns={"/all"})
-public class AllTaskServlet extends HttpServlet {
+@WebServlet(name="NotificationServlet", urlPatterns={"/api/notification"})
+public class NotificationServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -47,27 +43,7 @@ public class AllTaskServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String sort = request.getParameter("sort");
         
-        Account account = AccountDAO.getLoggedInUser(request);
-        ArrayList<Todo> todoList = TodoListDAO.getTodoList(account.getUsername());
-
-        if(sort != null && !sort.isBlank()) {
-            todoList = TodoListDAO.sortTodoList(todoList, sort);
-        }
-        
-        ArrayList<Todo> upcomingTodoList, todayTodoList, weekTodoList, beforeWeekTodoList = new ArrayList<>();
-        todayTodoList = TodoListDAO.filterTodayTodoList(todoList);
-        upcomingTodoList = TodoListDAO.filterUpcomingTodo(todayTodoList);
-        weekTodoList = TodoListDAO.filterWeekTodoList(todoList);
-        beforeWeekTodoList = TodoListDAO.filterBeforeWeekTodoList(todoList);
-        
-        request.setAttribute("ActiveNav", "all");
-        request.setAttribute("Upcoming", upcomingTodoList);
-        request.setAttribute("TodayTodoList", todayTodoList);
-        request.setAttribute("WeekTodoList", weekTodoList);
-        request.setAttribute("BeforeWeekTodoList", beforeWeekTodoList);
-        request.getRequestDispatcher("all.jsp").forward(request, response);
     } 
 
     /** 

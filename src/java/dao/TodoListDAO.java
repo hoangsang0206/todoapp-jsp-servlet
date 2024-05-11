@@ -44,9 +44,9 @@ public class TodoListDAO {
                 todo.setIsCompleted(rsTodo.getBoolean("is_completed"));
                 
                 todo.setDateCreate(rsTodo.getTimestamp("dateCreate") != null
-                        ? rsTodo.getTimestamp("dateCreate").toLocalDateTime() : LocalDateTime.now());
-                todo.setDateCompleted(rsTodo.getTimestamp("dateCompleted") != null
-                        ? rsTodo.getTimestamp("dateCompleted").toLocalDateTime() : null);
+                        ? rsTodo.getTimestamp("dateCreate").toLocalDateTime() : null);
+                todo.setDateToComplete(rsTodo.getTimestamp("dateToComplete") != null
+                        ? rsTodo.getTimestamp("dateToComplete").toLocalDateTime() : null);
                 
                 //Get sub task in todo
                 ArrayList<SubTodo> subTodoList = SubTodoDAO.getSubTodoList(todo.getId());
@@ -69,7 +69,7 @@ public class TodoListDAO {
     }
 
     public static ArrayList<Todo> getTodoList(String username) {
-        String sqlTodo = "Select * From TodoList Where username = '" + username +"' Order By dateCreate ASC";
+        String sqlTodo = "Select * From TodoList Where username = '" + username +"' Order By dateToComplete DESC";
         ArrayList<Todo> todoList = getTodoListBySQL(sqlTodo);
         
         return todoList;
@@ -77,7 +77,7 @@ public class TodoListDAO {
     
     public static ArrayList<Todo> getTodayTodoList(String username) {
         String sqlTodo = "Select * From TodoList Where username = '" + username 
-                +"' And Convert(DATE, dateCompleted) = Convert(DATE, Getdate()) Order By dateCreate ASC";
+                +"' And Convert(DATE, dateToComplete) = Convert(DATE, Getdate()) Order By dateToComplete DESC";
         ArrayList<Todo> todoList = getTodoListBySQL(sqlTodo);
         
         return todoList;
@@ -88,14 +88,15 @@ public class TodoListDAO {
                     "FROM Categories " +
                     "INNER JOIN Todo_Categories ON Categories.id = Todo_Categories.cateID " +
                     "INNER JOIN TodoList ON Todo_Categories.todoID = TodoList.id " +
-                    "WHERE Categories.id = '" + categoryID + "'";
+                    "WHERE Categories.id = '" + categoryID + "' " +
+                    "Order By dateToComplete DESC";
         ArrayList<Todo> todoList = getTodoListBySQL(sql);
          
         return todoList;
     }
     
     public static ArrayList<Todo> getTodoListByDateRange(LocalDateTime startDate, LocalDateTime endDate, String username) {
-        String sql = String.format("Select * From TodoList Where username = '%s' And (dateComplete Between '%s' And '%s')",
+        String sql = String.format("Select * From TodoList Where username = '%s' And (dateToComplete Between '%s' And '%s') Order By dateToComplete DESC",
                 username, FormatLocalDateTime.formatSQLOnlyDate(startDate), FormatLocalDateTime.formatSQLOnlyDate(endDate));
         ArrayList<Todo> todoList = getTodoListBySQL(sql);
          
@@ -105,7 +106,7 @@ public class TodoListDAO {
     public static ArrayList<Todo> searchTodoList(String username, String todoName) {
         String sqlTodo = "Select * From TodoList "
                 + "Where username = '" + username +"' And title = '" + todoName + "' "
-                + "Order By dateCreate ASC";
+                + "Order By dateToComplete DESC";
         
          ArrayList<Todo> todoList = getTodoListBySQL(sqlTodo);
         
@@ -132,9 +133,9 @@ public class TodoListDAO {
                 todo.setIsCompleted(rsTodo.getBoolean("is_completed"));
 
                 todo.setDateCreate(rsTodo.getTimestamp("dateCreate") != null
-                        ? rsTodo.getTimestamp("dateCreate").toLocalDateTime() : LocalDateTime.now());
-                todo.setDateCompleted(rsTodo.getTimestamp("dateCompleted") != null
-                        ? rsTodo.getTimestamp("dateCompleted").toLocalDateTime() : null);
+                        ? rsTodo.getTimestamp("dateCreate").toLocalDateTime() : null);
+                todo.setDateToComplete(rsTodo.getTimestamp("dateToComplete") != null
+                        ? rsTodo.getTimestamp("dateToComplete").toLocalDateTime() : null);
 
                 //Get sub task in todo
                 ArrayList<SubTodo> subTodoList = SubTodoDAO.getSubTodoList(todo.getId());
@@ -168,9 +169,9 @@ public class TodoListDAO {
             id = "td_" + RandomString.random(20);
         }
         
-        String sql = String.format("Insert Into TodoList (id, title, description, username, dateCreate, dateCompleted) Values ('%s', N'%s', "
+        String sql = String.format("Insert Into TodoList (id, title, description, username, dateCreate, dateToComplete) Values ('%s', N'%s', "
                 + "N'%s', '%s', Getdate(), '%s')", id, todo.getTitle(), todo.getDescription(),
-                username, FormatLocalDateTime.formatSQL(todo.getDateCompleted()));
+                username, FormatLocalDateTime.formatSQL(todo.getDateToComplete()));
         int result = connect.excuteUpdate(sql);
         
         if(result > 0 && todo.getCategories() != null && todo.getCategories().size() > 0) {
@@ -222,9 +223,9 @@ public class TodoListDAO {
             sql = "Update TodoList Set is_completed='" + todo.isIsCompleted() + "'"
                     + " Where id = '" + todo.getId() + "' And username = '" + username +"'";
         } else {
-            sql = String.format("Update TodoList Set title = N'%s', description = N'%s', dateCompleted = '%s', is_completed='%b'"
+            sql = String.format("Update TodoList Set title = N'%s', description = N'%s', dateToComplete = '%s', is_completed='%b'"
                 + " Where id = '%s' And username = '%s'", todo.getTitle(), todo.getDescription(),
-                FormatLocalDateTime.formatSQL(todo.getDateCompleted()), todo.isIsCompleted(), todo.getId(), username);
+                FormatLocalDateTime.formatSQL(todo.getDateToComplete()), todo.isIsCompleted(), todo.getId(), username);
         }
         
               
@@ -259,25 +260,29 @@ public class TodoListDAO {
     //
     public static ArrayList<Todo> filterTodayTodoList(ArrayList<Todo> todoList) {
         return (ArrayList<Todo>) todoList.stream()
-                .filter(todo -> todo.getDateCompleted().toLocalDate().isEqual(LocalDate.now()))
+                .filter(todo -> todo.getDateToComplete().toLocalDate().isEqual(LocalDate.now()))
                 .collect(Collectors.toList());
     }
     
     public static ArrayList<Todo> filterWeekTodoList(ArrayList<Todo> todoList) {
         LocalDate today = LocalDate.now();
         LocalDate startOfWeek = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
-        LocalDate endOfWeek = startOfWeek.plusDays(6);
+        LocalDate endOfWeek = startOfWeek.plusDays(7);
         
         ArrayList<Todo> weekTodoList = new ArrayList<>();
         
         for(Todo todo : todoList) {
-            LocalDate itemDate = todo.getDateCompleted().toLocalDate();
+            LocalDate itemDate = todo.getDateToComplete().toLocalDate();
             if(itemDate.isEqual(startOfWeek) || (itemDate.isAfter(startOfWeek) && itemDate.isBefore(endOfWeek))) {
                 weekTodoList.add(todo);
             }
         }
         
-        return weekTodoList;
+        return (ArrayList<Todo>) todoList.stream()
+                .filter(todo -> todo.getDateToComplete().toLocalDate().isEqual(startOfWeek) 
+                        || (todo.getDateToComplete().toLocalDate().isAfter(startOfWeek) 
+                                && todo.getDateToComplete().toLocalDate().isBefore(endOfWeek)))
+                .collect(Collectors.toList());
     }
     
     public static ArrayList<Todo> filterMonthTodoList(ArrayList<Todo> todoList) {
@@ -288,7 +293,7 @@ public class TodoListDAO {
         ArrayList<Todo> monthTodoList = new ArrayList<>();
         
         for(Todo todo : todoList) {
-            LocalDate itemDate = todo.getDateCompleted().toLocalDate();
+            LocalDate itemDate = todo.getDateToComplete().toLocalDate();
             if(itemDate.getMonthValue() == month && itemDate.getYear() == year) {
                 monthTodoList.add(todo);
             }
@@ -297,15 +302,30 @@ public class TodoListDAO {
         return monthTodoList;
     }
     
+    public static ArrayList<Todo> filterBeforeWeekTodoList(ArrayList<Todo> todoList) {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+        
+        return (ArrayList<Todo>) todoList.stream()
+                .filter(todo -> todo.getDateToComplete().toLocalDate().isBefore(startOfWeek))
+                .collect(Collectors.toList());
+    }
+    
     public static ArrayList<Todo> filterCompletedTodo(ArrayList<Todo> todoList) { 
         return (ArrayList<Todo>) todoList.stream().filter(todo -> todo.isIsCompleted()).collect(Collectors.toList());
     }
     
+    public static ArrayList<Todo> filterUpcomingTodo(ArrayList<Todo> todoList) { 
+        return (ArrayList<Todo>) todoList.stream()
+                .filter(todo -> todo.getDateToComplete().isAfter(LocalDateTime.now()) && todo.getDateToComplete().isBefore(LocalDateTime.now().plusMinutes(30)))
+                .collect(Collectors.toList());
+    }
+    
     public static ArrayList<Todo> sortTodoList(ArrayList<Todo> todoList, String sort) {
         if(sort.equals("desc")) {
-            todoList.sort(Comparator.comparing(Todo::getDateCompleted).reversed());
+            todoList.sort(Comparator.comparing(Todo::getDateToComplete).reversed());
         } else {
-            todoList.sort(Comparator.comparing(Todo::getDateCompleted));
+            todoList.sort(Comparator.comparing(Todo::getDateToComplete));
         }
         
         

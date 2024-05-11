@@ -87,7 +87,7 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between <%= activeNav == "calendar" ? "active" : "" %>" href="javascript:void(0)">
+                        <a class="nav-link d-flex align-items-center justify-content-between <%= activeNav == "calendar" ? "active" : "" %>" href="calendar">
                             <div class="nav-link-box d-flex align-items-center">
                                 <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
                                     <path d="M7 11h2v2H7zm0 4h2v2H7zm4-4h2v2h-2zm0 4h2v2h-2zm4-4h2v2h-2zm0 4h2v2h-2z"></path>

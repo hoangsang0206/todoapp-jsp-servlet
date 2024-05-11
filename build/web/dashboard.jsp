@@ -189,7 +189,7 @@
 
                                         <div class="d-flex align-items-center gap-4">
                                             <div class="d-flex flex-column align-items-end gap-1">
-                                                <span><%= todo.getDateCompleted() != null ? FormatLocalDateTime.format(todo.getDateCompleted()) : "" %></span>
+                                                <span><%= todo.getDateToComplete() != null ? FormatLocalDateTime.format(todo.getDateToComplete()) : "" %></span>
                                                 <span><%= todo.getSubTodoList().size() %> Việc cần làm</span>
                                             </div>
 

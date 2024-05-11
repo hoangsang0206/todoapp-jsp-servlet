@@ -46,22 +46,6 @@ const hideContentLoading = (content_box) => {
         content_box.find('.loader-box').remove();
     }, 1000);
 };
-const closeTaskList = (taskList) => {
-    let height = taskList.height();
-    let targetHeight = 0;
-    let duration = 300;
-    taskList.data('box-height', height);
-    taskList.animate({
-        height: targetHeight
-    }, duration);
-    return height;
-};
-const showTaskList = (taskList, height) => {
-    let duration = 300;
-    taskList.animate({
-        height: height
-    }, duration);
-};
 const showActionForm = (form_wrapper) => {
     form_wrapper.addClass('show');
     form_wrapper.find('.form-box').addClass('show');
@@ -258,18 +242,9 @@ $('.show-nav-action').click(() => {
     $('.sidebar').addClass('show');
     showOverlay();
 });
-$('.toggle-task-list').click(function () {
-    $(this).toggleClass('active');
-    let taskList = $(this).parent().next('.task-list');
-    if (!taskList.hasClass('close')) {
-        taskList.addClass('close');
-        closeTaskList(taskList);
-    }
-    else {
-        taskList.removeClass('close');
-        let height = taskList.data('box-height');
-        showTaskList(taskList, height);
-    }
+$('.show-hide-tasks').click(function () {
+    $(this).closest('.tasks-box').toggleClass('hide');
+    $(this).toggleClass('rotate');
 });
 $(document).on('click', '.edit-sub-task-btn', function () {
     $(this).parent().find('.edit-sub-task').addClass('show');
@@ -411,7 +386,7 @@ $('input[name="sort-by"]').on('change', function () {
 const appendTaskInfo = (data) => {
     $('.task-inf-name').text(data.title);
     $('.task-inf-description').text(data.description);
-    $('.task-inf-time').text(data.dateCompleted);
+    $('.task-inf-time').text(data.dateToComplete);
     $('.task-inf-cate-list').empty();
     $('.sub-task-list').empty();
     $('.edit-task-btn').data('id', data.id);
@@ -514,6 +489,9 @@ $(document).ready(() => {
                     clearFormValue($(e.target));
                     hideButtonLoader(submitBtn, btn_element);
                     getTodayTodoList();
+                    if ($('.tasks-box.upcoming').length > 0) {
+                        getUpcomingTodoList();
+                    }
                 }, 1000);
             },
             error: (error) => {
@@ -539,7 +517,7 @@ const appendTodayTodoList = (data) => {
 
                             <div class="d-flex align-items-center gap-4">
                                 <div class="d-flex flex-column align-items-end gap-1">
-                                    <span>${item.dateCompleted != 'undefined' ? item.dateCompleted : ""}</span>
+                                    <span>${item.dateToComplete != 'undefined' ? item.dateToComplete : ""}</span>
                                     <span>${item === null || item === void 0 ? void 0 : item.subTodoList.length} Việc cần làm</span>
                                 </div>
 
@@ -573,9 +551,9 @@ const appendTodayTodoList = (data) => {
                         </div>`);
     }
 };
-const appendTodoList = (data) => {
+const appendTodoList = (tasks_box, data) => {
+    tasks_box.find('.task-list').empty();
     if (data.length > 0) {
-        $('.task-list').empty();
         const params = getParams();
         data.map((item) => {
             let str;
@@ -603,8 +581,8 @@ const appendTodoList = (data) => {
                             </div>
                         </div>
                         <div class="task-box-time d-flex align-items-center justify-content-between gap-3">
-                            <span>${item.dateCompleted != 'undefined' ? item.dateCompleted.split(' ')[1] : ""}</span>
-                            <span>${item.dateCompleted != 'undefined' ? item.dateCompleted.split(' ')[0] : ""}</span>
+                            <span>${item.dateToComplete != 'undefined' ? item.dateToComplete.split(' ')[1] : ""}</span>
+                            <span>${item.dateToComplete != 'undefined' ? item.dateToComplete.split(' ')[0] : ""}</span>
                         </div>
                     </div>`;
             }
@@ -622,7 +600,7 @@ const appendTodoList = (data) => {
 
                         <div class="d-flex align-items-center gap-4">
                             <div class="d-flex flex-column align-items-end">
-                                <span>${item.dateCompleted}</span>
+                                <span>${item.dateToComplete}</span>
                                 <span>${item.subTodoList.length} Việc cần làm</span>
                             </div>
 
@@ -648,27 +626,42 @@ const appendTodoList = (data) => {
                         </div>
                     </div>`;
             }
-            $('.task-list').append(str);
+            tasks_box.find('.task-list').append(str);
         });
     }
 };
 const getTodayTodoList = () => {
     showContentLoading($('.home-task-list'));
-    showContentLoading($('.main-contents.today-page'));
+    showContentLoading($('.main-contents.today-page, .main-contents.all-page'));
     $.ajax({
         url: 'api/todo?t=day',
         type: 'GET',
         success: (response) => {
             const homeTask = $('.home-task-list');
-            const taskList = $('.task-list');
+            const taskBox = $('.tasks-box.today');
             if (homeTask.length > 0) {
                 appendTodayTodoList(response);
                 hideContentLoading(homeTask);
             }
-            else if (taskList.length > 0) {
-                appendTodoList(response);
-                hideContentLoading($('.main-contents.today-page'));
+            else if (taskBox.length > 0) {
+                appendTodoList(taskBox, response);
+                hideContentLoading($('.main-contents.today-page, .main-contents.all-page'));
             }
+        },
+        eror: (error) => {
+            console.error("Cannot get todo list.");
+        }
+    });
+};
+const getUpcomingTodoList = () => {
+    showContentLoading($('.main-contents.today-page, .main-contents.all-page'));
+    $.ajax({
+        url: 'api/todo?t=upcoming',
+        type: 'GET',
+        success: (response) => {
+            const taskBox = $('.tasks-box.upcoming');
+            appendTodoList(taskBox, response);
+            hideContentLoading($('.main-contents.today-page, .main-contents.all-page'));
         },
         eror: (error) => {
             console.error("Cannot get todo list.");
@@ -710,7 +703,7 @@ $(document).on('click', '.task-action.edit, .edit-task-btn', function () {
         else {
             $('#todo_notcomplete').prop('checked', true);
         }
-        const date = data === null || data === void 0 ? void 0 : data.dateCompleted;
+        const date = data === null || data === void 0 ? void 0 : data.dateToComplete;
         if (typeof date !== 'undefined') {
             $('#edit-task-time').val(() => {
                 const [datePart, timePart] = date.split(' ');
@@ -745,6 +738,9 @@ $(document).ready(() => {
                     hideOverlay();
                     getTodayTodoList();
                     hideButtonLoader(submitBtn, btn_element);
+                    if ($('.tasks-box.upcoming').length > 0) {
+                        getUpcomingTodoList();
+                    }
                 }, 1000);
             },
             error: (error) => {
@@ -760,6 +756,9 @@ $(document).on('click', '.task-status.not-complete, .completed-task-btn', functi
         type: 'PUT',
         success: (response) => {
             getTodayTodoList();
+            if ($('.tasks-box.upcoming').length > 0) {
+                getUpcomingTodoList();
+            }
         },
         error: (error) => {
         }
@@ -779,6 +778,9 @@ $(document).on('click', '.task-action.delete, .delete-task-btn', function () {
                 type: 'DELETE',
                 success: (response) => {
                     getTodayTodoList();
+                    if ($('.tasks-box.upcoming').length > 0) {
+                        getUpcomingTodoList();
+                    }
                     setTimeout(() => {
                         hideButtonLoader(btn, btn_element);
                         hideConfirmBox();
@@ -1027,6 +1029,10 @@ $(document).on('click', '.nav-del-cate', function () {
                         getCategories();
                         hideButtonLoader(btn, btn_element);
                         hideConfirmBox();
+                        getTodayTodoList();
+                        if ($('.tasks-box.upcoming').length > 0) {
+                            getUpcomingTodoList();
+                        }
                         hideOverlay();
                     }, 1000);
                 },

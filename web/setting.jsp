@@ -124,6 +124,7 @@
                         </div>
                         <input id="upload-image" type="file" accept="image/*" hidden />
                         <input id="cropped-image" name="file" type="file" hidden />
+                        <div class="form-error mt-3 d-none"></div>
                         <div class="form-action d-flex gap-3 align-items-center justify-content-end">
                             <button type="button" class="s-btn close-form-btn">
                                 Hủy

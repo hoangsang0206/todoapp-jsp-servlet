@@ -1,0 +1,107 @@
+.calendar-wrapper {
+    height: 100%;
+    background: var(--current-content-bg);
+    padding: 20px;
+    border-radius: var(--radius);
+    overflow-y: auto;
+}
+
+.calendar-header {
+    height: 40px;
+    margin-bottom: 15px;
+}
+
+.c-type-selection {
+    background: none;
+    height: 39px;
+    padding: 0 14px;
+    font-weight: 600;
+}
+
+.c-type-selection:hover {
+    background: #eee;
+}
+
+.c-type-selection.active {
+    background: #000;
+    color: #fff;
+}
+
+.current-day {
+    white-space: nowrap;
+    color: var(--current-text-color);
+    font-weight: 600;
+    font-size: 22px;
+    line-height: normal;
+}
+
+.c-next-prev button {
+    height: 39px;
+    padding: 0 14px;
+    font-weight: 600;
+}
+
+.c-next-prev button:hover, .c-next-prev button:active {
+    background: #ddd;
+}
+
+.btn-today {
+    background: none;
+}
+
+.btn-today:hover {
+    background: #000;
+    color: #fff;
+}
+
+.c-vbreak {
+    height: 35px;
+    background: #ccc;
+    width: 2px;
+    border-radius: 5px;
+    margin: 0 8px;
+}
+
+.calendar-main {
+    height: calc(100% - 55px);
+    width: 100%;
+}
+
+.c-days-of-month {
+    display: grid;
+    height: 40px;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    border-bottom: 1px solid #ddd;
+}
+
+.c-main {
+    height: calc(100% - 40px);
+    padding-bottom: 1px;
+    overflow-y: auto;
+}
+
+.c-days-of-month > div {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.c-days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.c-day {
+    display: grid;
+    place-items: end start;
+    height: 125px;
+    padding: 10px;
+    border: 1px solid #dddddd;
+}
+
+.c-day.current {
+    font-size: 20px;
+    font-weight: 700;
+}

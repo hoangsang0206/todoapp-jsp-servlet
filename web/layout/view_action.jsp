@@ -10,14 +10,14 @@
         <div class="view-action-box">
             <div class="sort-selection-box">
                 <div class="sort-selection">
-                    <input type="radio" name="sort-by" value="asc" id="sort-asc" hidden ${(param.sort != 'desc' ? "checked" : "")}>
+                    <input type="radio" name="sort-by" value="asc" id="sort-asc" hidden ${(param.sort == 'asc' ? "checked" : "")}>
                     <label class="d-flex align-items-center gap-2" for="sort-asc">
                         <i class='bx bx-up-arrow-alt'></i>
                         <span>Tăng dần theo thời gian</span>
                     </label>
                 </div>
                 <div class="sort-selection">
-                    <input type="radio" name="sort-by" value="desc" id="sort-desc" hidden ${(param.sort == 'desc' ? "checked" : "")}>
+                    <input type="radio" name="sort-by" value="desc" id="sort-desc" hidden ${(param.sort != 'asc' ? "checked" : "")}>
                     <label class="d-flex align-items-center gap-2" for="sort-desc">
                         <i class='bx bx-down-arrow-alt'></i>
                         <span>Giảm dần theo thời gian</span>

@@ -15,15 +15,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dao.AccountDAO;
-import dao.NotesDAO;
 import dao.TodoListDAO;
-import jakarta.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import utils.LocalDateTimeAdapter;
 import models.Todo;
-import java.time.temporal.ChronoUnit;
 import models.Account;
 import models.Category;
 
@@ -77,6 +74,21 @@ public class TodoServlet extends HttpServlet {
             ArrayList<Todo> todoList = TodoListDAO.getTodayTodoList(account.getUsername());
             printWriter.print(gson.toJson(todoList));
             
+        } else if(type != null && !type.isEmpty() && type.equals("upcoming")) {
+            ArrayList<Todo> todoList = TodoListDAO.getTodayTodoList(account.getUsername());
+            printWriter.print(gson.toJson(TodoListDAO.filterUpcomingTodo(todoList)));
+            
+        } else if(type != null && !type.isEmpty() && type.equals("daterange")) {
+            String startDate= request.getParameter("s");
+            String endDate = request.getParameter("e");
+            if(startDate == null || endDate == null || startDate.isEmpty() || endDate.isEmpty()) {
+                return;
+            }
+            
+            ArrayList<Todo> todoList = TodoListDAO.getTodoListByDateRange(LocalDate.parse(startDate).atStartOfDay(), 
+                    LocalDate.parse(endDate).atStartOfDay(), account.getUsername());
+            printWriter.print(gson.toJson(todoList));
+            
         } else {
             ArrayList<Todo> todoList = TodoListDAO.getTodoList(account.getUsername());
             printWriter.print(gson.toJson(todoList));
@@ -108,7 +120,7 @@ public class TodoServlet extends HttpServlet {
         todo.setTitle(title);
         todo.setDescription(description);
         todo.setDateCreate(LocalDateTime.now());
-        todo.setDateCompleted(dateTime);
+        todo.setDateToComplete(dateTime);
         
         ArrayList<Category> categories = new ArrayList<>();
         if(listCate != null && !listCate.isEmpty()) {
@@ -155,7 +167,7 @@ public class TodoServlet extends HttpServlet {
             todo.setTitle(title);
             todo.setDescription(description);
             todo.setDateCreate(LocalDateTime.now());
-            todo.setDateCompleted(dateTime);
+            todo.setDateToComplete(dateTime);
             todo.setIsCompleted(status.equals("completed"));
             
             ArrayList<Category> categories = new ArrayList<>();

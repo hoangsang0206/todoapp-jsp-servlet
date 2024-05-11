@@ -11,7 +11,6 @@ import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 import dao.AccountDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -28,7 +27,7 @@ import models.RandomString;
  * @author Sang
  */
 @WebServlet(name="AzureServlet", urlPatterns={"/api/azure"})
-@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 10)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 10)
 public class AzureServlet extends HttpServlet {
    
     /** 
@@ -69,11 +68,21 @@ public class AzureServlet extends HttpServlet {
         try {
             Part filePart = request.getPart("file");
             if(filePart == null) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().print("Đã xảy ra lỗi khi upload file");
+                return;
+            }
+            
+            if(filePart.getSize() > 1024 * 1024 * 5) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().print("Vui lòng upload file không quá 5MB");
                 return;
             }
 
             String contentType = filePart.getContentType();
             if(contentType == null || !contentType.startsWith("image")) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().print("Vui lòng upload file hình ảnh");
                 return;
             }
 
@@ -106,7 +115,8 @@ public class AzureServlet extends HttpServlet {
             if(AccountDAO.updateImage(account.getUsername(), "https://lhswebstorage.blob.core.windows.net/todoweb/" + blobFilePath)) {
                 HttpSession session = request.getSession(false);
                 session.removeAttribute("user");
-                session.setAttribute("user", AccountDAO.getUser(account.getUsername(), account.getPasswordHash()));
+                account.setImageSrc("https://lhswebstorage.blob.core.windows.net/todoweb/" + blobFilePath);
+                session.setAttribute("user", account);
                 response.getWriter().print("https://lhswebstorage.blob.core.windows.net/todoweb/" + blobFilePath);
                 
                 response.setStatus(HttpServletResponse.SC_OK);
@@ -114,7 +124,7 @@ public class AzureServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
         } catch (Exception e) {
-            System.out.println(e);
+
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
