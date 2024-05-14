@@ -57,11 +57,7 @@
 }
 
 .setting-content-main {
-    height: calc(100% - 50px);
-}
-
-.setting-content-bot {
-    height: 50px;
+    height: 100%;
 }
 
 .setting-content-item {

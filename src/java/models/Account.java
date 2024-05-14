@@ -16,18 +16,21 @@ public class Account implements Serializable {
     protected String passwordHash;
     protected String fullName;
     protected String email;
+    protected boolean emailVerified;
     protected String imageSrc;
-    
+    protected String status;
 
     public Account() {
     }
 
-    public Account(String username, String passwordHash, String fullName, String email, String imageSrc) {
+    public Account(String username, String passwordHash, String fullName, String email, String imageSrc, String status, boolean emailVerified) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.fullName = fullName;
         this.email = email;
+        this.emailVerified = emailVerified;
         this.imageSrc = imageSrc;
+        this.status = status;
     }
 
     public String getUsername() {
@@ -62,12 +65,28 @@ public class Account implements Serializable {
         this.email = email;
     }
 
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
     public String getImageSrc() {
         return imageSrc;
     }
 
     public void setImageSrc(String imageSrc) {
         this.imageSrc = imageSrc;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 }

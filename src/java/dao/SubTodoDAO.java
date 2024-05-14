@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import models.JDBCConnect;
-import models.RandomString;
+import utils.RandomString;
 import models.SubTodo;
 
 /**

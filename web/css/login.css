@@ -1,3 +1,8 @@
+:root {
+    --blur: blur(0) !important;
+    --radius: 6px;
+}
+
 * {
     padding: 0;
     margin: 0;
@@ -97,6 +102,7 @@ body {
     border-radius: 2rem;
     border: none;
     outline: none;
+    overflow: hidden;
 }
 
 .ac-button:hover {

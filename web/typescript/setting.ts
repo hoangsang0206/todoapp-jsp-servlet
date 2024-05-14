@@ -118,6 +118,7 @@ $('.upload-image form').submit((e) => {
                 hideButtonLoader($(e.target).find('.submit-form-btn'), btn_element);
                 hideActionForm($('.upload-image-wrapper'));
                 hideOverlay();
+                console.log(response)
             },
             error: (error) => {
                 console.error(error);
@@ -126,6 +127,23 @@ $('.upload-image form').submit((e) => {
     }
 });
 
+//
+const showOkBox = () => {
+}
+
+$('.confirm-email').click(() => {
+    $.ajax({
+        url: './verify',
+        type: 'POST',
+        success: () => {
+            showOkBox();
+            console.log('Email has sent')
+        },
+        error: () => {
+            console.error('Error when send email')
+        }
+    })
+})
 
 //Change language
 $('.lang-item').click(function() {

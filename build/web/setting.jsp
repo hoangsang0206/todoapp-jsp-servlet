@@ -70,17 +70,29 @@
                                             <input type="text" id="st-ac-name" autocomplete="off" value="${user.fullName}" required>
                                         </div>
 
-                                        <div class="input-box d-flex flex-column">
-                                            <label for="st-ac-email">Email</label>
-                                            <input type="email" id="st-ac-email" autocomplete="off" value="${user.email}" required>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="input-box d-flex flex-column">
+                                                <label for="st-ac-email">Email</label>
+                                                <input type="email" id="st-ac-email" autocomplete="off" value="${user.email}" required>
+                                            </div>
+                                            
+                                            <c:if test="${!user.emailVerified}">
+                                                <a href="javascript:void(0)" class="confirm-email mt-4 text-success text-decoration-none fw-bold">Xác nhận email</a>
+                                            </c:if>
                                         </div>
                                     
                                         <div class="d-flex gap-2">
-                                            <button class="s-btn">Đổi mật khẩu</button>
-                                            <button class="s-btn">Xóa tài khoản</button>
+                                            <button class="s-btn bg-primary text-white">
+                                                <i class='bx bx-key me-1'></i>
+                                                <span>Đổi mật khẩu</span>
+                                            </button>
+                                            <button class="s-btn bg-success text-white">
+                                                <i class='bx bx-log-out me-1'></i>
+                                                <span>Đăng xuất</span>
+                                            </button>
                                         </div>
                                     
-                                    
+                                        <a href="javascript:void(0)" class="delete-account mt-3 text-danger text-decoration-none fw-bold">Xóa tài khoản</a>
                                     </div>
                                     
                                     <div class="setting-content-item d-flex flex-column gap-4" data-setting="languages">
@@ -99,9 +111,6 @@
                                     </div>
                                     
                                     
-                                </div>
-                                <div class="setting-content-bot d-flex align-items-end justify-content-end">
-                                    <button class="s-btn" disabled>Lưu thay đổi</button>
                                 </div>
                             </div>
                         </div>

@@ -244,14 +244,14 @@
                                 if(notes.size() > 0) {
                                     for(Note note : notes) {
                             %>
-                            <div class="note-box">
-                                <div class="note-content">
-                                    <%= note.getContent() %>
-                                </div>
-                                <div class="note-time">
-                                    <%= FormatLocalDateTime.format(note.getDateCreate()) %>
-                                </div>
-                            </div>
+                                    <div class="note-box">
+                                        <div class="note-content">
+                                            <%= note.getContent() %>
+                                        </div>
+                                        <div class="note-time">
+                                            <%= FormatLocalDateTime.format(note.getDateCreate()) %>
+                                        </div>
+                                    </div>
                             <%
                                     }
                                 } else {

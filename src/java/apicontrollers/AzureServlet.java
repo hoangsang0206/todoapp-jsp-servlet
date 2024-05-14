@@ -20,14 +20,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import models.Account;
-import models.RandomString;
+import utils.RandomString;
 
 /**
  *
  * @author Sang
  */
 @WebServlet(name="AzureServlet", urlPatterns={"/api/azure"})
-@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 10)
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 30, maxRequestSize = 1024 * 1024 * 32)
 public class AzureServlet extends HttpServlet {
    
     /** 

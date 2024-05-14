@@ -7,7 +7,7 @@ package dao;
 import models.Category;
 import utils.FormatLocalDateTime;
 import models.JDBCConnect;
-import models.RandomString;
+import utils.RandomString;
 import models.Todo;
 import java.util.ArrayList;
 import java.sql.ResultSet;

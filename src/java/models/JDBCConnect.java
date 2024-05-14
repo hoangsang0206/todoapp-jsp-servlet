@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 public class JDBCConnect {
     private Connection connection = null;
     private Statement statement = null;
-    private String serverName = "AORUS-LAPTOP";
-    private String dbName = "DBTodoApp";
-    private String username = "sa";
-    private String password = "S@ng0356493696";
+    private static final String SERVER_NAME = "AORUS-LAPTOP";
+    private static final String DB_NAME = "DBTodoApp";
+    private static final String USERNAME = "sang";
+    private static final String PASSWORD = "123456";
     
     public JDBCConnect() {
     }
@@ -26,18 +26,16 @@ public class JDBCConnect {
             String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
             Class.forName(driver);
             
-            String connectionURL = "jdbc:sqlserver://" + serverName
-                    + ":1433;encrypt=true;trustServerCertificate=true;databaseName=" + dbName
-                    + ";user=" + username + ";password=" + password;
+            String connectionURL = "jdbc:sqlserver://" + SERVER_NAME
+                    + ":1433;encrypt=true;trustServerCertificate=true;databaseName=" + DB_NAME
+                    + ";user=" + USERNAME + ";password=" + PASSWORD;
             
             connection = DriverManager.getConnection(connectionURL);
             
 //            System.out.println(connection == null ? "-- Kết nối cơ sở dữ liệu thất bại."
 //                    : "-- Kết nối cơ sở dữ liệu thành công.");
             
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JDBCConnect.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(JDBCConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -46,7 +46,7 @@
             </div>
             <div class="register-form-box d-flex flex-column align-items-center justify-content-center">
                 <h4 class="text-center mb-4"><fmt:message bundle="${bundle}" key="register" /></h4>
-                <form action="register" method="post" class="register-form d-flex flex-column align-items-center">
+                <form action="./register" method="post" class="register-form d-flex flex-column align-items-center">
                     
                     <% 
                         String error = (String) request.getAttribute("Error");

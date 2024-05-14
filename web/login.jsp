@@ -45,7 +45,7 @@
             </div>
             <div class="login-form-box d-flex flex-column align-items-center justify-content-center">
                 <h4 class="text-center mb-4"><fmt:message bundle="${bundle}" key="login" /></h4>
-                <form action="login" method="post" class="login-form d-flex flex-column align-items-center">
+                <form action="./login" method="post" class="login-form d-flex flex-column align-items-center">
                     <% 
                         String error = (String) request.getAttribute("Error");
                         if(error != null && !error.isEmpty()) { 

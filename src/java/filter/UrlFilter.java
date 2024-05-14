@@ -122,6 +122,8 @@ public class UrlFilter implements Filter {
 	    // rethrow the problem after that.
 	    problem = t;
 	    t.printStackTrace();
+            ((HttpServletResponse) response).sendRedirect("./error");
+            return;
 	}
 
 	doAfterProcessing(request, response);

@@ -1,5 +1,10 @@
 $(window).on('load', () => {
-    $('.page-loader').removeClass('show');
+    setTimeout(() => {
+        $('.page-loader').removeClass('show');
+    }, 500);
+});
+$('.register-form, .login-form').submit(function () {
+    showButtonLoader($('.ac-button'));
 });
 const setMainWidth = () => {
     if (window.innerWidth >= 1024) {

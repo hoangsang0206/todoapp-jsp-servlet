@@ -7,7 +7,6 @@ package dao;
 import models.Account;
 import models.JDBCConnect;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -15,12 +14,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import utils.RandomString;
 
 /**
  *
  * @author Sang
  */
 public class AccountDAO {
+    public static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9-]+\\\\.)+[A-Za-z]{2,}$");
+    public static final String STATUS_DELETED = "DELETED";
+    public static final String STATUS_PENDING_DELETE = "PENDING_DELETE";
   
     public static Account getUser(String username, String passwordHash) {
         try {
@@ -34,8 +39,10 @@ public class AccountDAO {
                 user.setUsername(rsUser.getString("username"));
                 user.setPasswordHash(rsUser.getString("passwordHash"));
                 user.setEmail(rsUser.getString("email"));
+                user.setEmailVerified(rsUser.getBoolean("email_verified"));
                 user.setFullName(rsUser.getString("fullname"));
                 user.setImageSrc(rsUser.getString("imageSrc"));
+                user.setStatus(rsUser.getString("status"));
                 
                 return user;
             }
@@ -73,9 +80,115 @@ public class AccountDAO {
         return result > 0;
     }
     
-    public static boolean updateAccount() {
+    public static boolean updatePassword(String username, String newPassword) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
         
-        return false;
+        String code = RandomString.randomCode(5);
+        String sql = "Update Account Set passwordHash = N'" + hashPassword(newPassword) 
+                + "' And code = '" + code + "' Where username = '" + username + "'";
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        return result > 0;
+    }
+    
+    public static boolean changePassword(String username, String oldPassword, String newPassword) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String oldPasswordHash = hashPassword(oldPassword);
+        String newPasswordHash = hashPassword(newPassword);
+        if(!oldPasswordHash.equals(newPasswordHash)) {
+            return false;
+        }
+        
+        String sql = "Update Account Set passwordHash = N'" + newPasswordHash + "' Where username = '" + username + "'";
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        return result > 0;
+    }
+    
+    public static boolean updateEmail(String email, String username) {
+        if(!isValidEmail(email)) {
+            return false;
+        }
+        
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Update Account Set email = N'" + email + "' Where username = '" + username + "'";
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        return result > 0;
+    }
+    
+    private static String getVerificationKey(String username) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Select email_verify_key From Account Where username = '" + username + "'";
+        ResultSet resultSet = connect.excuteQuery(sql);
+        
+        String key = null;
+        try {
+            if(resultSet.next()) {
+                key = resultSet.getString("email_verify_key");
+                connect.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        connect.close();
+        return key;
+    }
+    
+    public static boolean getEmailVerificationStatus(String username) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Select email_verified From Account Where username = '" + username + "'";
+        ResultSet resultSet = connect.excuteQuery(sql);
+        boolean status = false;
+        try {
+            if(resultSet.next()) {
+                status = resultSet.getBoolean("email_verified");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        connect.close();
+        return status;
+    }
+    
+    public static boolean verifyEmail(String username, String verificationKey) {
+        if(!verificationKey.equals(getVerificationKey(username))) {
+            return false;
+        }
+                
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Update Account Set email_verified = 1 Where username = '" + username + "'";
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        return result > 0;
+    }
+    
+    public static boolean setVerifycationKey(String username, String key) {
+        String sql = "Update Account Set email_verify_key = '" + key + "' Where username = '" + username + "'";
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        return result > 0;
     }
     
     public static boolean updateImage(String username, String imageSrc) {
@@ -83,6 +196,17 @@ public class AccountDAO {
         connect.getConnection();
         
         String sql = "Update Account Set imageSrc = N'" + imageSrc + "' Where username = '" + username + "'";
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        return result > 0;
+    }
+    
+    public static boolean updateStatus(String status, String username) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Update Account Set status = '" + status + "' Where username = '" + username + "'";
         int result = connect.excuteUpdate(sql);
         connect.close();
         
@@ -134,5 +258,15 @@ public class AccountDAO {
         }
         
         return null;
+    }
+    
+    public static boolean isValidEmail(String email) {
+        if(email == null || email.isEmpty()) {
+            return false;
+        }
+        
+        Matcher matcher = EMAIL_PATTERN.matcher(email);
+        
+        return matcher.matches();
     }
 }

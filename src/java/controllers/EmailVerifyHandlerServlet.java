@@ -6,11 +6,6 @@
 package controllers;
 
 import dao.AccountDAO;
-import models.Todo;
-import models.Note;
-import dao.NotesDAO;
-import dao.TodoListDAO;
-import models.Account;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -18,16 +13,17 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import models.Account;
+import utils.RandomString;
+import utils.SendEmail;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 /**
  *
  * @author Sang
  */
-@WebServlet(name="DashboardServlet", urlPatterns={"/dashboard", ""})
-public class DashboardServlet extends HttpServlet {
+@WebServlet(name="EmailVerifyHandlerServlet", urlPatterns={"/verify"})
+public class EmailVerifyHandlerServlet extends HttpServlet {
+   
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -37,8 +33,8 @@ public class DashboardServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-    }
+
+    } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
@@ -50,31 +46,18 @@ public class DashboardServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {   
-        HttpSession session = request.getSession();
-        Account account = (Account) session.getAttribute("user");
+    throws ServletException, IOException {
+        String key = request.getParameter("key");
+        String username = request.getParameter("u");
+        if(key == null || key.isEmpty() || username == null || username.isEmpty()) {
+            return;
+        }
         
-        ArrayList<Todo> todoList, todayTodoList, weekTodoList, monthTodoList = new ArrayList<>();
-        todoList = TodoListDAO.getTodoList(account.getUsername());
-        
-        todayTodoList = TodoListDAO.filterTodayTodoList(todoList);
-        weekTodoList = TodoListDAO.filterWeekTodoList(todoList);
-        monthTodoList = TodoListDAO.filterMonthTodoList(todoList);
-        
-        ArrayList<Note> notes = new ArrayList<>();
-//        notes = NotesDAO.getNotes(account.getUsername());
-        
-        request.setAttribute("TodayList", todayTodoList);
-        request.setAttribute("AllCount", todoList.size());
-        request.setAttribute("MonthCount", monthTodoList.size());
-        request.setAttribute("WeekCount", weekTodoList.size());
-        request.setAttribute("TodayCompleted", TodoListDAO.filterCompletedTodo(todayTodoList).size());
-        request.setAttribute("AllCompleted", TodoListDAO.filterCompletedTodo(todoList).size());
-        request.setAttribute("MonthCompleted", TodoListDAO.filterCompletedTodo(monthTodoList).size());
-        request.setAttribute("WeekCompleted", TodoListDAO.filterCompletedTodo(weekTodoList).size());
-        request.setAttribute("Notes", notes);
-        request.setAttribute("ActiveNav", "dashboard");
-        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
+        if(AccountDAO.verifyEmail(username, key)) {
+            response.sendRedirect("./setting");
+        } else {
+            response.sendRedirect("./error");
+        }
     } 
 
     /** 
@@ -87,7 +70,33 @@ public class DashboardServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-
+        Account account = AccountDAO.getLoggedInUser(request);
+        if(account == null) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        };
+        if(AccountDAO.getEmailVerificationStatus(account.getUsername())) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
+        };
+            
+        String key = RandomString.random(40);
+                    
+        if(AccountDAO.setVerifycationKey(account.getUsername(), key)) {
+            
+            String emailHtml = "";
+            emailHtml += "<div style=\"width: 500px; max-width: calc(100% - 50px)\">";
+            emailHtml += "<img src=\"https://lhswebstorage.blob.core.windows.net/todoweb/email-images/2909200.jpg\" style=\"width: 100%\">";
+            emailHtml += "<h3>XÁC NHẬN ĐỊA CHỈ EMAIL</h3>";
+            emailHtml += "<p>Vui lòng nhấn vào bút bên dưới để xác nhận địa chỉ email của bạn</p>";
+            emailHtml += "<a href=\"http://localhost:8080/todoapp/verify?key=" + key + "&u=" + account.getUsername() + "\">Xác nhận</a>";
+            emailHtml += "</div>";
+            
+            SendEmail.sendEmail(account.getEmail(), emailHtml);
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /** 

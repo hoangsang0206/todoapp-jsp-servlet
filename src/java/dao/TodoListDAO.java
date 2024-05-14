@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import models.JDBCConnect;
-import models.RandomString;
+import utils.RandomString;
 import models.Todo;
 import models.SubTodo;
 import utils.FormatLocalDateTime;
