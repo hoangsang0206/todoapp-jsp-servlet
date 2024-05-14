@@ -19,6 +19,7 @@ import dao.TodoListDAO;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import utils.LocalDateTimeAdapter;
 import models.Todo;
 import models.Account;
@@ -96,6 +97,20 @@ public class TodoServlet extends HttpServlet {
                     break;   
                 }
                 case "filter":
+                    HashMap<String, ArrayList<Todo>> filterdTodoList = new HashMap<>();
+                    
+                    ArrayList<Todo> todoList = TodoListDAO.getTodoList(account.getUsername());
+                    ArrayList<Todo> today = TodoListDAO.filterTodayTodoList(todoList);
+                    ArrayList<Todo> upcoming = TodoListDAO.filterUpcomingTodo(today);
+                    ArrayList<Todo> week = TodoListDAO.filterWeekTodoList(todoList);
+                    ArrayList<Todo> before = TodoListDAO.filterBeforeWeekTodoList(todoList);
+                    
+                    filterdTodoList.put("upcoming", upcoming);
+                    filterdTodoList.put("today", today);
+                    filterdTodoList.put("week", week);
+                    filterdTodoList.put("beforeWeek", before);
+                    
+                    printWriter.print(gson.toJson(filterdTodoList));
                     break;
                 default:
                     break;
@@ -106,6 +121,7 @@ public class TodoServlet extends HttpServlet {
             
         }
         
+        printWriter.flush();
     } 
 
     /** 

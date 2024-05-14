@@ -489,9 +489,8 @@ $(document).ready(() => {
                     clearFormValue($(e.target));
                     hideButtonLoader(submitBtn, btn_element);
                     getTodayTodoList();
-                    if ($('.tasks-box.upcoming').length > 0) {
-                        getUpcomingTodoList();
-                    }
+                    getUpcomingTodoList();
+                    getFilterdTodoList();
                 }, 1000);
             },
             error: (error) => {
@@ -630,15 +629,24 @@ const appendTodoList = (tasks_box, data) => {
         });
     }
 };
+const appendAllTaskPageTodoList = (data) => {
+    const taskListBox = $('.main-contents.all-page');
+    if (taskListBox.length > 0) {
+        appendTodoList(taskListBox.find('.tasks-box.upcoming'), data.upcoming);
+        appendTodoList(taskListBox.find('.tasks-box.today'), data.today);
+        appendTodoList(taskListBox.find('.tasks-box.week'), data.week);
+        appendTodoList(taskListBox.find('.tasks-box.bofore'), data.beforeWeek);
+    }
+};
 const getTodayTodoList = () => {
     showContentLoading($('.home-task-list'));
-    showContentLoading($('.main-contents.today-page, .main-contents.all-page'));
+    showContentLoading($('.main-contents.today-page'));
     $.ajax({
         url: './api/todo?t=day',
         type: 'GET',
         success: (response) => {
             const homeTask = $('.home-task-list');
-            const taskBox = $('.tasks-box.today');
+            const taskBox = $('.main-contents.today-page .tasks-box.today');
             if (homeTask.length > 0) {
                 appendTodayTodoList(response);
                 hideContentLoading(homeTask);
@@ -654,17 +662,31 @@ const getTodayTodoList = () => {
     });
 };
 const getUpcomingTodoList = () => {
-    showContentLoading($('.main-contents.today-page, .main-contents.all-page'));
+    const todayPage = $('.main-contents.today-page');
+    if (todayPage.length > 0) {
+        showContentLoading(todayPage);
+        $.ajax({
+            url: './api/todo?t=upcoming',
+            type: 'GET',
+            success: (response) => {
+                const taskBox = todayPage.find(' .tasks-box.upcoming');
+                appendTodoList(taskBox, response);
+                hideContentLoading($('.main-contents.today-page'));
+            },
+            eror: (error) => {
+                console.error("Cannot get todo list.");
+            }
+        });
+    }
+};
+const getFilterdTodoList = () => {
     $.ajax({
-        url: './api/todo?t=upcoming',
+        url: './api/todo?t=filter',
         type: 'GET',
         success: (response) => {
-            const taskBox = $('.tasks-box.upcoming');
-            appendTodoList(taskBox, response);
-            hideContentLoading($('.main-contents.today-page, .main-contents.all-page'));
+            appendAllTaskPageTodoList(response);
         },
-        eror: (error) => {
-            console.error("Cannot get todo list.");
+        error: (error) => {
         }
     });
 };
@@ -733,14 +755,13 @@ $(document).ready(() => {
             url: `./api/todo?id=${id}&title=${name}&description=${description}&date=${date}&status=${status}&categories=${categories}`,
             type: 'PUT',
             success: (response) => {
+                getTodayTodoList();
+                getUpcomingTodoList();
+                getFilterdTodoList();
                 setTimeout(() => {
                     hideActionForm($('.edit-task-wrapper'));
                     hideOverlay();
-                    getTodayTodoList();
                     hideButtonLoader(submitBtn, btn_element);
-                    if ($('.tasks-box.upcoming').length > 0) {
-                        getUpcomingTodoList();
-                    }
                 }, 1000);
             },
             error: (error) => {
@@ -756,9 +777,8 @@ $(document).on('click', '.task-status.not-complete, .completed-task-btn', functi
         type: 'PUT',
         success: (response) => {
             getTodayTodoList();
-            if ($('.tasks-box.upcoming').length > 0) {
-                getUpcomingTodoList();
-            }
+            getUpcomingTodoList();
+            getFilterdTodoList();
         },
         error: (error) => {
         }
@@ -778,9 +798,8 @@ $(document).on('click', '.task-action.delete, .delete-task-btn', function () {
                 type: 'DELETE',
                 success: (response) => {
                     getTodayTodoList();
-                    if ($('.tasks-box.upcoming').length > 0) {
-                        getUpcomingTodoList();
-                    }
+                    getUpcomingTodoList();
+                    getFilterdTodoList();
                     setTimeout(() => {
                         hideButtonLoader(btn, btn_element);
                         hideConfirmBox();
@@ -1030,9 +1049,8 @@ $(document).on('click', '.nav-del-cate', function () {
                         hideButtonLoader(btn, btn_element);
                         hideConfirmBox();
                         getTodayTodoList();
-                        if ($('.tasks-box.upcoming').length > 0) {
-                            getUpcomingTodoList();
-                        }
+                        getUpcomingTodoList();
+                        getFilterdTodoList();
                         hideOverlay();
                     }, 1000);
                 },

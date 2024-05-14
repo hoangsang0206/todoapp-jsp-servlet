@@ -74,6 +74,8 @@ public class CategoriesServlet extends HttpServlet {
             ArrayList<Category> categories = CategoriesDAO.getUserCategories(account.getUsername());
             printWriter.print(gson.toJson(categories));
         }
+        
+        printWriter.flush();
     } 
 
     /** 

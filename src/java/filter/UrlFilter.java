@@ -5,6 +5,7 @@
 
 package filter;
 
+import com.azure.core.http.HttpResponse;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -104,9 +105,10 @@ public class UrlFilter implements Filter {
 	doBeforeProcessing(request, response);
         
         String url = ((HttpServletRequest) request).getServletPath();
-        if(url.endsWith(".jsp")) {
-            ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_NOT_FOUND);
-            ((HttpServletResponse) response).sendRedirect("error");
+        if(url.endsWith(".jsp")) {  
+            ((HttpServletRequest) request).setAttribute("errorMsg", "404 - Không tìm thấy trang");
+            ((HttpServletRequest) request).getRequestDispatcher("error.jsp").forward((HttpServletRequest) request, (HttpServletResponse) response);
+            
             return;
         }
 	

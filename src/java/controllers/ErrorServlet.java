@@ -29,18 +29,16 @@ public class ErrorServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         Integer statusCode = (Integer) request.getAttribute("jakarta.servlet.error.status_code");
-        String errorMessage = "";
+        
+        String errorMessage = "Đã xảy ra lỗi không xác định";
         
         if(statusCode != null) {
-            if(statusCode == 404) {
+            if(statusCode == HttpServletResponse.SC_NOT_FOUND) {
                 errorMessage = "404 - Không tìm thấy trang";
-            } else if(statusCode != null && statusCode == 500) {
+            } else if(statusCode != null && statusCode == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
                 errorMessage = "500 - Đã xảy ra lỗi";
-            } else {
-                errorMessage = "Đã xảy ra lỗi không xác định";
             }
         }
-        
         
         request.setAttribute("errorMsg", errorMessage);
         request.getRequestDispatcher("error.jsp").forward(request, response);

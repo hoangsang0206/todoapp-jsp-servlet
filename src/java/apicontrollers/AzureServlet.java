@@ -118,7 +118,8 @@ public class AzureServlet extends HttpServlet {
                 account.setImageSrc("https://lhswebstorage.blob.core.windows.net/todoweb/" + blobFilePath);
                 session.setAttribute("user", account);
                 response.getWriter().print("https://lhswebstorage.blob.core.windows.net/todoweb/" + blobFilePath);
-                
+                response.getWriter().flush();
+                        
                 response.setStatus(HttpServletResponse.SC_OK);
             } else {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

@@ -60,6 +60,7 @@ public class SubTodoServlet extends HttpServlet {
         String json = gson.toJson(subTodo);
 
         printWriter.print(json);
+        printWriter.flush();
     } 
 
     /** 
