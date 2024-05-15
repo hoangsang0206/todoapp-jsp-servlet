@@ -127,7 +127,7 @@
                                 <c:forEach var="todo" items="${upcomingTodoList}">
                                     <div class="horizon-task-box d-flex align-items-center justify-content-between gap-2">
                                         <div class="td-task-content d-flex align-items-center gap-3">
-                                            <div class="task-status ${todo.isCompleted ? "completed" : "not-complete"}" data-id="${!todo.isCompleted ? todo.id : ""}">
+                                            <div class="task-status ${todo.isCompleted ? "completed" : "not-complete"}" data-id="${todo.id}">
                                                 <i class='bx bx-check'></i>
                                             </div>
                                             <div class="td-task-name-des d-flex flex-column">
@@ -142,7 +142,7 @@
                                                 <span>${todo.subTodoList.size()} Việc cần làm</span>
                                             </div>
 
-                                            <div class="d-flex align-items-center gap-2">
+                                            <div class="d-flex align-items-center gap-2 task-action-btns">
                                                 <div class="task-action info" data-id="${todo.id}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                                                         <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
@@ -176,7 +176,7 @@
                                 <c:forEach var="todo" items="${todoList}">
                                     <div class="horizon-task-box d-flex align-items-center justify-content-between gap-2">
                                         <div class="td-task-content d-flex align-items-center gap-3">
-                                            <div class="task-status ${todo.isCompleted ? "completed" : "not-complete"}" data-id="${!todo.isCompleted ? todo.id : ""}">
+                                            <div class="task-status ${todo.isCompleted ? "completed" : "not-complete"}" data-id="${todo.id}">
                                                 <i class='bx bx-check'></i>
                                             </div>
                                             <div class="td-task-name-des d-flex flex-column">
@@ -191,7 +191,7 @@
                                                 <span>${todo.subTodoList.size()} Việc cần làm</span>
                                             </div>
 
-                                            <div class="d-flex align-items-center gap-2">
+                                            <div class="d-flex align-items-center gap-2 task-action-btns">
                                                 <div class="task-action info" data-id="${todo.id}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                                                         <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>

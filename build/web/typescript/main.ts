@@ -571,13 +571,13 @@ $(document).on('click', '.task-box, .task-action.info', function() {
     $(this).addClass('active');
     $('.task-infomation-wrapper').removeClass('close');
     setMainWidth();
+    
+    showContentLoading($('.task-infomation-wrapper'));
+    let id = $(this).data('id');
 
     if(window.innerWidth < 768) {
         showOverlay();
     }
-    
-    showContentLoading($('.task-infomation-wrapper'));
-    const id = $(this).data('id');
     
     $.ajax({
         url: './api/todo',
@@ -595,6 +595,31 @@ $(document).on('click', '.task-box, .task-action.info', function() {
    
 })
 
+$(document).on('click', '.horizon-task-box, .today-task-box', function(e) {
+    if(window.innerWidth < 768) {
+        if($(e.target).closest('.task-status').length > 0) {
+            return;
+        }
+        
+        $('.task-infomation-wrapper').removeClass('close');
+        showContentLoading($('.task-infomation-wrapper'));
+        showOverlay();
+        const id = $(this).find($('.task-status ')).data('id');
+        
+        $.ajax({
+            url: './api/todo',
+            type: 'GET',
+            data: {
+                id: id
+            },
+            success: (response) => {
+                appendTaskInfo(response);
+                hideContentLoading($('.task-infomation-wrapper'));
+            },
+            error: () => { }
+        })
+    }
+})
 
 $('.edit-sub-task-submit').click(function() {
     $(this).closest('.edit-sub-task').removeClass('show');
@@ -665,7 +690,7 @@ const appendTodayTodoList = (data) => {
                                     <span>${item?.subTodoList.length} Việc cần làm</span>
                                 </div>
 
-                                <div class="d-flex align-items-center gap-2">
+                                <div class="d-flex align-items-center gap-2 task-action-btns">
                                     <div class="task-action info" data-id="${item?.id}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                                             <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
@@ -740,7 +765,7 @@ const appendTodoList = (tasks_box: any, data: any) => {
             } else if(!params.has('view') || params.get('view') !== 'grid') {
                 str = `<div class="horizon-task-box d-flex align-items-center justify-content-between gap-2">
                         <div class="td-task-content d-flex align-items-center gap-3">
-                            <div class="task-status ${item.isCompleted ? "completed" : "not-complete"}" data-id="${!item.isCompleted ? item.id : ""}">
+                            <div class="task-status ${item.isCompleted ? "completed" : "not-complete"}" data-id="${item.id}">
                                 <i class='bx bx-check'></i>
                             </div>
                             <div class="td-task-name-des d-flex flex-column">
@@ -755,7 +780,7 @@ const appendTodoList = (tasks_box: any, data: any) => {
                                 <span>${item.subTodoList.length} Việc cần làm</span>
                             </div>
 
-                            <div class="d-flex align-items-center gap-2">
+                            <div class="d-flex align-items-center gap-2 task-action-btns">
                                 <div class="task-action info" data-id="${item.id}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                                         <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M11 11h2v6h-2zm0-4h2v2h-2z"></path>
@@ -874,6 +899,7 @@ const getTodo = (id: string): Promise<any> => {
 $(document).on('click', '.task-action.edit, .edit-task-btn', function() {
     showActionForm($('.edit-task-wrapper'));
     showOverlay();
+    $('.task-infomation-wrapper').addClass('close');
     
     clearFormValue($('.edit-task form'));
     
@@ -967,6 +993,7 @@ $(document).on('click', '.task-status.not-complete, .completed-task-btn', functi
 $(document).on('click', '.task-action.delete, .delete-task-btn', function() {
     showConfirmBox('Xác nhận xóa công việc này?', '', 'delete-todo', '#e30019');
     showOverlay();
+    $('.task-infomation-wrapper').addClass('close');
     
     const id = $(this).data('id');
     

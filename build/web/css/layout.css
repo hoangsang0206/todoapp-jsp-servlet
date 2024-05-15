@@ -1757,8 +1757,30 @@ input[name="view-type"]:checked ~ label {
         font-size: 15px;
     }
     
+    .header-navigation {
+        display: none !important;
+    }
+    
+    .main-contents {
+        margin-top: 0;
+        height: 100%;
+    }
+    
     .task-infomation-wrapper {
         z-index: 25;
+    }
+    
+    .task-action-btns {
+        display: none !important;
+    }
+    
+    .td-task-content {
+        width: calc(100% - 120px) !important;
+        gap: 0 !important;
+    }
+    
+    .td-task-content .td-task-name-des {
+         max-width: calc(100% - 20px); 
     }
     
     .sidebar {
@@ -1824,10 +1846,6 @@ input[name="view-type"]:checked ~ label {
     .add-new-task {
         display: none;
     }
-
-    /* .main-contents {
-        height: calc(100% - 130px);
-    } */
 
     .sub-task-list {
         max-height: 265px;

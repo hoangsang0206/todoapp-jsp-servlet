@@ -21,6 +21,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${(requestScope.errorMsg != '') ? requestScope.errorMsg  : "Error Page"}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
@@ -82,6 +83,13 @@
 
         .error-wrapper button:hover {
             background-color: #5f5f5f4d;
+        }
+        
+        @media screen and (max-width: 767px) {
+            h1 {
+                font-size: 22px;
+                text-align: center;
+            }
         }
 
     </style>
