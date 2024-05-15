@@ -91,23 +91,37 @@ const clearFormValue = (form: any) => {
     })
 }
 
-const showConfirmBox = (message: string, sub_message: string, data_action: string) => {
+const showConfirmBox = (message: string, sub_message: string, data_action: string, color: string) => {
     $('.confirm-wrapper').addClass('show');
     $('.confirm-box').addClass('show');
-    
     $('.confirm-message').html(message);
     $('.confirm-sub-message').html(sub_message)
-    
     $('.cancel-btn').data('confirm', data_action);
     $('.confirm-btn').data('confirm', data_action);
+    if(color != null && color.length > 0) {
+        $('.confirm-btn').css('background-color', color);
+    }
 }
 
 const hideConfirmBox = () => {
     $('.confirm-wrapper').removeClass('show');
     $('.confirm-box').removeClass('show');
-    
+    $('.confirm-message').empty();
+    $('.confirm-sub-message').empty();
     $('.cancel-btn').removeAttr('data-confirm');
     $('.confirm-btn').removeAttr('data-confirm');
+}
+
+const showOkBox = (message: string) => {
+    $('.success-wrapper').addClass('show');
+    $('.success-box').addClass('show');
+    $('.success-message').html(message);
+}
+
+const hideOkBox = () => {
+    $('.success-wrapper').removeClass('show');
+    $('.success-box').removeClass('show');
+    $('.success-message').empty();
 }
 
 const showButtonLoader = (button: any): string => {
@@ -134,6 +148,11 @@ const hideButtonLoader = (button: any, html: string) => {
 
 $('.cancel-btn').click(() => {
     hideConfirmBox();
+    hideOverlay();
+})
+
+$('.success-btn').click(() => {
+    hideOkBox();
     hideOverlay();
 })
 
@@ -946,7 +965,7 @@ $(document).on('click', '.task-status.not-complete, .completed-task-btn', functi
 
 //Delete Todo
 $(document).on('click', '.task-action.delete, .delete-task-btn', function() {
-    showConfirmBox('Xác nhận xóa công việc này?', '', 'delete-todo');
+    showConfirmBox('Xác nhận xóa công việc này?', '', 'delete-todo', '#e30019');
     showOverlay();
     
     const id = $(this).data('id');
@@ -1241,7 +1260,7 @@ $('.edit-category form').submit(function(e) {
 //DELETE category
 $(document).on('click', '.nav-del-cate', function() {
     const id = $(this).data('id');
-    showConfirmBox('Xóa danh mục này?', 'Danh mục này và các công việc liên quan sẽ bị xóa.', 'delete-cate');
+    showConfirmBox('Xóa danh mục này?', 'Danh mục này và các công việc liên quan sẽ bị xóa.', 'delete-cate', '#e30019');
     showOverlay();
     
     $('.confirm-btn').off('click').click(function() {

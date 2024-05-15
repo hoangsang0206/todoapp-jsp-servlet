@@ -82,13 +82,17 @@
                                         </div>
                                     
                                         <div class="d-flex gap-2">
-                                            <button class="s-btn bg-primary text-white">
-                                                <i class='bx bx-key me-1'></i>
-                                                <span>Đổi mật khẩu</span>
+                                            <button class="s-btn bg-primary">
+                                                <i class='bx bx-key me-1 text-white'></i>
+                                                <span class="text-white">Đổi mật khẩu</span>
                                             </button>
-                                            <button class="s-btn bg-success text-white">
-                                                <i class='bx bx-log-out me-1'></i>
-                                                <span>Đăng xuất</span>
+                                            <button class="s-btn bg-success" onclick="window.location.href='./logout'">
+                                                <i class='bx bx-log-out me-1  text-white'></i>
+                                                <span class="text-white">Đăng xuất</span>
+                                            </button>
+                                            <button class="s-btn" disabled>
+                                                <i class='bx bx-save me-1 text-white'></i>
+                                                <span class="text-white">Lưu</span>
                                             </button>
                                         </div>
                                     
@@ -166,6 +170,7 @@
             <jsp:include page="layout/task_info.jsp" />
             <jsp:include page="layout/action_form.jsp" />      
             <jsp:include page="layout/mb_navigation.jsp" />
+            <jsp:include page="layout/confirm_box.jsp" />
  
             <button class="add-task-floating">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">

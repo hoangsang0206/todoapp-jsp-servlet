@@ -128,7 +128,8 @@ button:disabled {
 }
 
 .form-container,
-.confirm-wrapper {
+.confirm-wrapper,
+.success-wrapper {
     background: none;
     width: 100%;
     height: 100%;
@@ -144,13 +145,15 @@ button:disabled {
 }
 
 .form-container.show,
-.confirm-wrapper.show {
+.confirm-wrapper.show,
+.success-wrapper.show {
     opacity: 1;
     visibility: visible;
 }
 
 .form-box,
-.confirm-box {
+.confirm-box,
+.success-box {
     border-radius: var(--radius);
     max-width: calc(100% - 20px) !important;
     max-height: calc(100% - 50px) !important;
@@ -164,7 +167,8 @@ button:disabled {
 }
 
 .form-box *,
-.confirm-box * {
+.confirm-box *,
+.success-box * {
     color: var(--current-text-color);
 }
 
@@ -173,7 +177,8 @@ button:disabled {
 }
 
 .form-box.show,
-.confirm-box.show {
+.confirm-box.show,
+.success-box.show {
     opacity: 1;
     visibility: visible;
 }
@@ -421,7 +426,7 @@ input[type="checkbox"]:checked::after {
 }
 
 
-.confirm-message {
+.confirm-message, .confirm-message:is(span, p) {
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 6px;
@@ -432,12 +437,13 @@ input[type="checkbox"]:checked::after {
     margin-bottom: 25px;
 }
 
-.cancel-btn {
-    
+.success-message, .success-message:is(span, p) {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 15px;
 }
 
-.confirm-btn {
-    background: var(--btn-color-red);
+.confirm-btn, .success-btn {
     color: var(--text-color-white);
 }
 
@@ -1835,7 +1841,7 @@ input[name="view-type"]:checked ~ label {
         display: block;
     }
 
-    .form-box, .confirm-box {
+    .form-box, .confirm-box, .success-box {
         width: calc(100% - 10px) !important;
         padding: 20px 15px;
     }

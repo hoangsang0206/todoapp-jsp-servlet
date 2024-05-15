@@ -83,17 +83,26 @@ public class EmailVerifyHandlerServlet extends HttpServlet {
         String key = RandomString.random(40);
                     
         if(AccountDAO.setVerifycationKey(account.getUsername(), key)) {
+            String emailHtml = "<table style=\"width: 100%; text-align: center;\">\n" +
+                "<tr>\n" +
+                "<td style=\"width: 35%\"></td>\n" +
+                "<td>\n" +
+                "<div style=\"width: 500px; max-width: 100%; background-color: #f8f8f8; padding: 30px; border-radius: 10px;\">\n" +
+                "<img src=\"https://lhswebstorage.blob.core.windows.net/todoweb/email-images/2909200.jpg\" style=\"width: 100%; display: block; margin-bottom: 20px;\">\n" +
+                "<h2 style=\"color: #000; margin-top: 0;\">XÁC NHẬN ĐỊA CHỈ EMAIL</h2>\n" +
+                "<p style=\"color: #000; margin-bottom: 20px;\">Vui lòng nhấn vào nút bên dưới để xác nhận địa chỉ email của bạn</p>\n" +
+                "<a href=\"http://localhost:8080/todoapp/verify?key=" + key + "&u=" + account.getUsername() + "\" style=\"padding: 10px 25px; border-radius: 6px; background-color: blueviolet; color: #fff; text-decoration: none; font-size: 18px; font-weight: 500;\">Xác nhận</a>\n" +
+                "</div>\n" +
+                "</td>\n" +
+                "<td style=\"width: 35%\"></td>\n" +
+                "</tr>\n" +
+                "</table>";
             
-            String emailHtml = "";
-            emailHtml += "<div style=\"width: 500px; max-width: calc(100% - 50px)\">";
-            emailHtml += "<img src=\"https://lhswebstorage.blob.core.windows.net/todoweb/email-images/2909200.jpg\" style=\"width: 100%\">";
-            emailHtml += "<h3>XÁC NHẬN ĐỊA CHỈ EMAIL</h3>";
-            emailHtml += "<p>Vui lòng nhấn vào bút bên dưới để xác nhận địa chỉ email của bạn</p>";
-            emailHtml += "<a href=\"http://localhost:8080/todoapp/verify?key=" + key + "&u=" + account.getUsername() + "\">Xác nhận</a>";
-            emailHtml += "</div>";
-            
-            SendEmail.sendEmail(account.getEmail(), emailHtml);
-            response.setStatus(HttpServletResponse.SC_OK);
+            if(SendEmail.sendEmail(account.getEmail(), emailHtml)) {
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

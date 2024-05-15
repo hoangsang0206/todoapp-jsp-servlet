@@ -128,19 +128,34 @@ $('.upload-image form').submit((e) => {
 });
 
 //
-const showOkBox = () => {
-}
 
 $('.confirm-email').click(() => {
-    $.ajax({
-        url: './verify',
-        type: 'POST',
-        success: () => {
-            showOkBox();
-            console.log('Email has sent')
-        },
-        error: () => {
-            console.error('Error when send email')
+    showConfirmBox('Xác nhận địa chỉ Email hiện tại?', '', 'verify-email', '#0d6efd');
+    showOverlay();
+     $('.confirm-btn').off('click').click(function() {
+        const action = $(this).data('confirm');
+        
+        if(action === 'verify-email') { 
+            const btn = $(this);
+            const btn_element = showButtonLoader(btn);
+            
+            $.ajax({
+                url: './verify',
+                type: 'POST',
+                success: () => {
+                    hideConfirmBox();
+                    hideButtonLoader(btn, btn_element);
+                    showOkBox('Chúng tôi đã gửi một email đến địa chỉ email của bạn');
+                },
+                error: () => {
+                    hideConfirmBox();
+                    hideButtonLoader(btn, btn_element);
+                    showOkBox(`<div class="d-flex align-items-center gap-2">
+                        <i class="form-error-icon fa-solid fa-circle-exclamation"></i>
+                        <span>Đã xảy ra lỗi trong quá trình gửi Email</span>
+                     </div>`);
+                }
+            });
         }
     })
 })
