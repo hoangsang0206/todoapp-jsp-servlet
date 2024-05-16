@@ -80,45 +80,46 @@ public class AccountDAO {
         return result > 0;
     }
     
-    public static boolean updatePassword(String username, String newPassword) {
+    public static boolean checkPassword(String password, String username) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
-        String code = RandomString.randomCode(5);
+        String sql = "Select TOP 1 username From Account"
+                + " Where passwordHash = N'" + hashPassword(password) + "' And username = '" + username + "'";
+        
+        ResultSet rs = connect.excuteQuery(sql);
+        try {
+            if(rs.next()) {
+                connect.close();
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        connect.close();
+        
+        return false;
+    }
+    
+    public static boolean updatePassword(String username, String newPassword, String code) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
         String sql = "Update Account Set passwordHash = N'" + hashPassword(newPassword) 
-                + "' And code = '" + code + "' Where username = '" + username + "'";
+                + "' Where username = '" + username + "' And code = '" + code + "'";
         int result = connect.excuteUpdate(sql);
         connect.close();
         
         return result > 0;
     }
     
-    public static boolean changePassword(String username, String oldPassword, String newPassword) {
+    public static boolean changePassword(String username,  String newPassword) {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
-        String oldPasswordHash = hashPassword(oldPassword);
-        String newPasswordHash = hashPassword(newPassword);
-        if(!oldPasswordHash.equals(newPasswordHash)) {
-            return false;
-        }
-        
+        String newPasswordHash = hashPassword(newPassword); 
         String sql = "Update Account Set passwordHash = N'" + newPasswordHash + "' Where username = '" + username + "'";
-        int result = connect.excuteUpdate(sql);
-        connect.close();
-        
-        return result > 0;
-    }
-    
-    public static boolean updateEmail(String email, String username) {
-        if(!isValidEmail(email)) {
-            return false;
-        }
-        
-        JDBCConnect connect = new JDBCConnect();
-        connect.getConnection();
-        
-        String sql = "Update Account Set email = N'" + email + "' Where username = '" + username + "'";
         int result = connect.excuteUpdate(sql);
         connect.close();
         
@@ -173,7 +174,7 @@ public class AccountDAO {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
-        String sql = "Update Account Set email_verified = 1 Where username = '" + username + "'";
+        String sql = "Update Account Set email_verified = 1, email_verify_key = NULL Where username = '" + username + "'";
         int result = connect.excuteUpdate(sql);
         connect.close();
         
@@ -196,6 +197,57 @@ public class AccountDAO {
         connect.getConnection();
         
         String sql = "Update Account Set imageSrc = N'" + imageSrc + "' Where username = '" + username + "'";
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        return result > 0;
+    }
+    
+    public static boolean updateInfomation(String fullName, String email, String username) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Update Account Set fullname = N'" + fullName + "'"
+                + " Where username = '" + username + "'";
+        int result = connect.excuteUpdate(sql);
+        connect.close();
+        
+        if(!email.equals(getEmail(username))) {
+            return updateEmail(email, username);
+        }
+        
+        return result > 0;
+    }
+    
+    private static String getEmail(String username) {
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Select Top 1 email From Account Where username = '" + username + "'";
+        ResultSet rs = connect.excuteQuery(sql);
+        try {
+            if(rs.next()) {
+                String email = rs.getString("email");
+                connect.close();
+                return email;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        connect.close();
+        
+        return "";
+    }
+    
+    public static boolean updateEmail(String email, String username) {
+        if(!isValidEmail(email)) {
+            return false;
+        }
+        
+        JDBCConnect connect = new JDBCConnect();
+        connect.getConnection();
+        
+        String sql = "Update Account Set email = N'" + email + "', email_verified = 0, email_verify_key = NULL Where username = '" + username + "'";
         int result = connect.excuteUpdate(sql);
         connect.close();
         

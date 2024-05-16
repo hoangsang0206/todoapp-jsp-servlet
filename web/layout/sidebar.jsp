@@ -126,18 +126,18 @@
                 <ul class="nav-item-list nav-categories">
                 <% for(Category category : categories) { %>
                     <li>
-                        <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                            <div class="nav-link-box d-flex align-items-center">
+                        <div class="nav-link d-flex align-items-center justify-content-between">
+                            <a class="nav-link-box d-flex align-items-center text-decoration-none" href="./category/<%= category.getId() %>">
                                 <span class="nav-color-icon" style="background: <%= category.getIconColor() != null ? category.getIconColor() : "#e30019" %>;"></span>
 
                                 <span class="nav-link-text"><%= category.getCateName() %></span>
-                            </div>
+                            </a>
                             
                             <div class="nav-cate-action d-flex align-items-center gap-2">
                                 <i class='nav-edit-cate bx bx-edit' data-id="<%= category.getId() %>"></i>
                                 <i class='nav-del-cate bx bx-trash' data-id="<%= category.getId() %>"></i>
                             </div>
-                        </a>
+                        </div>
                     </li>
                 <% } %>                  
 

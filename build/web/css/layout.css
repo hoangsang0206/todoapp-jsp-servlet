@@ -124,6 +124,7 @@
 }
 
 button:disabled {
+    background: #e7e7e7 !important;
     cursor: not-allowed;
 }
 
@@ -227,7 +228,7 @@ button:disabled {
     background: #fff3cd;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
 }
 
 .form-error-msg {
@@ -242,7 +243,7 @@ button:disabled {
     width: 500px;
 }
 
-.create-category, .edit-category  {
+.create-category, .edit-category, .change-password {
     width: 400px;
 }
 
@@ -1827,6 +1828,10 @@ input[name="view-type"]:checked ~ label {
         padding: 5px 10px;
     }
 
+    .nav-cate-action {
+        display: flex !important;
+    }
+    
     .nav-bottom {
         display: flex !important;
         margin-top: 15px !important;

@@ -120,8 +120,12 @@ $('.upload-image form').submit((e) => {
                 hideOverlay();
                 console.log(response)
             },
-            error: (error) => {
-                console.error(error);
+            error: (jqXHR, textStatus, errorThrown) => {
+                const formErr = $(e.target).find('.form-error');
+                formErr.empty();
+                formErr.append(`<i class="form-error-icon fa-solid fa-circle-exclamation"></i>
+                        <span class="form-error-msg">${jqXHR.responseText}</span>`);
+                formErr.removeClass('d-none');
             }
         })
     }
@@ -156,6 +160,95 @@ $('.confirm-email').click(() => {
                      </div>`);
                 }
             });
+        }
+    })
+})
+
+//Change password
+$('.st-btn-changepass').click(() => {
+    showActionForm($('.change-password-wrapper'));
+    showOverlay();
+})
+
+$('.change-password form').submit((e) => {
+    e.preventDefault();
+    const button: any = $(e.target).find('.submit-form-btn');
+    const btn_element: string = showButtonLoader(button);
+    const oldPass = $(e.target).find('#oldPassword').val();
+    const newPass = $(e.target).find('#newPassword').val();
+    const newPassConf = $(e.target).find('#newPasswordConfirm').val();
+    
+    $.ajax({
+        url: './api/account',
+        type: 'POST',
+        data: {
+            t: 'changepass',
+            oldpass: oldPass,
+            newpass: newPass,
+            newpassconf: newPassConf
+            
+        },
+        success: (response) => {
+            setTimeout(() => {
+                hideButtonLoader(button, btn_element);
+                hideActionForm($('.change-password-wrapper'));
+                clearFormValue($('.change-password-wrapper form'));
+                showOkBox('Đổi mật khẩu thành công');
+            }, 500)
+        },
+        error: (jqXHR, textStatus, errorThrown) => {
+            setTimeout(() => {
+                hideButtonLoader(button, btn_element);
+            }, 500);
+    
+            const formErr = $(e.target).find('.form-error');
+            formErr.empty();
+            formErr.append(`<i class="form-error-icon fa-solid fa-circle-exclamation"></i>
+                        <span class="form-error-msg">${jqXHR.responseText}</span>`);
+            formErr.removeClass('d-none');
+        }
+    })
+})
+
+//Change infomation
+$('#st-ac-name').keyup(function() {
+    if($(this).val() !== $(this).data('name') || $('#st-ac-email').val() !== $('#st-ac-email').data('email')) {
+        $('.st-btn-changeinfo').prop('disabled', false);
+    } else {
+        $('.st-btn-changeinfo').prop('disabled', true);
+    }
+})
+
+$('#st-ac-email').keyup(function() {
+    if($(this).val() !== $(this).data('email') || $('#st-ac-name').val() !== $('#st-ac-name').data('name')) {
+        $('.st-btn-changeinfo').prop('disabled', false);
+    } else {
+        $('.st-btn-changeinfo').prop('disabled', true);
+    }
+})
+
+$('.st-btn-changeinfo').click(function() {
+    const name: string = $('#st-ac-name').val();
+    const email: string = $('#st-ac-email').val();
+    const btn_element: string = showButtonLoader($(this));
+    
+    $.ajax({
+       url: './api/account',
+        type: 'POST',
+        data: {
+            t: 'changeinfo',
+            name: name,
+            email: email
+            
+        },
+        success: (response) => {
+            setTimeout(() => {
+                hideButtonLoader($(this), btn_element);
+                showOkBox('Đổi thông tin thành công');
+                showOverlay();
+            }, 500)
+        },
+        error: () => {
         }
     })
 })

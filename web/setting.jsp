@@ -67,13 +67,13 @@
 
                                         <div class="input-box d-flex flex-column">
                                             <label for="st-ac-name">Họ tên</label>
-                                            <input type="text" id="st-ac-name" autocomplete="off" value="${user.fullName}" required>
+                                            <input type="text" id="st-ac-name" autocomplete="off" value="${user.fullName}" data-name="${user.fullName}" required>
                                         </div>
 
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="input-box d-flex flex-column">
                                                 <label for="st-ac-email">Email</label>
-                                                <input type="email" id="st-ac-email" autocomplete="off" value="${user.email}" required>
+                                                <input type="email" id="st-ac-email" autocomplete="off" value="${user.email}" data-email="${user.email}" required>
                                             </div>
                                             
                                             <c:if test="${!user.emailVerified}">
@@ -82,15 +82,15 @@
                                         </div>
                                     
                                         <div class="d-flex gap-2">
-                                            <button class="s-btn bg-primary">
+                                            <button class="s-btn st-btn-changepass bg-primary">
                                                 <i class='bx bx-key me-1 text-white'></i>
                                                 <span class="text-white">Đổi mật khẩu</span>
                                             </button>
-                                            <button class="s-btn bg-success" onclick="window.location.href='./logout'">
-                                                <i class='bx bx-log-out me-1  text-white'></i>
+                                            <button class="s-btn bg-info" onclick="window.location.href='./logout'">
+                                                <i class='bx bx-log-out me-1 text-white'></i>
                                                 <span class="text-white">Đăng xuất</span>
                                             </button>
-                                            <button class="s-btn" disabled>
+                                            <button class="s-btn bg-success st-btn-changeinfo" disabled>
                                                 <i class='bx bx-save me-1 text-white'></i>
                                                 <span class="text-white">Lưu</span>
                                             </button>
@@ -114,6 +114,11 @@
                                         </div>
                                     </div>
                                     
+                                    <div class="setting-content-item d-flex flex-column gap-4" data-setting="other">
+                                        <div>
+                                            
+                                        </div>
+                                    </div>
                                     
                                 </div>
                             </div>
@@ -164,6 +169,41 @@
                             Xác nhận
                         </button>
                     </div>
+                </section>
+            </section>
+                                                    
+            <section class="change-password-wrapper form-container">
+                <section class="change-password form-box">
+                    <div class="form-box-header">
+                        <h4>Đổi mật khẩu</h4>
+                    </div>
+                    <form class="form-main" action="#" method="POST">
+                        <div class="form-error mt-3 d-none"></div>
+                        <div>
+                            <div class="input-box d-flex flex-column">
+                                <label for="oldPassword">Mật khẩu cũ</label>
+                                <input type="password" name="oldPassword" id="oldPassword" autocomplete="off" required />
+                            </div>
+                            <div class="input-box d-flex flex-column mt-3">
+                                <label for="newPassword">Mật khẩu mới</label>
+                                <input type="password" name="newPassword" id="newPassword" autocomplete="off" required />
+                            </div>
+                                 <div class="input-box d-flex flex-column mt-3">
+                                <label for="newPasswordConfirm">Xác nhận mật khẩu mới</label>
+                                <input type="password" name="newPasswordConfirm" id="newPasswordConfirm" autocomplete="off" required />
+                            </div>
+                        </div>
+
+                        <div class="form-action d-flex gap-3 align-items-center">
+                            <button type="submit" class="s-btn submit-form-btn">
+                               Thay đổi
+                            </button>
+                            <button type="button" class="s-btn close-form-btn">
+                                <fmt:message bundle="${bundle}" key="form_close_btn" />
+                            </button>
+                        </div>
+
+                    </form>
                 </section>
             </section>
             

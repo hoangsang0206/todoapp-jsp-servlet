@@ -45,13 +45,17 @@
     background: #ddd;
 }
 
+.btn-today, .c-type-selection, .c-day {
+    color: var(--current-text-color);
+}
+
 .btn-today {
     background: none;
 }
 
 .btn-today:hover {
-    background: #000;
-    color: #fff;
+    background: #000 !important;
+    color: #fff !important;
 }
 
 .c-vbreak {

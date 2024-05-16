@@ -65,7 +65,7 @@
                         <p class="text-nowrap">
                             <fmt:message bundle="${bundle}" key="user_hello" />,&nbsp;${(user.fullName != null ? user.fullName : user.username)}
                         </p>
-                        <button class="logout-btn s-btn text-nowrap mt-3" onclick="window.window.location.href = 'logout'">Đăng xuất</button>
+                        <button class="logout-btn s-btn text-nowrap mt-3" onclick="window.window.location.href = './logout'">Đăng xuất</button>
                     </div>
                 </div>
             </c:when>
@@ -75,8 +75,8 @@
                 </div>
                 
                 <div class="account-action align-items-center gap-2">
-                    <button class="login-btn s-btn text-nowrap" onclick="window.window.location.href = 'login'">Đăng nhập</button>
-                    <button class="register-btn s-btn text-nowrap" onclick="window.window.location.href = 'register'">Đăng ký</button>
+                    <button class="login-btn s-btn text-nowrap" onclick="window.window.location.href = './login'">Đăng nhập</button>
+                    <button class="register-btn s-btn text-nowrap" onclick="window.window.location.href = './register'">Đăng ký</button>
                 </div>         
             </c:when>
         </c:choose>       
