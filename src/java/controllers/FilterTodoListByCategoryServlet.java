@@ -5,6 +5,9 @@
 
 package controllers;
 
+import dao.AccountDAO;
+import dao.CategoriesDAO;
+import dao.TodoListDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,6 +15,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import models.Account;
+import models.Todo;
 
 /**
  *
@@ -42,7 +48,33 @@ public class FilterTodoListByCategoryServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String id = request.getParameter("cid");
+        String sort = request.getParameter("sort");
+        if(id == null || id.isEmpty()) {
+            response.sendRedirect("./error");
+            return;
+        }
         
+        Account account = AccountDAO.getLoggedInUser(request);
+        ArrayList<Todo> todoList = TodoListDAO.getTodoListByCategory(id, account.getUsername());
+
+        if(sort != null && !sort.isBlank()) {
+            todoList = TodoListDAO.sortTodoList(todoList, sort);
+        }
+        
+        ArrayList<Todo> upcomingTodoList, todayTodoList, weekTodoList, beforeWeekTodoList;
+        todayTodoList = TodoListDAO.filterTodayTodoList(todoList);
+        upcomingTodoList = TodoListDAO.filterUpcomingTodo(todayTodoList);
+        weekTodoList = TodoListDAO.filterWeekTodoList(todoList);
+        beforeWeekTodoList = TodoListDAO.filterBeforeWeekTodoList(todoList);
+        
+        request.setAttribute("ActiveNav", CategoriesDAO.getCategory(id).getId());
+        request.setAttribute("Title", CategoriesDAO.getCategory(id).getCateName());
+        request.setAttribute("Upcoming", upcomingTodoList);
+        request.setAttribute("TodayTodoList", todayTodoList);
+        request.setAttribute("WeekTodoList", weekTodoList);
+        request.setAttribute("BeforeWeekTodoList", beforeWeekTodoList);
+        request.getRequestDispatcher("categorytodolist.jsp").forward(request, response);
     } 
 
     /** 

@@ -83,12 +83,12 @@ public class TodoListDAO {
         return todoList;
     }
     
-    public static ArrayList<Todo> getTodoListByCategory(String categoryID) {
+    public static ArrayList<Todo> getTodoListByCategory(String categoryID, String username) {
         String sql = "SELECT TodoList.* " +
                     "FROM Categories " +
                     "INNER JOIN Todo_Categories ON Categories.id = Todo_Categories.cateID " +
                     "INNER JOIN TodoList ON Todo_Categories.todoID = TodoList.id " +
-                    "WHERE Categories.id = '" + categoryID + "' " +
+                    "WHERE Categories.id = '" + categoryID + "' and Categories.username = '" + username + "'" +
                     "Order By dateToComplete DESC";
         ArrayList<Todo> todoList = getTodoListBySQL(sql);
          

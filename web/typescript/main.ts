@@ -640,6 +640,7 @@ $(document).ready(() => {
         
         const submitBtn = $(e.target).find('.submit-form-btn');
         const btn_element: string = showButtonLoader(submitBtn);
+        const params: URLSearchParams = getParams();
         
         $.ajax({
             url: './api/todo',
@@ -657,6 +658,7 @@ $(document).ready(() => {
                     getTodayTodoList();
                     getUpcomingTodoList();
                     getFilterdTodoList();
+                    getCategoryTodoList(params.has('cid') ? params.get('cid') : "");
                     
                 }, 1000)
             },
@@ -762,7 +764,7 @@ const appendTodoList = (tasks_box: any, data: any) => {
                     </div>`;
                     
                    
-            } else if(!params.has('view') || params.get('view') !== 'grid') {
+            } else {
                 str = `<div class="horizon-task-box d-flex align-items-center justify-content-between gap-2">
                         <div class="td-task-content d-flex align-items-center gap-3">
                             <div class="task-status ${item.isCompleted ? "completed" : "not-complete"}" data-id="${item.id}">
@@ -808,13 +810,12 @@ const appendTodoList = (tasks_box: any, data: any) => {
     }
 }
 
-const appendAllTaskPageTodoList = (data: any) => {
-    const taskListBox: any = $('.main-contents.all-page');
+const appendAllTaskPageTodoList = (data: any, taskListBox: any) => {
     if(taskListBox.length > 0) {    
         appendTodoList(taskListBox.find('.tasks-box.upcoming'), data.upcoming);
         appendTodoList(taskListBox.find('.tasks-box.today'), data.today);
         appendTodoList(taskListBox.find('.tasks-box.week'), data.week);
-        appendTodoList(taskListBox.find('.tasks-box.bofore'), data.beforeWeek);
+        appendTodoList(taskListBox.find('.tasks-box.before'), data.beforeWeek);
     }
 }
 
@@ -866,11 +867,31 @@ const getUpcomingTodoList = () => {
 }
 
 const getFilterdTodoList = (): any => {
+    if($('.main-contents.all-page').length <= 0) {
+        return;
+    }
+    
     $.ajax({
         url: './api/todo?t=filter',
         type: 'GET',
         success: (response) => {
-            appendAllTaskPageTodoList(response);
+            appendAllTaskPageTodoList(response, $('.main-contents.all-page'));
+        },
+        error: (error) => {
+        }
+    })
+}
+
+const getCategoryTodoList = (id: string): any => {
+    if($('.main-contents.todocate-page').length <= 0) {
+        return;
+    }
+
+    $.ajax({
+        url: `./api/todo?t=category&cid=${id}`,
+        type: 'GET',
+        success: (response) => {
+            appendAllTaskPageTodoList(response, $('.main-contents.todocate-page'));
         },
         error: (error) => {
         }
@@ -952,6 +973,8 @@ $(document).ready(() => {
         const submitBtn = $(e.target).find('.submit-form-btn');
         const btn_element: string = showButtonLoader(submitBtn);
         
+        const params: URLSearchParams = getParams();
+        
         $.ajax({
             url: `./api/todo?id=${id}&title=${name}&description=${description}&date=${date}&status=${status}&categories=${categories}`,
             type: 'PUT',
@@ -959,6 +982,7 @@ $(document).ready(() => {
                 getTodayTodoList();
                 getUpcomingTodoList();
                 getFilterdTodoList();
+                getCategoryTodoList(params.has('cid') ? params.get('cid') : "");
                     
                 setTimeout(() => {
                     hideActionForm($('.edit-task-wrapper'));
@@ -975,6 +999,7 @@ $(document).ready(() => {
 
 $(document).on('click', '.task-status.not-complete, .completed-task-btn', function() {
     const id: string = $(this).data('id');
+    const params: URLSearchParams = getParams();
     
     $.ajax({
         url: `./api/todo?t=status&id=${id}&status=completed`,
@@ -983,6 +1008,7 @@ $(document).on('click', '.task-status.not-complete, .completed-task-btn', functi
             getTodayTodoList();
             getUpcomingTodoList();
             getFilterdTodoList();
+            getCategoryTodoList(params.has('cid') ? params.get('cid') : "");
         },
         error: (error) => {
         }
@@ -996,6 +1022,7 @@ $(document).on('click', '.task-action.delete, .delete-task-btn', function() {
     $('.task-infomation-wrapper').addClass('close');
     
     const id = $(this).data('id');
+    const params: URLSearchParams = getParams();
     
     $('.confirm-btn').off('click').click(function() {
         const action = $(this).data('confirm');
@@ -1011,6 +1038,7 @@ $(document).on('click', '.task-action.delete, .delete-task-btn', function() {
                     getTodayTodoList(); 
                     getUpcomingTodoList();
                     getFilterdTodoList();
+                    getCategoryTodoList(params.has('cid') ? params.get('cid') : "");
                     
                     setTimeout(() => {
                         hideButtonLoader(btn, btn_element);
@@ -1205,18 +1233,18 @@ const getCategories = () => {
                 $('.nav-categories').empty();
                 response.map((item) => {
                     const str = `<li>
-                                <a class="nav-link d-flex align-items-center justify-content-between" href="javascript:void(0)">
-                                    <div class="nav-link-box d-flex align-items-center">
+                                <div class="nav-link d-flex align-items-center justify-content-between">
+                                    <a class="nav-link-box d-flex align-items-center text-decoration-none" href="./category?id=${item.id}">
                                         <span class="nav-color-icon" style="background: ${typeof item.iconColor !== 'undefined' ? item.iconColor : "#e30019"};"></span>
 
                                         <span class="nav-link-text">${item.cateName}</span>
-                                    </div>
+                                    </a>
                                     
                                     <div class="nav-cate-action d-flex align-items-center gap-2">
                                         <i class='nav-edit-cate bx bx-edit' data-id="${item.id}"></i>
                                         <i class='nav-del-cate bx bx-trash' data-id="${item.id}"></i>
                                     </div>
-                                </a>
+                                </div>
                             </li>`;
                             
                      $('.nav-categories').append(str);
@@ -1267,6 +1295,7 @@ $('.edit-category form').submit(function(e) {
     
     const submitBtn = $(e.target).find('.submit-form-btn');
     const btn_element = showButtonLoader(submitBtn);
+    const params: URLSearchParams = getParams();
     
     $.ajax({
         url: `./api/categories?id=${id}&name=${name}&color=${color}`,
@@ -1274,6 +1303,11 @@ $('.edit-category form').submit(function(e) {
         success: (response) => {
             setTimeout(() => {
                 getCategories();
+                getTodayTodoList();
+                getUpcomingTodoList();
+                getFilterdTodoList();
+                getCategoryTodoList(params.has('cid') ? params.get('cid') : "");
+                        
                 hideButtonLoader(submitBtn, btn_element);
                 hideActionForm($('.edit-category-wrapper'))
                 hideOverlay();
@@ -1287,6 +1321,7 @@ $('.edit-category form').submit(function(e) {
 //DELETE category
 $(document).on('click', '.nav-del-cate', function() {
     const id = $(this).data('id');
+    const params: URLSearchParams = getParams();
     showConfirmBox('Xóa danh mục này?', 'Danh mục này và các công việc liên quan sẽ bị xóa.', 'delete-cate', '#e30019');
     showOverlay();
     
@@ -1309,6 +1344,7 @@ $(document).on('click', '.nav-del-cate', function() {
                         getTodayTodoList();
                         getUpcomingTodoList();
                         getFilterdTodoList();
+                        getCategoryTodoList(params.has('cid') ? params.get('cid') : "");
                         
                         hideOverlay();
                     }, 1000);

@@ -176,7 +176,7 @@ public class CategoriesDAO {
         JDBCConnect connect = new JDBCConnect();
         connect.getConnection();
         
-        ArrayList<Todo> todoList = TodoListDAO.getTodoListByCategory(id);
+        ArrayList<Todo> todoList = TodoListDAO.getTodoListByCategory(id, username);
         if(todoList.size() > 0) {
             for(Todo todo : todoList) {
                 ArrayList<Category> categories = CategoriesDAO.getTodoCategories(todo.getId());

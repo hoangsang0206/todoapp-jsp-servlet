@@ -3,13 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/controllers/SettingServlet.java</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/dao/AccountDAO.java</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/utils/SendEmail.java</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/setting.jsp</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/css/setting.css</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/typescript/setting.ts</file>
-            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/controllers/EmailVerifyHandlerServlet.java</file>
+            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/typescript/main.ts</file>
+            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/web/layout/sidebar.jsp</file>
+            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/apicontrollers/TodoServlet.java</file>
+            <file>file:/D:/HUFI/HK6/DoAnJava/TodoApp/src/java/controllers/FilterTodoListByCategoryServlet.java</file>
         </group>
     </open-files>
 </project-private>

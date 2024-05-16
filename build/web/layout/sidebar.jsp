@@ -126,8 +126,8 @@
                 <ul class="nav-item-list nav-categories">
                 <% for(Category category : categories) { %>
                     <li>
-                        <div class="nav-link d-flex align-items-center justify-content-between">
-                            <a class="nav-link-box d-flex align-items-center text-decoration-none" href="./category/<%= category.getId() %>">
+                        <div class="nav-link d-flex align-items-center justify-content-between <%= activeNav.equals(category.getId()) ? "active" : "" %>">
+                            <a class="nav-link-box d-flex align-items-center text-decoration-none" href="./category?cid=<%= category.getId() %>">
                                 <span class="nav-color-icon" style="background: <%= category.getIconColor() != null ? category.getIconColor() : "#e30019" %>;"></span>
 
                                 <span class="nav-link-text"><%= category.getCateName() %></span>

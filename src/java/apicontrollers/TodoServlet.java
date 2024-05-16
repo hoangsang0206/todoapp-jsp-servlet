@@ -97,6 +97,7 @@ public class TodoServlet extends HttpServlet {
                     break;   
                 }
                 case "filter":
+                {
                     HashMap<String, ArrayList<Todo>> filterdTodoList = new HashMap<>();
                     
                     ArrayList<Todo> todoList = TodoListDAO.getTodoList(account.getUsername());
@@ -112,6 +113,30 @@ public class TodoServlet extends HttpServlet {
                     
                     printWriter.print(gson.toJson(filterdTodoList));
                     break;
+                }
+                case "category":
+                {
+                    String cateId = request.getParameter("cid");
+                    if(cateId == null || cateId.isEmpty()) {
+                        break;
+                    }
+                    String e = "";
+                    HashMap<String, ArrayList<Todo>> filterdTodoList = new HashMap<>();
+                    
+                    ArrayList<Todo> todoList = TodoListDAO.getTodoListByCategory(cateId, account.getUsername());
+                    ArrayList<Todo> today = TodoListDAO.filterTodayTodoList(todoList);
+                    ArrayList<Todo> upcoming = TodoListDAO.filterUpcomingTodo(today);
+                    ArrayList<Todo> week = TodoListDAO.filterWeekTodoList(todoList);
+                    ArrayList<Todo> before = TodoListDAO.filterBeforeWeekTodoList(todoList);
+                    
+                    filterdTodoList.put("upcoming", upcoming);
+                    filterdTodoList.put("today", today);
+                    filterdTodoList.put("week", week);
+                    filterdTodoList.put("beforeWeek", before);
+                    
+                    printWriter.print(gson.toJson(filterdTodoList));
+                    break;
+                }
                 default:
                     break;
             }

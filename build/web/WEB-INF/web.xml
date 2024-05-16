@@ -18,6 +18,10 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>AuthenFilter</filter-name>
+        <url-pattern>/category</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthenFilter</filter-name>
         <url-pattern>/notes</url-pattern>
     </filter-mapping>
     <filter-mapping>
