@@ -105,8 +105,7 @@ public class AccountServlet extends HttpServlet {
                 Account account = AccountDAO.getLoggedInUser(request);
                 
                 if(AccountDAO.updateInfomation(fullName, email, account.getUsername())) {
-                    account.setFullName(fullName);
-                    account.setEmail(email);
+                    account = AccountDAO.getUser(account.getUsername(), account.getPasswordHash());
                     HttpSession session = request.getSession(false);
                     session.removeAttribute("user");
                     session.setAttribute("user", account);

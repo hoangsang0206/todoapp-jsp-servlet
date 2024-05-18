@@ -12,17 +12,18 @@ integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
 <!-- CSS -->
-<link type="text/css" rel="stylesheet" href="css/loader.css">
-<link type="text/css" rel="stylesheet" href="css/layout.css">
-<link type="text/css" rel="stylesheet" href="css/index.css">
+<link type="text/css" rel="stylesheet" href="./css/loader.css">
+<link type="text/css" rel="stylesheet" href="./css/layout.css">
+<link type="text/css" rel="stylesheet" href="./css/index.css">
 
 
 <!-- Jquery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
 
 <!-- Javascript -->
-<script type="text/javascript" src="javascript/main.js" defer></script>
-<script type="text/javascript" src="javascript/index.js" defer></script>
+<script type="text/javascript" src="./javascript/main.js" defer></script>
+<script type="text/javascript" src="./javascript/index.js" defer></script>
+<script type="text/javascript" src="./javascript/search.js" defer></script>
 
 <!-- Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 

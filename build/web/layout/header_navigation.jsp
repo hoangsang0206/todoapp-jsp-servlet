@@ -11,12 +11,14 @@
 <fmt:setBundle basename="languages.lang" var="bundle" />
 
 <section class="header-navigation d-flex align-items-center justify-content-between position-relative">
-    <form action="#" method="#" class="search-form d-flex align-items-center">
+    <form class="search-form d-flex align-items-center position-relative">
         <input type="search" id="search" name="search" placeholder="<fmt:message bundle="${bundle}" key="search_placeholder" />" autocomplete="off" required>
-        <div class="vertical-break"></div>
-        <button type="submit" class="submit-search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
+
+        <div class="search-autocomplete-box">
+            <div class="search-autocomplete">
+               <div class="d-flex align-items-center justify-content-center p-5 m-5">Đang tìm kiếm.....</div>
+            </div>
+        </div>
     </form>
 
 

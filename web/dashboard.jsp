@@ -52,16 +52,16 @@
                             <img src="images/todo-img.png" alt="">
                             <div class="ms-5">
                                 <h4 class="m-0 p-0">
-                                    Xin chào,&nbsp;${(user.fullName != null ? user.fullName : user.username)}
+                                   <fmt:message bundle="${bundle}" key="user_hello" />,&nbsp;${(user.fullName != null ? user.fullName : user.username)}
                                 </h4>
                                 <p class="p-0 m-0">
-                                    Hãy bắt đầu với một gì đó thú vị nào!
+                                   <fmt:message bundle="${bundle}" key="dashboard_start" />
                                 </p>
                             </div>
                         </div>
 
                         <button class="me-4">
-                            Thêm công việc
+                            <fmt:message bundle="${bundle}" key="create_task_btn" />
                         </button>
                     </div>
 
@@ -69,10 +69,10 @@
                         <div class="statistic-box d-flex flex-column justify-content-between">
                             <div>
                                 <p class="sta-cate-name m-0">
-                                    Tất cả
+                                    <fmt:message bundle="${bundle}" key="stat_all" />
                                 </p>
                                 <p class="sta-task-count m-0">
-                                    <%= allCount %> Việc
+                                    <%= allCount %> <fmt:message bundle="${bundle}" key="task" />
                                 </p>
                             </div>
                             <div class="completed-percent-box mt-4">
@@ -88,10 +88,10 @@
                         <div class="statistic-box d-flex flex-column justify-content-between">
                             <div>
                                 <p class="sta-cate-name m-0">
-                                    Tháng này
+                                    <fmt:message bundle="${bundle}" key="stat_month" />
                                 </p>
                                 <p class="sta-task-count m-0">
-                                    <%= monthCount %> Việc
+                                    <%= monthCount %> <fmt:message bundle="${bundle}" key="task" />
                                 </p>
                             </div>
                             <div class="completed-percent-box mt-4">
@@ -107,10 +107,10 @@
                         <div class="statistic-box d-flex flex-column justify-content-between">
                             <div>
                                 <p class="sta-cate-name m-0">
-                                    Tuần này
+                                    <fmt:message bundle="${bundle}" key="stat_week" />
                                 </p>
                                 <p class="sta-task-count m-0">
-                                    <%= weekCount %> Việc
+                                    <%= weekCount %> <fmt:message bundle="${bundle}" key="task" />
                                 </p>
                             </div>
                             <div class="completed-percent-box mt-4">
@@ -126,10 +126,10 @@
                         <div class="statistic-box d-flex flex-column justify-content-between">
                             <div>
                                 <p class="sta-cate-name m-0">
-                                    Hôm nay
+                                    <fmt:message bundle="${bundle}" key="stat_today" />
                                 </p>
                                 <p class="sta-task-count m-0">
-                                    <%= todayList.size() %> Việc
+                                    <%= todayList.size() %> <fmt:message bundle="${bundle}" key="task" />
                                 </p>
                             </div>
                             <div class="completed-percent-box mt-4">
@@ -168,7 +168,7 @@
 
                         <div class="content-box today-tasks">
                             <div class="header-text">
-                                <span>Công việc hôm nay</span>
+                                <span><fmt:message bundle="${bundle}" key="header_today" /></span>
                             </div>
                             <div class="home-task-list d-flex flex-column gap-2 mt-2">
                                 
@@ -219,7 +219,7 @@
                                     } else {
                                 %>
                                 <div class="d-flex align-items-center justify-content-center w-100 h-100">
-                                    <span>Không có gì ở đây cả..</span>
+                                    <span><fmt:message bundle="${bundle}" key="nothing_here" /></span>
                                 </div>
                                 <% } %>
                                 
@@ -229,13 +229,13 @@
 
                     <div class="notes content-box mt-4">
                         <div class="header-text">
-                            <span>Ghi chú</span>
+                            <span><fmt:message bundle="${bundle}" key="nav_notes" /></span>
                             <button class="add-note-btn s-btn d-flex align-items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                                     <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
                                 </svg>
 
-                                <span>Tạo ghi chú</span>
+                                <span><fmt:message bundle="${bundle}" key="create_note_btn" /></span>
                             </button>
                         </div>
                         <div class="note-list mt-3">

@@ -16,14 +16,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import utils.RandomString;
 
 /**
  *
  * @author Sang
  */
 public class AccountDAO {
-    public static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9-]+\\\\.)+[A-Za-z]{2,}$");
+    public static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.-]+@[\\w-]+\\.[\\w-]{2,}$");
     public static final String STATUS_DELETED = "DELETED";
     public static final String STATUS_PENDING_DELETE = "PENDING_DELETE";
   

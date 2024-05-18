@@ -57,7 +57,6 @@ public class TodoServlet extends HttpServlet {
         PrintWriter printWriter = response.getWriter();
         
         response.setContentType("application/json");
-        
         Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
             .create();
@@ -73,7 +72,7 @@ public class TodoServlet extends HttpServlet {
         } else if(type != null && !type.isEmpty()) {
             switch (type) {
                 case "day":
-                {
+                {               
                     ArrayList<Todo> todoList = TodoListDAO.getTodayTodoList(account.getUsername());
                     printWriter.print(gson.toJson(todoList));
                     break;

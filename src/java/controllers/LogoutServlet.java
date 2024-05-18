@@ -33,8 +33,12 @@ public class LogoutServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         
         if(session != null) {
+           String lang = (String) session.getAttribute("lang");
            session.removeAttribute("user");
            session.invalidate(); // Xóa toàn bộ session
+           
+           HttpSession langSession = request.getSession();
+           langSession.setAttribute("lang", lang != null ? lang : "vi");
         }
         
         response.sendRedirect("login");

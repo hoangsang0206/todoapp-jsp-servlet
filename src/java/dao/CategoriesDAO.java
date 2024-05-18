@@ -215,4 +215,32 @@ public class CategoriesDAO {
         connect.close();
         return false;
     }
+    
+    public static ArrayList<Category> searchCategories(String cateName, String username) {
+        try {
+            JDBCConnect connect = new JDBCConnect();
+            connect.getConnection();
+            
+            ArrayList<Category> categories = new ArrayList<>();
+            String sql = "Select * From Categories Where cateName Like N'%" + cateName + "%' And username = '" + username + "'";
+            
+            ResultSet rs = connect.excuteQuery(sql);
+            while(rs.next()) {
+                Category category = new Category();
+                category.setId(rs.getString("id"));
+                category.setCateName(rs.getString("cateName"));
+                category.setUsername(rs.getString("username"));
+                category.setIconColor(rs.getString("iconColor"));
+                
+                categories.add(category);
+            }
+            
+            return categories;
+                
+        } catch (SQLException ex) {
+            Logger.getLogger(CategoriesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return new ArrayList<>();
+    }
 }

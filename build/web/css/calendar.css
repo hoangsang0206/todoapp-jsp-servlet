@@ -90,6 +90,7 @@
     height: 100%;
     font-size: 18px;
     font-weight: 600;
+    color: var(--current-text-color);
 }
 
 .c-days {

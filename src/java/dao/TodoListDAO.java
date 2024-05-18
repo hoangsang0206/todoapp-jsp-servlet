@@ -103,14 +103,46 @@ public class TodoListDAO {
         return todoList;
     }
     
-    public static ArrayList<Todo> searchTodoList(String username, String todoName) {
-        String sqlTodo = "Select * From TodoList "
-                + "Where username = '" + username +"' And title = '" + todoName + "' "
+    public static ArrayList<Todo> searchTodoList(String username, String title) {
+       try {
+            JDBCConnect connect = new JDBCConnect();
+            connect.getConnection();
+            
+            ArrayList<Todo> todoList = new ArrayList<>();
+            String sql = "Select * From TodoList "
+                + "Where username = '" + username +"' And title Like N'%" + title + "%' "
                 + "Order By dateToComplete DESC";
+            
+            ResultSet rsTodo = connect.excuteQuery(sql);
+            
+            while(rsTodo.next()) {
+                Todo todo = new Todo();
+                todo.setId(rsTodo.getString("id"));
+                todo.setTitle(rsTodo.getString("title"));
+                todo.setDescription(rsTodo.getString("description"));
+                todo.setUsername(rsTodo.getString("username"));
+                todo.setIsCompleted(rsTodo.getBoolean("is_completed"));
+                
+                todo.setDateCreate(rsTodo.getTimestamp("dateCreate") != null
+                        ? rsTodo.getTimestamp("dateCreate").toLocalDateTime() : null);
+                todo.setDateToComplete(rsTodo.getTimestamp("dateToComplete") != null
+                        ? rsTodo.getTimestamp("dateToComplete").toLocalDateTime() : null);
+                
+                //Get sub task in todo
+                ArrayList<SubTodo> subTodoList = SubTodoDAO.getSubTodoList(todo.getId());
+                todo.setSubTodoList(subTodoList);
+                
+                todoList.add(todo);
+            }
+            
+            connect.close();
+            
+            return todoList;
+        } catch (SQLException ex) {
+            Logger.getLogger(TodoListDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-         ArrayList<Todo> todoList = getTodoListBySQL(sqlTodo);
-        
-        return todoList;
+        return new ArrayList<>();
     }
     
     

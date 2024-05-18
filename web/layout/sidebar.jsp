@@ -10,6 +10,9 @@
 <% 
     
     String activeNav = (String) request.getAttribute("ActiveNav");
+    if (activeNav == null) {
+        activeNav = "";
+    }
     Account user = (Account) session.getAttribute("user");
     
     ArrayList<Category> categories = new ArrayList<>();

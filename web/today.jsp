@@ -39,7 +39,7 @@
                         <c:when test="${view == 'grid'}">
                             <div class="tasks-box upcoming mt-2">
                                 <div class="task-list-title d-flex align-items-center gap-3">
-                                    <span>Sắp tới</span>
+                                    <span><fmt:message bundle="${bundle}" key="upcoming" /></span>
                                     <ion-icon class="show-hide-tasks" name="caret-up-outline"></ion-icon>
                                 </div>
                                 <div class="task-list view-grid mt-2">
@@ -79,7 +79,7 @@
                             
                             <div class="tasks-box today mt-3">
                                 <div class="task-list-title d-flex align-items-center gap-3">
-                                    <span>Hôm nay</span>
+                                    <span><fmt:message bundle="${bundle}" key="stat_today" /></span>
                                     <ion-icon class="show-hide-tasks" name="caret-up-outline"></ion-icon>
                                 </div>
                                 <div class="task-list view-grid mt-2">

@@ -5,6 +5,11 @@
 
 package apicontrollers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import dao.AccountDAO;
+import dao.CategoriesDAO;
+import dao.TodoListDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,6 +17,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import models.Account;
+import models.Category;
+import models.Todo;
+import utils.LocalDateTimeAdapter;
 
 /**
  *
@@ -43,7 +56,21 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        response.setContentType("application/json");
+        
+        String search = request.getParameter("q");
+        Gson gson = new GsonBuilder()
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+            .create();
+        Account account = AccountDAO.getLoggedInUser(request);
+        Map<String, ArrayList> searchMap = new HashMap<>();
+        ArrayList<Category> categories = CategoriesDAO.searchCategories(search, account.getUsername());
+        ArrayList<Todo> todoList = TodoListDAO.searchTodoList(account.getUsername(), search);
+        
+        searchMap.put("Categories", categories);
+        searchMap.put("TodoList", todoList);
+        
+        response.getWriter().print(gson.toJson(searchMap));
     } 
 
     /** 
@@ -56,7 +83,6 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     /** 

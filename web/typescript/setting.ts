@@ -261,7 +261,6 @@ $('.lang-item').click(function() {
         type: 'POST',
         url: `./setting?t=lang&v=${value}`,
         success: () => {
-            localStorage.setItem('lang', value);
             window.location.href = '';
         },
         error: (error) => {
