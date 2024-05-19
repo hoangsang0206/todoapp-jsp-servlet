@@ -827,8 +827,10 @@ main {
 .search-form {
     width: 470px;
     border: none !important;
-    border-radius: 5px;
-    background: #fff;
+}
+
+.search-input-box {
+    width: 100%;
 }
 
 #search {
@@ -837,7 +839,8 @@ main {
     border-radius: 5px;
     border: none;
     outline: none;
-    background: none;
+    border-radius: 5px;
+    background: #fff;
     color: var(--nav-text);
 }
 
@@ -859,6 +862,7 @@ main {
 
 .search-autocomplete {
     width: 700px;
+    color: var(--current-text-color);
 }
 
 .search-categories, .search-todo {
@@ -876,6 +880,7 @@ main {
 
 .search-autocomplete h5 {
     font-weight: 600;
+    color: var(--current-text-color);
 }
 
 .search-cate-item {
@@ -889,6 +894,7 @@ main {
 
 .search-todo .horizon-task-box {
     box-shadow: 1px 1px 7px #8a8a8a67;
+    background: var(--current-task-background);
 }
 
 .vertical-break {
@@ -1792,13 +1798,75 @@ input[name="view-type"]:checked ~ label {
         font-size: 15px;
     }
     
-    .header-navigation {
+    .header-navigation .vertical-break {
+        display: none;
+    }
+    
+    .search-input-box {
         display: none !important;
     }
     
+    .btn-show-search {
+        display: flex !important;
+    }
+    
+    .btn-show-search i, .btn-close-search {
+        color: var(--current-text-color);
+        font-size: 25px;
+    }
+    
+    .search-form.show {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        padding: 7px 10px;
+        width: 100%;
+        background: var(--current-bg);
+        z-index: 20;
+        
+        .search-input-box {
+            display: flex !important;
+            gap: 10px;
+        }
+        
+        .search-autocomplete-box {
+            display: block !important;
+            width: 100%;
+            top: 100%;
+            height: calc(100vh - 50px);
+            border-radius: none;
+            box-shadow: none;
+            
+            .search-autocomplete {
+                width: 100%;
+            }
+        }
+        
+        .btn-show-search {
+            display: none !important;
+        }
+        
+        .btn-close-search {
+            display: flex !important;
+        }
+    }
+    
+    .header-notifications {
+        display: none !important;
+    }
+
     .main-contents {
         margin-top: 0;
-        height: 100%;
+        height: calc(100% - 40px);
+    }
+    
+    .horizon-task-box {
+        padding: 5px 10px;
+    }
+    
+    .task-status {
+        width: 30px;
+        margin-right: 5px;
     }
     
     .task-infomation-wrapper {

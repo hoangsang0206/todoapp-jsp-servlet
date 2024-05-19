@@ -4,7 +4,7 @@
     <div class="confirm-box">
         <div class="confirm-message">Xác nhận xóa?</div>
         <div class="confirm-sub-message">.................</div>
-        <div class="d-flex justify-content-end gap-2">
+        <div class="d-flex justify-content-end gap-2 mt-3">
             <button class="s-btn cancel-btn text-black" data-confirm="1">Hủy</button>
             <button class="s-btn confirm-btn" data-confirm="1">Xác nhận</button>
         </div>
@@ -14,7 +14,7 @@
 <section class="success-wrapper">
     <div class="success-box">
         <div class="success-message">Message</div>
-        <div class="d-flex justify-content-end gap-2">
+        <div class="d-flex justify-content-end gap-2 mt-4">
             <button class="s-btn success-btn bg-success">OK</button>
         </div>
     </div>

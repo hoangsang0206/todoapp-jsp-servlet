@@ -161,7 +161,7 @@
             <c:set var="user" value="${sessionScope.user}" />
             <c:choose>
                 <c:when test="${(user != null)}">
-                    <a href="javascript:void(0)" class="nav-bot-user d-flex align-items-center gap-2">               
+                    <a href="./setting" class="nav-bot-user d-flex align-items-center gap-2">               
                         <div class="nav-user-img-box">
                             <img class="nav-user-img" src="${(user.imageSrc != null && !user.imageSrc.isBlank()) ? user.imageSrc : "images/user-no-image.jpg"}" alt="">
                         </div>

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class JDBCConnect {
     private Connection connection = null;
     private Statement statement = null;
-    private static final String SERVER_NAME = "AORUS-LAPTOP";
+    private static final String SERVER_NAME = "AORUS-Laptop"; //34.87.52.99
     private static final String DB_NAME = "DBTodoApp";
     private static final String USERNAME = "sang";
     private static final String PASSWORD = "123456";

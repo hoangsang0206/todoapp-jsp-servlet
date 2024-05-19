@@ -12,17 +12,24 @@
 
 <section class="header-navigation d-flex align-items-center justify-content-between position-relative">
     <form class="search-form d-flex align-items-center position-relative">
-        <input type="search" id="search" name="search" placeholder="<fmt:message bundle="${bundle}" key="search_placeholder" />" autocomplete="off" required>
-
+        <div class="search-input-box d-flex align-items-center">
+            <i class='bx bx-arrow-back d-none btn-close-search'></i>
+            <input type="search" id="search" name="search" placeholder="<fmt:message bundle="${bundle}" key="search_placeholder" />" autocomplete="off" required>
+        </div>
+                        
+        <div class="btn-show-search d-none align-items-center">
+            <i class='bx bx-search'></i>
+        </div>
+            
         <div class="search-autocomplete-box">
             <div class="search-autocomplete">
-               <div class="d-flex align-items-center justify-content-center p-5 m-5">Đang tìm kiếm.....</div>
+               <div class="d-flex align-items-center justify-content-center p-5 m-5">Kết quả tìm kiếm</div>
             </div>
         </div>
     </form>
 
 
-    <div class="d-flex align-items-center justify-content-between gap-3">
+    <div class="header-nav-right d-flex align-items-center justify-content-between gap-3">
         <button class="add-new-task s-btn me-2">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
                 <path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path>
@@ -58,7 +65,7 @@
         <div class="header-account position-relative">
         <c:choose>
             <c:when test="${(user != null)}">
-                <div class="nav-user-img-box">
+                <div class="nav-user-img-box" onclick="window.location.href='./setting'">
                     <img class="nav-user-img" src="${(user.imageSrc != null && !user.imageSrc.isBlank() ? user.imageSrc : "images/user-no-image.jpg")}" alt="">
                 </div>
 

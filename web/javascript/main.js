@@ -227,9 +227,15 @@ $('input[name="search-option"]').keyup(function () {
         .catch((eror) => {
     });
 });
+$('.btn-show-search').click(() => {
+    $('.search-form').addClass('show');
+});
+$('.btn-close-search').click(() => {
+    $('.search-form').removeClass('show');
+});
 $(window).resize(() => {
     if (window.innerWidth < 768) {
-        $('.sidebar').removeClass('close');
+        $('.sidebar').removeClass('show');
     }
 });
 $('.toggle-nav').click(() => {
@@ -310,7 +316,7 @@ const setLightTheme = () => {
     $('body').css('--nav-text', 'var(--text-color-gray)');
     $('body').css('--border-input', '#ddd');
     $('.theme-toggle').css('background', '#ebebeb');
-    $('.search-form').css('background', '#fff');
+    $('#search').css('background', '#fff');
     $('.logo-text').css('color', 'var(--text-color-gray)');
     $('.sort-action, .filter-action, .view-action').css('background', '#e7e7e7');
 };
@@ -323,8 +329,8 @@ const setDarkTheme = () => {
     $('body').css('--nav-text', 'var(--text-color-white)');
     $('body').css('--border-input', 'var(--border-input-dark)');
     $('.theme-toggle ').css('background', '#242424');
-    $('.search-form').css('background', '#3a3b3c');
-    $('.search-form').css('border', 'none');
+    $('#search').css('background', '#3a3b3c');
+    $('#search').css('border', 'none');
     $('.logo-text').css('color', '#fff');
     $('.sort-action, .filter-action, .view-action').css('background', 'var(--bg-dark-content)');
 };
@@ -774,6 +780,7 @@ $(document).on('click', '.task-action.edit, .edit-task-btn', function () {
     showActionForm($('.edit-task-wrapper'));
     showOverlay();
     $('.task-infomation-wrapper').addClass('close');
+    setMainWidth();
     clearFormValue($('.edit-task form'));
     loadSelectData()
         .then((data) => {

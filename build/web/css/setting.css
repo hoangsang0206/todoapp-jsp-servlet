@@ -218,3 +218,40 @@
     color: #000;
 }
 
+@media screen and (max-width: 767px) {
+    .setting-main {
+        flex-direction: column;
+    }
+    
+    .setting-side {
+        height: auto;
+        width: 100%;
+        border: none;
+        border-bottom: 2px solid var(--border-color);
+        padding: 0 0 10px 0;
+    }
+    
+    .setting-content {
+        padding: 15px 0 0 0;
+        width: 100%;
+        height: auto;
+    }
+    
+    .setting .input-box {
+        width: 100% !important;
+    }
+    
+    .setting-email {
+        flex-direction: column;
+        align-items: start !important;
+        gap: 5px !important;
+    }
+    
+    .confirm-email  {
+        margin-top: 5px !important;
+    }
+    
+    .setting-account-btns {
+        flex-wrap: wrap;
+    }
+}

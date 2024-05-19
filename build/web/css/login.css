@@ -168,11 +168,13 @@ body {
         display: none;
     }
 
-    .login-form-box {
-        padding: 25px !important;
+    .login-form-box, .register-form-box {
+        padding: 20px !important;
     }
 
-    .login-form-box, .register-form-box, .login-form, .login-form > div {
+    .login-form-box, .register-form-box, 
+    .login-form, .register-form,
+    .login-form > div, .register-form > div {
         width: 100%;
     }
 

@@ -85,8 +85,7 @@
 }
 
 .c-days-of-month > div {
-    display: grid;
-    place-items: center;
+    text-align: center;
     height: 100%;
     font-size: 18px;
     font-weight: 600;
@@ -109,4 +108,46 @@
 .c-day.current {
     font-size: 20px;
     font-weight: 700;
+    color: #1773ea;
+}
+
+.c-day.other {
+    color: #bbb;
+}
+
+@media screen and (max-width: 767px) {
+    .current-day {
+        font-size: 16px;
+    }
+    
+    .c-type-select {
+        display: none !important;
+    }
+    
+    .c-next-prev button {
+        padding: 0 10px;
+        height: 31px;
+    }
+    
+    .btn-today {
+        font-size: 13px;
+        background: #000;
+        color: #fff;
+    }
+    
+    .c-days-of-month {
+        border: none;
+    }
+    
+    .c-days-of-month > div {
+        font-size: 14px;
+    }
+    
+    .c-days {
+        margin-top: 15px;
+    }
+    
+    .c-day {
+        height: auto;
+    }
 }

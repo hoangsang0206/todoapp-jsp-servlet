@@ -28,7 +28,7 @@ const initCalendar = () => {
     $('.c-days').empty();
     
     for(let i = day; i > 0; i--) {
-        calendarEmelemts += `<div class="c-day">${prevDays - i + 1}</div>`;
+        calendarEmelemts += `<div class="c-day other">${prevDays - i + 1}</div>`;
     }
     
     for(let i = 1; i <= lastDate; i++) {
@@ -40,7 +40,7 @@ const initCalendar = () => {
     }
     
     for(let i = 1; i <= nextDays; i++) {
-        calendarEmelemts += `<div class="c-day">${i}</div>`;
+        calendarEmelemts += `<div class="c-day other">${i}</div>`;
     }
     
     $('.c-days').append(calendarEmelemts);

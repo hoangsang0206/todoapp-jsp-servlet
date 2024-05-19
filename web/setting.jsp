@@ -70,7 +70,7 @@
                                             <input type="text" id="st-ac-name" autocomplete="off" value="${user.fullName}" data-name="${user.fullName}" required>
                                         </div>
 
-                                        <div class="d-flex align-items-center gap-3">
+                                        <div class="setting-email d-flex align-items-center gap-3">
                                             <div class="input-box d-flex flex-column">
                                                 <label for="st-ac-email">Email</label>
                                                 <input type="email" id="st-ac-email" autocomplete="off" value="${user.email}" data-email="${user.email}" required>
@@ -81,7 +81,7 @@
                                             </c:if>
                                         </div>
                                     
-                                        <div class="d-flex gap-2">
+                                        <div class="setting-account-btns d-flex gap-2">
                                             <button class="s-btn st-btn-changepass bg-primary">
                                                 <i class='bx bx-key me-1 text-white'></i>
                                                 <span class="text-white">Đổi mật khẩu</span>

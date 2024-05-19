@@ -11,7 +11,7 @@ $('#search').keyup(function () {
                 $('.search-autocomplete').empty();
                 if (response.Categories.length === 0 && response.TodoList.length === 0) {
                     $('.search-autocomplete').empty();
-                    $('.search-autocomplete').append(`<div class="d-flex align-items-center justify-content-center p-5 m-5">Không tìm thấy kết quả phù hợp</div>`);
+                    $('.search-autocomplete').append(`<div class="d-flex align-items-center justify-content-center p-5 mt-5">Không tìm thấy kết quả phù hợp</div>`);
                 }
                 else {
                     if (response.Categories.length > 0) {
@@ -26,7 +26,7 @@ $('#search').keyup(function () {
             },
             error: (jqXHR, textStatus, errorThrown) => {
                 $('.search-autocomplete').empty();
-                $('.search-autocomplete').append(`<div class="d-flex align-items-center justify-content-center p-5 m-5">Không tìm thấy kết quả phù hợp</div>`);
+                $('.search-autocomplete').append(`<div class="d-flex align-items-center justify-content-center p-5 mt-5">Không tìm thấy kết quả phù hợp</div>`);
             }
         });
         $('.search-autocomplete-box').addClass('show');
